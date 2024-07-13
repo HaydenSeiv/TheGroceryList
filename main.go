@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
 // our grocery item struct
@@ -22,6 +24,16 @@ func main() {
 
 	//creating our new app instance in fiber -- fiber is out web framework for Golang
 	app := fiber.New()
+
+	//load our .env file with envirment variables, if there is an error kill program
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	//Get the PORT enviroment variable from .env (our manually assigned port)
+	PORT := os.Getenv("PORT")
 
 	//items is our array ofr Item structs
 	items := []Item{}
@@ -100,5 +112,5 @@ func main() {
 		return c.Status(404).JSON(fiber.Map{"error": "Item not found"})
 	})
 
-	log.Fatal(app.Listen(":4000"))
+	log.Fatal(app.Listen(":" + PORT))
 }
