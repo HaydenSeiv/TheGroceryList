@@ -169,7 +169,7 @@ func deleteItem(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"Error": "Invalid item ID"})
 	}
 
-	//filter based off of ID and delete matching item
+	//filter based off of ID and delete matching item -- "_" variable used as we do not use the returned value
 	filter := bson.M{"_id": objectID}
 	_, err = collection.DeleteOne(context.Background(), filter)
 
