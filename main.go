@@ -16,7 +16,7 @@ import (
 
 // our grocery item struct
 type Item struct {
-	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"` // the unique id of the item created by DB - mongoDB uses bson - Primitive is a MongoDB type
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"` // the unique id of the item created by DB - mongoDB uses bson - Primitive is a MongoDB type --omitempty is important as it omits 000000 id that may be sent first with no item being created
 	Completed bool               `json:"completed"`                         //if the item as been picked up or not
 	Title     string             `json:"title"`                             //the title or name of the item
 	Category  string             `json:"category"`                          //the category or "aisle"
