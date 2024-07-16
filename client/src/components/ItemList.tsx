@@ -23,12 +23,15 @@ const ItemList = () => {
                 if(!res.ok){
                     throw new Error(data.error || "Something went wrong")
                 }
+				
                 return data || []
             } catch (error) {
                 console.log(error)
             }
         }
     })
+
+	items?.sort((a, b) => a.catID - b.catID)
 
 	return (
 		<>
