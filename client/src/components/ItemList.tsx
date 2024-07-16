@@ -49,9 +49,9 @@ const ItemList = () => {
 			{!isLoading && items?.length === 0 && (
 				<Stack alignItems={"center"} gap='3'>
 					<Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
-						All tasks completed! 🤞
+						All items completed! 🤞
 					</Text>
-					<img src='/go.png' alt='Go logo' width={70} height={70} />
+					{/* <img src='/go.png' alt='Go logo' width={70} height={70} /> */}
 				</Stack>
 			)}
 			<Stack gap={3}>
