@@ -6,68 +6,73 @@ import { BASE_URL } from "../App";
 import React from "react";
 
 const ItemForm = () => {
-	const [newItem, setNewItem] = useState("");
-	
-	const queryClient = useQueryClient();
+  const [newItem, setNewItem] = useState("");
 
-	const {mutate:createItem, isPending:isCreating} = useMutation({
-		mutationKey:['createItem'],
-		mutationFn:async(e:React.FormEvent)=>{
-			e.preventDefault()
-			try {
-				const res = await fetch(BASE_URL + '/items', {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ title: newItem}),
+  const queryClient = useQueryClient();
 
-				})
-				const data = await res.json();
+  const { mutate: createItem, isPending: isCreating } = useMutation({
+    mutationKey: ["createItem"],
+    mutationFn: async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        const res = await fetch(BASE_URL + "/items", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title: newItem }),
+        });
+        const data = await res.json();
 
-				if (!res.ok){
-					throw new Error(data.error || "Something went wrong")
-				}
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
 
-				setNewItem("");
-				return data
-				
-			} catch (error:any) {
-				throw new Error(error)				
-			}
-		},
+        setNewItem("");
+        return data;
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
 
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["items"] });
-		},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
 
-		onError: (error:any) => {
-			alert(error.message);
-		}
+    onError: (error: any) => {
+      alert(error.message);
+    },
+  });
 
-	})
-
-
-	return (
-		<form onSubmit={createItem}>
-			<Flex gap={2}>
-				<Input
-					type='text'
-					value={newItem}
-					onChange={(e) => setNewItem(e.target.value)}
-					ref={(input) => input && input.focus()}
-				/>
-				<Button
-					mx={2}
-					type='submit'
-					_active={{
-						transform: "scale(.97)",
-					}}
-				>
-					{isCreating? <Spinner size={"xs"} /> : <IoMdAdd size={30} />}
-				</Button>
-			</Flex>
-		</form>
-	);
+  return (
+    <form onSubmit={createItem}>
+      <Flex gap={2}>
+        <Input
+          type="text"
+          value={newItem}
+          onChange={(e) => setNewItem(e.target.value)}
+          ref={(input) => input && input.focus()}
+        />
+        <Select w='240px' placeholder="Select Aisle">
+			<option value="Other">Other</option>
+            <option value="Veggie">Veggie/fruit</option>
+            <option value="Deli">Deli/Meat</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Frozen">Frozen</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Pantry">Pantry</option>
+        </Select>
+        <Button
+          mx={2}
+          type="submit"
+          _active={{
+            transform: "scale(.97)",
+          }}
+        >
+          {isCreating ? <Spinner size={"xs"} /> : <IoMdAdd size={30} />}
+        </Button>
+      </Flex>
+    </form>
+  );
 };
 export default ItemForm;
