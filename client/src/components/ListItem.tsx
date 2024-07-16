@@ -11,7 +11,7 @@ const ListItem = ({ item }: { item: Item }) => {
 
   console.log(item);
   const { mutate: updateItem, isPending: isUpdating } = useMutation({
-    mutationKey: ["updateItem"],    
+    mutationKey: ["updateItem"],
     mutationFn: async () => {
       if (item.completed) return alert("Item is already completed");
       try {
@@ -69,6 +69,12 @@ const ListItem = ({ item }: { item: Item }) => {
           textDecoration={item.completed ? "line-through" : "none"}
         >
           {item.title}
+        </Text>
+        <Text
+          color={item.completed ? "green.200" : "tomato"}
+          textDecoration={item.completed ? "line-through" : "none"}
+        >
+          {item.category}
         </Text>
         {item.completed && (
           <Badge ml="1" colorScheme="green">
