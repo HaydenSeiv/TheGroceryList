@@ -6,9 +6,45 @@ import { BASE_URL } from "../App";
 import React from "react";
 
 const ItemForm = () => {
-  const [newItem, setNewItem] = useState("");
+  const [newItem, setNewItem] = useState("");  
+  const [newAisle, setNewAisle] = useState("None");
+  const [newCatID, setNewCatID] = useState("");
 
   const queryClient = useQueryClient();
+
+
+  //Function that takes the select category (string) and assigns the correct CatID
+  function setCatID(category) {	
+
+    let catID;
+    switch(category){
+        case 'other':
+            catID = 0;
+            break;
+        case "Veggie":
+            catID = 1;
+            break;
+        case "Deli":
+            catID = 2;
+            break;
+        case "Dairy":
+            catID = 3;
+            break;
+        case "Frozen":
+            catID = 4;
+            break;
+        case "Bakery":
+            catID = 5;
+            break;
+        case "Pantry":
+            catID = 6;
+            break;
+        default:
+            catID = -1;
+  }
+
+  return catID;                
+  }
 
   const { mutate: createItem, isPending: isCreating } = useMutation({
     mutationKey: ["createItem"],
@@ -20,7 +56,7 @@ const ItemForm = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ title: newItem }),
+          body: JSON.stringify({ title: newItem, category: newAisle, catID: newCatID }),
         });
         const data = await res.json();
 
@@ -34,6 +70,8 @@ const ItemForm = () => {
         throw new Error(error);
       }
     },
+
+	
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
@@ -53,7 +91,7 @@ const ItemForm = () => {
           onChange={(e) => setNewItem(e.target.value)}
           ref={(input) => input && input.focus()}
         />
-        <Select w='240px' placeholder="Select Aisle">
+        <Select w='240px' name="selectedAisle" value={newAisle}  onChange={e => {setNewAisle(e.target.value); setNewCatID(setCatID(e.target.value)) }} defaultValue="None" placeholder="Select Aisle">
 			<option value="Other">Other</option>
             <option value="Veggie">Veggie/fruit</option>
             <option value="Deli">Deli/Meat</option>

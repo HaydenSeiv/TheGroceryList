@@ -21,7 +21,7 @@ type Item struct {
 	Completed bool               `json:"completed"`                         //if the item as been picked up or not
 	Title     string             `json:"title"`                             //the title or name of the item
 	Category  string             `json:"category"`                          //the category or "aisle"
-	CatID     int                `json:"CatID"`                             //the id of that category -- Produce would be 1 etc
+	CatID     int                `json:"catID"`                             //the id of that category -- Produce would be 1 etc
 }
 
 var collection *mongo.Collection
