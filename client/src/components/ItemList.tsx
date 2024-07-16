@@ -36,7 +36,7 @@ const ItemList = () => {
             bgGradient='linear(to-l, #0b85f8, #00ffff)'
             bgClip='text'
             >
-				Today's Tasks
+				Grocery List
 			</Text>
 			{isLoading && (
 				<Flex justifyContent={"center"} my={4}>
