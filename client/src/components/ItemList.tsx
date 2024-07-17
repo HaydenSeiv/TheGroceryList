@@ -3,6 +3,7 @@ import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
+//the Item struct, matches "Item" design in both backend and database
 export type Item = {
     _id: number;
     title: string;
@@ -12,9 +13,12 @@ export type Item = {
 };
 
 const ItemList = () => {
+
+	//hook to get items from database in an array
     const {data:items, isLoading} = useQuery<Item[]>({
         queryKey:["items"],
 
+		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
                 const res = await fetch("http://localhost:4000/api/items")
@@ -31,6 +35,8 @@ const ItemList = () => {
         }
     })
 
+	//sort the array of items based off of Category ID, this makes it so list is in proper order of aisles.
+	//In the future may want to make it so user can decided own order of aisles to match their store
 	items?.sort((a, b) => a.catID - b.catID)
 
 	return (

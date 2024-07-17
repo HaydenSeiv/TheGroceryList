@@ -4,6 +4,10 @@ import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 
 export default function Navbar() {
+
+	//eventually want to add more features to nav bar
+
+	//used to toggle between light and dark mode
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	return (

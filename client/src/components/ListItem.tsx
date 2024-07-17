@@ -9,16 +9,25 @@ import React from "react";
 const ListItem = ({ item }: { item: Item }) => {
   const queryClient = useQueryClient();
 
-  console.log(item);
+  //console.log(item); //console log used to see items coming back
+
+  //updateItem function used to complete items
   const { mutate: updateItem, isPending: isUpdating } = useMutation({
     mutationKey: ["updateItem"],
     mutationFn: async () => {
+
+      //may want to set up in future so that you can uncheck item, right now it is only one way street
       if (item.completed) return alert("Item is already completed");
       try {
+        //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
         const res = await fetch(BASE_URL + `/items/${item.id}`, {
-          method: "PATCH",
+          method: "PATCH", //using patch to update, our PATCH handler in backend auto marks as completed
         });
+
+        //data is assigned the returned json
         const data = await res.json();
+
+        //if response is not ok, throw error
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
@@ -27,19 +36,25 @@ const ListItem = ({ item }: { item: Item }) => {
       }
     },
 
+     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
+
+  //deleteItem function 
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteItem"],
     mutationFn: async () => {
       try {
+        //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
         const res = await fetch(BASE_URL + `/items/${item.id}`, {
-          method: "DELETE",
+          method: "DELETE", //Delete handler in back end just deletes the entire item
         });
         const data = await res.json();
+
+         //if response is not ok, throw error
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
@@ -48,6 +63,8 @@ const ListItem = ({ item }: { item: Item }) => {
         console.log(error);
       }
     },
+
+    //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
