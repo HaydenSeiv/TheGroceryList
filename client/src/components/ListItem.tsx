@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Spinner, Text, Grid, GridItem } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Item } from "./ItemList.tsx";
@@ -72,8 +72,10 @@ const ListItem = ({ item }: { item: Item }) => {
 
   return (
     <Flex gap={2} alignItems={"center"}>
-      <Flex
-        flex={1}
+      <Grid
+        //flex={1}
+        templateColumns={"repeat(6, 1fr)"}
+        gap={2}
         alignItems={"center"}
         border={"1px"}
         borderColor={"gray.600"}
@@ -81,29 +83,36 @@ const ListItem = ({ item }: { item: Item }) => {
         borderRadius={"lg"}
         justifyContent={"space-between"}
       >
-        <Text
+        <GridItem
           color={item.completed ? "green.200" : "yellow.100"}
-          textDecoration={item.completed ? "line-through" : "none"}
+          textDecoration={item.completed ? "line-through" : "none"}    
+          colSpan={3}      
         >
           {item.title}
-        </Text>
-        <Text
+        </GridItem>
+        <GridItem
           color={item.completed ? "green.200" : "tomato"}
           textDecoration={item.completed ? "line-through" : "none"}
+          colSpan={2}
+
         >
           {item.category}
-        </Text>
+        </GridItem>
         {item.completed && (
+          <GridItem>
           <Badge ml="1" colorScheme="green">
             Done
           </Badge>
+          </GridItem>
         )}
         {!item.completed && (
+          <GridItem>
           <Badge ml="1" colorScheme="yellow">
             In Progress
           </Badge>
+          </GridItem>
         )}
-      </Flex>
+      </Grid>
       <Flex gap={2} alignItems={"center"}>
         <Box
           color={"green.500"}
