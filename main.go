@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,11 +28,13 @@ var collection *mongo.Collection
 func main() {
 	fmt.Println("Hello World")
 
-	//load our .env file with envirment variables, if there is an error kill program
-	err := godotenv.Load(".env")
+	//if not in production - load our .env file with envirment variables, if there is an error kill program
+	if os.Getenv("ENV") != "production" {
+		err := godotenv.Load(".env")
 
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
+		if err != nil {
+			log.Fatal("Error loading .env file", err)
+		}
 	}
 
 	//get the MongoDB URI from from the enviro vars and connect to the database
@@ -64,10 +65,12 @@ func main() {
 	//creating our new app instance in fiber -- fiber is out web framework for Golang
 	app := fiber.New()
 
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173",
-		AllowHeaders: "Origin, Content - Type, Accept",
-	}))
+	//work around cors for dev on local machine
+
+	// app.Use(cors.New(cors.Config{
+	// 	AllowOrigins: "http://localhost:5173",
+	// 	AllowHeaders: "Origin, Content - Type, Accept",
+	// }))
 
 	//assign the handlers to their respective functions
 	app.Get("/api/items", getItems)
@@ -79,6 +82,11 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "4000"
+	}
+
+	//if app is in prodution, if any request outside of the set handlers above get triggered, it routes to client/dist
+	if os.Getenv("ENV") == "production" {
+		app.Static("/", "./client/dist")
 	}
 
 	log.Fatal(app.Listen("0.0.0.0:" + port))
