@@ -2,6 +2,7 @@ import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { BASE_URL } from "../App";
 
 //the Item struct, matches "Item" design in both backend and database
 export type Item = {
@@ -21,7 +22,7 @@ const ItemList = () => {
 		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
-                const res = await fetch("http://localhost:4000/api/items")
+                const res = await fetch(BASE_URL + "/items")
                 const data = await res.json()
 
                 if(!res.ok){
