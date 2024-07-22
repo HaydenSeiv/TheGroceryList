@@ -1,4 +1,12 @@
-import { Badge, Box, Flex, Spinner, Text, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  Spinner,
+  Text,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Item } from "./ItemList.tsx";
@@ -15,7 +23,6 @@ const ListItem = ({ item }: { item: Item }) => {
   const { mutate: updateItem, isPending: isUpdating } = useMutation({
     mutationKey: ["updateItem"],
     mutationFn: async () => {
-
       //may want to set up in future so that you can uncheck item, right now it is only one way street
       if (item.completed) return alert("Item is already completed");
       try {
@@ -36,14 +43,13 @@ const ListItem = ({ item }: { item: Item }) => {
       }
     },
 
-     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
+    //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
-
-  //deleteItem function 
+  //deleteItem function
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteItem"],
     mutationFn: async () => {
@@ -54,7 +60,7 @@ const ListItem = ({ item }: { item: Item }) => {
         });
         const data = await res.json();
 
-         //if response is not ok, throw error
+        //if response is not ok, throw error
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
@@ -72,10 +78,8 @@ const ListItem = ({ item }: { item: Item }) => {
 
   return (
     <Flex gap={2} alignItems={"center"}>
-      <Grid
-        //flex={1}
-        templateColumns={"repeat(6, 1fr)"}
-        gap={2}
+      <Flex
+        flex={1}
         alignItems={"center"}
         border={"1px"}
         borderColor={"gray.600"}
@@ -83,36 +87,13 @@ const ListItem = ({ item }: { item: Item }) => {
         borderRadius={"lg"}
         justifyContent={"space-between"}
       >
-        <GridItem
+        <Text
           color={item.completed ? "green.200" : "yellow.100"}
-          textDecoration={item.completed ? "line-through" : "none"}    
-          colSpan={3}      
+          textDecoration={item.completed ? "line-through" : "none"}
         >
           {item.title}
-        </GridItem>
-        <GridItem
-          color={item.completed ? "green.200" : "tomato"}
-          textDecoration={item.completed ? "line-through" : "none"}
-          colSpan={2}
-
-        >
-          {item.category}
-        </GridItem>
-        {item.completed && (
-          <GridItem>
-          <Badge ml="1" colorScheme="green">
-            Done
-          </Badge>
-          </GridItem>
-        )}
-        {!item.completed && (
-          <GridItem>
-          <Badge ml="1" colorScheme="yellow">
-            In Progress
-          </Badge>
-          </GridItem>
-        )}
-      </Grid>
+        </Text>        
+      </Flex>
       <Flex gap={2} alignItems={"center"}>
         <Box
           color={"green.500"}
