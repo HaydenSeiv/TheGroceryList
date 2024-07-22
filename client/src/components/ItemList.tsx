@@ -23,7 +23,7 @@ const ItemList = () => {
         queryFn: async () => {
             try {
                 const res = await fetch(BASE_URL + "/items")
-                const data = await res.json()
+                const data = await res.json()				
 
                 if(!res.ok){
                     throw new Error(data.error || "Something went wrong")
