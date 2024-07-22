@@ -92,7 +92,13 @@ const ListItem = ({ item }: { item: Item }) => {
           textDecoration={item.completed ? "line-through" : "none"}
         >
           {item.title}
-        </Text>        
+        </Text>
+        <Text
+          color={item.completed ? "green.200" : "tomato"}
+          textDecoration={item.completed ? "line-through" : "none"}
+        >
+          {item.category}
+        </Text>
       </Flex>
       <Flex gap={2} alignItems={"center"}>
         <Box
