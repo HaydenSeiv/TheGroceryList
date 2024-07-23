@@ -49,6 +49,39 @@ const ListItem = ({ item }: { item: Item }) => {
     },
   });
 
+  function setColor(catID){
+
+    let textColor
+
+    switch (catID) {
+      case "Other":
+        textColor = "#9CD9D0";
+        break;
+      case "Veggie":
+        textColor = "#FB4023";
+        break;
+      case "Deli":
+        textColor = "#ff9e00";
+        break;
+      case "Dairy":
+        textColor = "#3ecbbd";
+        break;
+      case "Frozen":
+        textColor = "#FFDC5E";
+        break;
+      case "Bakery":
+        textColor = "#A5BE00";
+        break;
+      case "Pantry":
+        textColor = "#9b5de5";
+        break;
+      default:
+        textColor = "#ffffff";
+    }
+
+    return textColor;
+  } 
+
   //deleteItem function
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteItem"],
@@ -97,7 +130,7 @@ const ListItem = ({ item }: { item: Item }) => {
           {item.title}
         </Text>
         <Text
-          color={item.completed ? "green.200" : "tomato"}
+          color={item.completed ? "green.200" : setColor(item.category)}
           textDecoration={item.completed ? "line-through" : "none"}
         >
           {item.category}
