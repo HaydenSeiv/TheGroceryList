@@ -24,7 +24,7 @@ const ListItem = ({ item }: { item: Item }) => {
     mutationKey: ["updateItem"],
     mutationFn: async () => {
       //may want to set up in future so that you can uncheck item, right now it is only one way street
-      if (item.completed) return alert("Item is already completed");
+      //if (item.completed) return alert("Item is already completed");
       try {
         //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
         const res = await fetch(BASE_URL + `/items/${item.id}`, {
@@ -53,6 +53,7 @@ const ListItem = ({ item }: { item: Item }) => {
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteItem"],
     mutationFn: async () => {
+      if (item.completed)
       try {
         //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
         const res = await fetch(BASE_URL + `/items/${item.id}`, {
@@ -68,6 +69,8 @@ const ListItem = ({ item }: { item: Item }) => {
       } catch (error) {
         console.log(error);
       }
+
+      else {alert("Item must be completed to delete")}
     },
 
     //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct

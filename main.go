@@ -163,8 +163,9 @@ func updateItem(c *fiber.Ctx) error {
 	//filter items based off of ID
 	filter := bson.M{"_id": objectID}
 
-	//update item status to completed
-	update := bson.M{"$set": bson.M{"completed": true}}
+	//update item status to complete
+	update := []any{
+		bson.M{"$set": bson.M{"completed": bson.M{"$not": "$completed"}}}}
 
 	//push change to the database collection based off the filter and status update
 	_, err = collection.UpdateOne(context.Background(), filter, update)
