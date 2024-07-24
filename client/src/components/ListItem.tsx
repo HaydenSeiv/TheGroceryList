@@ -20,8 +20,8 @@ const ListItem = ({ item }: { item: Item }) => {
   //console.log(item); //console log used to see items coming back
 
   //updateItem function used to complete items
-  const { mutate: updateItem, isPending: isUpdating } = useMutation({
-    mutationKey: ["updateItem"],
+  const { mutate: completeItem, isPending: isUpdating } = useMutation({
+    mutationKey: ["completeItem"],
     mutationFn: async () => {
       //may want to set up in future so that you can uncheck item, right now it is only one way street
       //if (item.completed) return alert("Item is already completed");
@@ -140,7 +140,7 @@ const ListItem = ({ item }: { item: Item }) => {
         <Box
           color={"green.500"}
           cursor={"pointer"}
-          onClick={() => updateItem()}
+          onClick={() => completeItem()}
         >
           {!isUpdating && <FaCheckCircle size={20} />}
           {isUpdating && <Spinner size={"sm"} />}

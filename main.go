@@ -63,7 +63,7 @@ func main() {
 	//get the collection from mongoDB
 	collection = client.Database("golang_db").Collection("items")
 
-	//creating our new app instance in fiber -- fiber is out web framework for Golang
+	//creating our new app instance in fiber -- fiber is our web framework for Golang
 	app := fiber.New()
 
 	//work around cors for dev on local machine
@@ -77,7 +77,7 @@ func main() {
 	//assign the handlers to their respective functions
 	app.Get("/api/items", getItems)
 	app.Post("/api/items", createItem)
-	app.Patch("/api/items/:id", updateItem)
+	app.Patch("/api/items/:id", completeItem)
 	app.Delete("/api/items/:id", deleteItem)
 
 	//get the port from our enviro vars
@@ -151,7 +151,7 @@ func createItem(c *fiber.Ctx) error {
 	return c.Status(201).JSON(item)
 }
 
-func updateItem(c *fiber.Ctx) error {
+func completeItem(c *fiber.Ctx) error {
 	//get the item id -- id is a json string, so we turn it into a type of "primitive" so mongoDB can use
 	id := c.Params("id")
 	objectID, err := primitive.ObjectIDFromHex(id)
