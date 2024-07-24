@@ -12,19 +12,18 @@ import { MdDelete } from "react-icons/md";
 import { Item } from "./ItemList.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../App";
-import React from "react";
+import React, { useState } from "react";
 
 const ListItem = ({ item }: { item: Item }) => {
   const queryClient = useQueryClient();
+  //const [newTitle, setNewTitle] = useState('');
 
   //console.log(item); //console log used to see items coming back
 
-  //updateItem function used to complete items
-  const { mutate: completeItem, isPending: isUpdating } = useMutation({
+  //completeItem function used to complete items
+  const { mutate: completeItem, isPending: isCompleting } = useMutation({
     mutationKey: ["completeItem"],
     mutationFn: async () => {
-      //may want to set up in future so that you can uncheck item, right now it is only one way street
-      //if (item.completed) return alert("Item is already completed");
       try {
         //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
         const res = await fetch(BASE_URL + `/items/${item.id}`, {
@@ -49,9 +48,36 @@ const ListItem = ({ item }: { item: Item }) => {
     },
   });
 
-  function setColor(catID){
+  //updateItem function used to update item text
+  const { mutate: updateItem, isPending: isupdating } = useMutation({
+    mutationKey: ["updateItem"],
+    mutationFn: async (updatedTitle: string | null) => {
+      try {
+        //send the route we want with our ID info and the newtitle info using the PATCH hanlder in our backend
+        const res = await fetch(BASE_URL + `/itemsupdate/${item.id}/${updatedTitle}`, {
+          method: "PATCH", //using patch to update
+        });
 
-    let textColor
+        //data is assigned the returned json
+        const data = await res.json();
+
+        //if response is not ok, throw error
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
+  });
+
+  function setColor(catID) {
+    let textColor;
 
     switch (catID) {
       case "Other":
@@ -80,30 +106,31 @@ const ListItem = ({ item }: { item: Item }) => {
     }
 
     return textColor;
-  } 
+  }
 
   //deleteItem function
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteItem"],
     mutationFn: async () => {
       if (item.completed)
-      try {
-        //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
-        const res = await fetch(BASE_URL + `/items/${item.id}`, {
-          method: "DELETE", //Delete handler in back end just deletes the entire item
-        });
-        const data = await res.json();
+        try {
+          //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
+          const res = await fetch(BASE_URL + `/items/${item.id}`, {
+            method: "DELETE", //Delete handler in back end just deletes the entire item
+          });
+          const data = await res.json();
 
-        //if response is not ok, throw error
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
+          //if response is not ok, throw error
+          if (!res.ok) {
+            throw new Error(data.error || "Something went wrong");
+          }
+          return data;
+        } catch (error) {
+          console.log(error);
         }
-        return data;
-      } catch (error) {
-        console.log(error);
+      else {
+        alert("Item must be completed to delete");
       }
-
-      else {alert("Item must be completed to delete")}
     },
 
     //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
@@ -121,11 +148,17 @@ const ListItem = ({ item }: { item: Item }) => {
         borderColor={"gray.600"}
         p={2}
         borderRadius={"lg"}
-        justifyContent={"space-between"}
+        justifyContent={"space-between"}        
       >
         <Text
           color={item.completed ? "green.200" : "yellow.100"}
           textDecoration={item.completed ? "line-through" : "none"}
+          onClick={(e) => {
+            let editTitle = prompt("Please enter new item name", `${item.title}`)   
+            if (editTitle?.trim() !== '') {updateItem(editTitle)}
+            else {console.log("Input is empty")}
+            
+          }}
         >
           {item.title}
         </Text>
@@ -142,8 +175,8 @@ const ListItem = ({ item }: { item: Item }) => {
           cursor={"pointer"}
           onClick={() => completeItem()}
         >
-          {!isUpdating && <FaCheckCircle size={20} />}
-          {isUpdating && <Spinner size={"sm"} />}
+          {!isCompleting && <FaCheckCircle size={20} />}
+          {isCompleting && <Spinner size={"sm"} />}
         </Box>
         <Box color={"red.500"} cursor={"pointer"} onClick={() => deleteItem()}>
           {!isDeleting && <MdDelete size={25} />}

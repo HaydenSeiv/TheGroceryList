@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -78,6 +79,7 @@ func main() {
 	app.Get("/api/items", getItems)
 	app.Post("/api/items", createItem)
 	app.Patch("/api/items/:id", completeItem)
+	app.Patch("/api/itemsupdate/:id/:newTitle", updateItem)
 	app.Delete("/api/items/:id", deleteItem)
 
 	//get the port from our enviro vars
@@ -168,6 +170,38 @@ func completeItem(c *fiber.Ctx) error {
 		bson.M{"$set": bson.M{"completed": bson.M{"$not": "$completed"}}}}
 
 	//push change to the database collection based off the filter and status update
+	_, err = collection.UpdateOne(context.Background(), filter, update)
+
+	if err != nil {
+		return err
+	}
+
+	//if no errors return status of success
+	return c.Status(200).JSON(fiber.Map{"success": true})
+}
+func updateItem(c *fiber.Ctx) error {
+	//get the item id -- id is a json string, so we turn it into a type of "primitive" so mongoDB can use
+	id := c.Params("id")
+	newTitle := c.Params("newTitle")
+	objectID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid item ID"})
+	}
+
+	//because newTitle string data come encoded in URL with special chars we have to decode back into a readable string (for example if there was a space in the string it would be sent with "%20" instead of space)
+	decodedTitle, err2 := url.QueryUnescape(newTitle)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	//filter items based off of ID
+	filter := bson.M{"_id": objectID}
+
+	//update item name
+	update := bson.M{"$set": bson.M{"title": decodedTitle}}
+
+	//push change to the database collection based off the filter and title update
 	_, err = collection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
