@@ -19,14 +19,30 @@ import (
 
 // our grocery item struct
 type Item struct {
-	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"` // the unique id of the item created by DB - mongoDB uses bson - Primitive is a MongoDB type --omitempty is important as it omits 000000 id that may be sent first with no item being created
-	Completed bool               `json:"completed"`                         //if the item as been picked up or not
-	Title     string             `json:"title"`                             //the title or name of the item
-	Category  string             `json:"category"`                          //the category or "aisle"
-	CatID     int                `json:"catID"`                             //the id of that category -- Produce would be 1 etc
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`         // the unique id of the item created by DB - mongoDB uses bson - Primitive is a MongoDB type --omitempty is important as it omits 000000 id that may be sent first with no item being created
+	ListId    primitive.ObjectID `json:"listId,omitempty" bson:"_listId,omitempty"` //unique list ID referencing which list this item is apart of
+	Completed bool               `json:"completed"`                                 //if the item as been picked up or not
+	Title     string             `json:"title"`                                     //the title or name of the item
+	Category  string             `json:"category"`                                  //the category or "aisle"
+	CatID     int                `json:"catID"`                                     //the id of that category -- Produce would be 1 etc
 }
 
-var collection *mongo.Collection
+// the list struct for every list a user creates
+type List struct {
+	ListId      primitive.ObjectID `json:"listId,omitempty" bson:"_listId,omitempty"` //unique list ID for tracking lists
+	UserId      primitive.ObjectID `json:"userId,omitempty" bson:"_userId,omitempty"` //unique user ID referencing which user this list belongs too
+	DateCreated primitive.DateTime `json:"dateCreated" bson:"_dateCreated"`           //date that the list was created
+}
+
+// the users struct to hold user data
+type User struct {
+	UserId    primitive.ObjectID `json:"userId,omitempty" bson:"_userId,omitempty"` //unique user ID referencing which user this list belongs too
+	FirstName string             `json:"firstName"`
+	LastName  string             `json:"lastName"`
+	Email     string             `json:"email"`
+}
+
+var ItemCollection *mongo.Collection
 
 func main() {
 	fmt.Println("Hello World")
@@ -63,7 +79,7 @@ func main() {
 	fmt.Println("Connected to MONGODB ATLAS")
 
 	//get the collection from mongoDB
-	collection = client.Database("golang_db").Collection("items")
+	ItemCollection = client.Database("golang_db").Collection("items")
 
 	//creating our new app instance in fiber -- fiber is our web framework for Golang
 	app := fiber.New()
@@ -103,7 +119,7 @@ func getItems(c *fiber.Ctx) error {
 
 	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
 	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	cursor, err := ItemCollection.Find(context.Background(), bson.M{})
 
 	if err != nil {
 		log.Fatal(err)
@@ -142,7 +158,7 @@ func createItem(c *fiber.Ctx) error {
 	}
 
 	//insert our item into our database collection
-	insertResult, err := collection.InsertOne(context.Background(), item)
+	insertResult, err := ItemCollection.InsertOne(context.Background(), item)
 	if err != nil {
 		return err
 	}
@@ -171,7 +187,7 @@ func completeItem(c *fiber.Ctx) error {
 		bson.M{"$set": bson.M{"completed": bson.M{"$not": "$completed"}}}}
 
 	//push change to the database collection based off the filter and status update
-	_, err = collection.UpdateOne(context.Background(), filter, update)
+	_, err = ItemCollection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
 		return err
@@ -203,7 +219,7 @@ func updateItem(c *fiber.Ctx) error {
 	update := bson.M{"$set": bson.M{"title": decodedTitle}}
 
 	//push change to the database collection based off the filter and title update
-	_, err = collection.UpdateOne(context.Background(), filter, update)
+	_, err = ItemCollection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
 		return err
@@ -223,7 +239,7 @@ func deleteItem(c *fiber.Ctx) error {
 
 	//filter based off of ID and delete matching item -- "_" variable used as we do not use the returned value
 	filter := bson.M{"_id": objectID}
-	_, err = collection.DeleteOne(context.Background(), filter)
+	_, err = ItemCollection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
 		return err
