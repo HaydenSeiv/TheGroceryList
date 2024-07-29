@@ -42,7 +42,9 @@ type User struct {
 	Email     string             `json:"email"`
 }
 
-var ItemCollection *mongo.Collection
+var itemCollection *mongo.Collection
+var listCollection *mongo.Collection
+var userCollection *mongo.Collection
 
 func main() {
 	fmt.Println("Hello World")
@@ -78,8 +80,10 @@ func main() {
 	//if connected to DB
 	fmt.Println("Connected to MONGODB ATLAS")
 
-	//get the collection from mongoDB
-	ItemCollection = client.Database("golang_db").Collection("items")
+	//get the collections from mongoDB
+	itemCollection = client.Database("golang_db").Collection("items")
+	userCollection = client.Database("golang_db").Collection("users")
+	listCollection = client.Database("golang_db").Collection("lists")
 
 	//creating our new app instance in fiber -- fiber is our web framework for Golang
 	app := fiber.New()
@@ -92,12 +96,16 @@ func main() {
 		}))
 	}
 
-	//assign the handlers to their respective functions
+	//assign the item handlers to their respective functions
 	app.Get("/api/items", getItems)
 	app.Post("/api/items", createItem)
 	app.Patch("/api/items/:id", completeItem)
 	app.Patch("/api/itemsupdate/:id/:newTitle", updateItem)
 	app.Delete("/api/items/:id", deleteItem)
+
+	//assign the user handlers
+	app.Get("/api/users", getUsers)
+	app.Post("/api/users", createUser)
 
 	//get the port from our enviro vars
 	port := os.Getenv("PORT")
@@ -119,7 +127,7 @@ func getItems(c *fiber.Ctx) error {
 
 	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
 	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
-	cursor, err := ItemCollection.Find(context.Background(), bson.M{})
+	cursor, err := itemCollection.Find(context.Background(), bson.M{})
 
 	if err != nil {
 		log.Fatal(err)
@@ -158,7 +166,7 @@ func createItem(c *fiber.Ctx) error {
 	}
 
 	//insert our item into our database collection
-	insertResult, err := ItemCollection.InsertOne(context.Background(), item)
+	insertResult, err := itemCollection.InsertOne(context.Background(), item)
 	if err != nil {
 		return err
 	}
@@ -187,7 +195,7 @@ func completeItem(c *fiber.Ctx) error {
 		bson.M{"$set": bson.M{"completed": bson.M{"$not": "$completed"}}}}
 
 	//push change to the database collection based off the filter and status update
-	_, err = ItemCollection.UpdateOne(context.Background(), filter, update)
+	_, err = itemCollection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
 		return err
@@ -219,7 +227,7 @@ func updateItem(c *fiber.Ctx) error {
 	update := bson.M{"$set": bson.M{"title": decodedTitle}}
 
 	//push change to the database collection based off the filter and title update
-	_, err = ItemCollection.UpdateOne(context.Background(), filter, update)
+	_, err = itemCollection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
 		return err
@@ -239,7 +247,7 @@ func deleteItem(c *fiber.Ctx) error {
 
 	//filter based off of ID and delete matching item -- "_" variable used as we do not use the returned value
 	filter := bson.M{"_id": objectID}
-	_, err = ItemCollection.DeleteOne(context.Background(), filter)
+	_, err = itemCollection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
 		return err
@@ -247,4 +255,66 @@ func deleteItem(c *fiber.Ctx) error {
 
 	//if no errors return a status of success
 	return c.Status(200).JSON(fiber.Map{"Success": true})
+}
+func createUser(c *fiber.Ctx) error {
+	user := new(User)
+
+	if err := c.BodyParser(user); err != nil {
+		return err
+	}
+
+	//error handle a blank First Name
+	if user.FirstName == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "First name cannot be empty"})
+	}
+	//error handle a blank Last name
+	if user.LastName == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Last name cannot be empty"})
+	}
+	//error handle a blank email
+	if user.Email == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Email cannot be empty"})
+	}
+
+	//insert our item into our database collection
+	insertResult, err := userCollection.InsertOne(context.Background(), user)
+	if err != nil {
+		return err
+	}
+
+	//assign ID to the one created by database
+	user.UserId = insertResult.InsertedID.(primitive.ObjectID)
+
+	//return success status if no errors triggered
+	return c.Status(201).JSON(user)
+}
+func getUsers(c *fiber.Ctx) error {
+	var users []User
+
+	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
+	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
+	cursor, err := userCollection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//defer postspones the excution of this code until the surronding function is complete
+	//in this case once we have the items we will close off the cursor (pointer)
+	defer cursor.Close(context.Background())
+
+	for cursor.Next(context.Background()) {
+		var user User
+
+		//Decode takes the JSON and turns it into a Go struct (unmarshal), if any errors such as null (nil) it will return err
+		if err := cursor.Decode(&user); err != nil {
+			return err
+		}
+
+		//if no errors, add item to the items array
+		users = append(users, user)
+	}
+
+	//return the array
+	return c.JSON(users)
 }
