@@ -2,7 +2,7 @@ import { Button, Flex, Input, Spinner, Select } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { BASE_URL } from "../App";
+import { BASE_URL } from "../main";
 import React from "react";
 
 const ItemForm = () => {

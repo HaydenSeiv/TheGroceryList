@@ -2,7 +2,7 @@ import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { BASE_URL } from "../App";
+import { BASE_URL } from "../main";
 
 //the Item struct, matches "Item" design in both backend and database
 export type Item = {
