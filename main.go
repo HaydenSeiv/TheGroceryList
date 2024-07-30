@@ -29,14 +29,14 @@ type Item struct {
 
 // the list struct for every list a user creates
 type List struct {
-	ListId      primitive.ObjectID `json:"listId,omitempty" bson:"_listId,omitempty"` //unique list ID for tracking lists
+	ListId      primitive.ObjectID `json:"listId,omitempty" bson:"_id,omitempty"`     //unique list ID for tracking lists
 	UserId      primitive.ObjectID `json:"userId,omitempty" bson:"_userId,omitempty"` //unique user ID referencing which user this list belongs too
 	DateCreated primitive.DateTime `json:"dateCreated" bson:"_dateCreated"`           //date that the list was created
 }
 
 // the users struct to hold user data
 type User struct {
-	UserId    primitive.ObjectID `json:"userId,omitempty" bson:"_userId,omitempty"` //unique user ID referencing which user this list belongs too
+	UserId    primitive.ObjectID `json:"userId,omitempty" bson:"_id,omitempty"` //unique user ID referencing which user this list belongs too
 	FirstName string             `json:"firstName"`
 	LastName  string             `json:"lastName"`
 	Email     string             `json:"email"`
