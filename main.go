@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -31,7 +32,8 @@ type Item struct {
 type List struct {
 	ListId      primitive.ObjectID `json:"listId,omitempty" bson:"_id,omitempty"`     //unique list ID for tracking lists
 	UserId      primitive.ObjectID `json:"userId,omitempty" bson:"_userId,omitempty"` //unique user ID referencing which user this list belongs too
-	DateCreated primitive.DateTime `json:"dateCreated" bson:"_dateCreated"`           //date that the list was created
+	ListName    string             `json:"listName"`
+	DateCreated time.Time          `json:"dateCreated" bson:"_dateCreated"` //date that the list was created
 }
 
 // the users struct to hold user data
@@ -107,6 +109,11 @@ func main() {
 	app.Get("/api/users", getUsers)
 	app.Post("/api/users", createUser)
 	app.Delete("/api/users/:id", deleteUser)
+
+	//assign the list handlers
+	app.Get("/api/lists", getLists)
+	app.Post("/api/lists", createList)
+	app.Delete("/api/lists/:id", deleteList)
 
 	//get the port from our enviro vars
 	port := os.Getenv("PORT")
@@ -331,6 +338,82 @@ func deleteUser(c *fiber.Ctx) error {
 	//filter based off of ID and delete matching item -- "_" variable used as we do not use the returned value
 	filter := bson.M{"_id": objectID}
 	_, err = userCollection.DeleteOne(context.Background(), filter)
+
+	if err != nil {
+		return err
+	}
+
+	//if no errors return a status of success
+	return c.Status(200).JSON(fiber.Map{"Success": true})
+}
+func getLists(c *fiber.Ctx) error {
+	var lists []List
+
+	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
+	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
+	cursor, err := listCollection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//defer postspones the excution of this code until the surronding function is complete
+	//in this case once we have the items we will close off the cursor (pointer)
+	defer cursor.Close(context.Background())
+
+	for cursor.Next(context.Background()) {
+		var list List
+
+		//Decode takes the JSON and turns it into a Go struct (unmarshal), if any errors such as null (nil) it will return err
+		if err := cursor.Decode(&list); err != nil {
+			return err
+		}
+
+		//if no errors, add item to the items array
+		lists = append(lists, list)
+	}
+
+	//return the array
+	return c.JSON(lists)
+}
+func createList(c *fiber.Ctx) error {
+	list := new(List)
+
+	if err := c.BodyParser(list); err != nil {
+		return err
+	}
+
+	//error handle a blank List Name
+	if list.ListName == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "List name cannot be empty"})
+	}
+
+	list.DateCreated = time.Now()
+
+	//insert our list into our database collection
+	insertResult, err := listCollection.InsertOne(context.Background(), list)
+	if err != nil {
+		return err
+	}
+
+	//assign ID to the one created by database
+	list.ListId = insertResult.InsertedID.(primitive.ObjectID)
+
+	//return success status if no errors triggered
+	return c.Status(201).JSON(list)
+}
+func deleteList(c *fiber.Ctx) error {
+	//get the item id -- id is a json string, so we turn it into a type of "primitive" so mongoDB can use
+	listId := c.Params("id")
+	objectID, err := primitive.ObjectIDFromHex(listId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"Error": "Invalid list ID"})
+	}
+
+	//filter based off of ID and delete matching item -- "_" variable used as we do not use the returned value
+	filter := bson.M{"_id": objectID}
+	_, err = listCollection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
 		return err

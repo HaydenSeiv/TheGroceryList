@@ -1,6 +1,10 @@
-import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
-import React from "react";
+import {
+  Stack,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import LoginForm from "../components/loginForm";
 
 export default function Root(props) {
   const { loggedIn, email } = props;
@@ -9,24 +13,8 @@ export default function Root(props) {
 
   return (
     <Stack direction={`column`}>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        width="100%"
-      >
-        <Stack>
-        <Text>
-            This is the Welcome page
-        </Text>
-        <Text>
-            Please Click below to view list
-        </Text>
-        <Button>
-            <Link to={`list/`}>Log In</Link>
-        </Button>
-        </Stack>
-      </Box>
+      <Navbar />
+      <LoginForm />
     </Stack>
   );
 }
