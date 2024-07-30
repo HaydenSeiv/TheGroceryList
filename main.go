@@ -106,6 +106,7 @@ func main() {
 	//assign the user handlers
 	app.Get("/api/users", getUsers)
 	app.Post("/api/users", createUser)
+	app.Delete("/api/users/:id", deleteUser)
 
 	//get the port from our enviro vars
 	port := os.Getenv("PORT")
@@ -317,4 +318,24 @@ func getUsers(c *fiber.Ctx) error {
 
 	//return the array
 	return c.JSON(users)
+}
+func deleteUser(c *fiber.Ctx) error {
+	//get the item id -- id is a json string, so we turn it into a type of "primitive" so mongoDB can use
+	userId := c.Params("id")
+	objectID, err := primitive.ObjectIDFromHex(userId)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"Error": "Invalid user ID"})
+	}
+
+	//filter based off of ID and delete matching item -- "_" variable used as we do not use the returned value
+	filter := bson.M{"_id": objectID}
+	_, err = userCollection.DeleteOne(context.Background(), filter)
+
+	if err != nil {
+		return err
+	}
+
+	//if no errors return a status of success
+	return c.Status(200).JSON(fiber.Map{"Success": true})
 }
