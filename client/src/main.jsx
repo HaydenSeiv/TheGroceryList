@@ -9,9 +9,10 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Root from "./routes/root.tsx";
 import ErrorPage from "./routes/error-page.tsx";
 import UserList from "./routes/user-list.tsx";
+import LoginPage from "./routes/login-Page.tsx";
+import SignUpPage from "./routes/signup-page.tsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:4000/api" : "/api";
@@ -21,12 +22,16 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <LoginPage />,
     errorElement: <ErrorPage />,
   },
   {
     path: "list/",
     element: <UserList />,
+  },
+  {
+    path: "signup/",
+    element: <SignUpPage />,
   },
 ]);
 

@@ -14,81 +14,21 @@ import { Link } from "react-router-dom";
 import { BASE_URL } from "../main";
 import { IoMdAdd } from "react-icons/io";
 
-export default function LoginForm() {
-  //state hook to create a new first name
-  const [newFirstName, setNewFirstName] = useState("");
-
-  //state hook to asign a new Last name
-  const [newLastName, setNewLastName] = useState("");
-
-  //state hook to asign new email
-  const [newEmail, setNewEmail] = useState("");
+export default function LoginForm() {  
 
   const queryClient = useQueryClient();
 
-  //createItem function to update backend - uses TanStack useMutation hook
-  const { mutate: createUser, isPending: isCreating } = useMutation({
-    mutationKey: ["createUser"],
-
-    //the mutation function is async. e is of type of Formevent
-    mutationFn: async (e: React.FormEvent) => {
-      e.preventDefault();
-      try {
-        //we send the new items title,Category and CatID to the server and await for the response
-        const res = await fetch(BASE_URL + "/users", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          //update the body with JSON of new info
-          body: JSON.stringify({
-            firstName: newFirstName,
-            lastName: newLastName,
-            email: newEmail,
-          }),
-        });
-        const data = await res.json();
-
-        //if response not ok, throw error
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
-        }
-
-        //reset the input boxs to be blank
-        setNewFirstName("");
-        setNewLastName("");
-        setNewEmail("");
-
-        return data;
-      } catch (error: any) {
-        throw new Error(error);
-      }
-    },
-
-    //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-
-    onError: (error: any) => {
-      alert(error.message);
-    },
-  });
+ 
   return (
     <Container >
-        <form onSubmit={createUser}>
       <Stack display="flex" alignItems="center" justifyContent="center">
         <FormControl isRequired>
-          <FormLabel textAlign={"center"}>First name</FormLabel>
-          <Input placeholder="First name" onChange={(e) => {setNewFirstName(e.target.value)}} />
+          <FormLabel textAlign={"center"}>Email</FormLabel>
+          <Input placeholder="Email" />
         </FormControl>
         <FormControl isRequired>
-          <FormLabel textAlign={"center"}>Last name</FormLabel>
-          <Input placeholder="Last name" onChange={(e) => {setNewLastName(e.target.value)}} />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel textAlign={"center"}>Email address</FormLabel>
-          <Input type="email" placeholder="Email" onChange={(e) => {setNewEmail(e.target.value)}}/>
+          <FormLabel textAlign={"center"}>Password</FormLabel>
+          <Input placeholder="Password" />
         </FormControl>
 
         <Box
@@ -100,24 +40,22 @@ export default function LoginForm() {
         >
           <Button
            mx={2}
+           type="submit"
            _active={{
             transform: "scale(.97)",
           }}>
-            <Link to={`/list/`}>Log In</Link>
+            <Link to={`list/`}>Log In</Link>
           </Button>
           <Button
-            mx={2}
-            type="submit"
+            mx={2}            
             _active={{
               transform: "scale(.97)",
             }}
           >
-        {/* if createUser function is running, show loading spinner  */}
-        {isCreating ? <Spinner size={"xs"} /> : <text> Create Account </text>}   
+             <Link to={`signup/`}>Create Account</Link>
           </Button>
         </Box>
       </Stack>
-      </form>
     </Container>
   );
 }
