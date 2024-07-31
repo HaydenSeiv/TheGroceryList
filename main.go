@@ -266,6 +266,7 @@ func deleteItem(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"Success": true})
 }
 func createUser(c *fiber.Ctx) error {
+	fmt.Println("We here")
 	user := new(User)
 
 	if err := c.BodyParser(user); err != nil {
@@ -284,18 +285,40 @@ func createUser(c *fiber.Ctx) error {
 	if user.Email == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Email cannot be empty"})
 	}
-
-	//insert our item into our database collection
-	insertResult, err := userCollection.InsertOne(context.Background(), user)
-	if err != nil {
-		return err
+	//error handle a blank password
+	if user.Password == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Password cannot be empty"})
 	}
 
-	//assign ID to the one created by database
-	user.UserId = insertResult.InsertedID.(primitive.ObjectID)
+	//if email already exists throw error
+	filter := bson.M{"email": user.Email}
+	var existingUser User
+	emailFound := userCollection.FindOne(context.TODO(), filter).Decode(&existingUser)
 
-	//return success status if no errors triggered
-	return c.Status(201).JSON(user)
+	if emailFound != nil {
+		if emailFound == mongo.ErrNoDocuments {
+			//// Email not found, proceed with sign up process
+			//insert our item into our database collection
+			insertResult, err := userCollection.InsertOne(context.Background(), user)
+			if err != nil {
+				return err
+			}
+
+			//assign ID to the one created by database
+			user.UserId = insertResult.InsertedID.(primitive.ObjectID)
+
+			//return success status if no errors triggered
+			return c.Status(201).JSON(user)
+
+		} else {
+			// Some other error occurred
+			return c.Status(fiber.StatusInternalServerError).SendString("Error checking email")
+		}
+	}
+
+	// If we reach here, email already exists
+	return c.Status(fiber.StatusConflict).SendString("Email already in use")
+
 }
 func getUsers(c *fiber.Ctx) error {
 	var users []User

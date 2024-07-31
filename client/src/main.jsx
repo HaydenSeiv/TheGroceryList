@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     element: <UserList />,
   },
   {
-    path: "signup/",
+    path: "/signup/",
     element: <SignUpPage />,
   },
 ]);

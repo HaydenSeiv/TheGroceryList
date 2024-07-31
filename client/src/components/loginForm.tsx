@@ -44,7 +44,7 @@ export default function LoginForm() {
            _active={{
             transform: "scale(.97)",
           }}>
-            <Link to={`list/`}>Log In</Link>
+            <Link to={`/list/`}>Log In</Link>
           </Button>
           <Button
             mx={2}            
@@ -52,7 +52,7 @@ export default function LoginForm() {
               transform: "scale(.97)",
             }}
           >
-             <Link to={`signup/`}>Create Account</Link>
+             <Link to={`/signup/`}>Create Account</Link>
           </Button>
         </Box>
       </Stack>
