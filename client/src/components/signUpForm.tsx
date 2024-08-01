@@ -13,6 +13,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../main";
 import { IoMdAdd } from "react-icons/io";
+import {toast} from "react-hot-toast";
+
 
 export default function SignUpForm() {
   //state hook to create a new first name
@@ -75,11 +77,13 @@ export default function SignUpForm() {
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      setTimeout(() => {
+        toast.success("Account created succesfully, you will now be redirected to log in")}, 2);
       navigate("/");
     },
 
     onError: (error: any) => {
-      alert(error.message);
+      toast.error("An Account with that email already exists");
     },
   });
   return (

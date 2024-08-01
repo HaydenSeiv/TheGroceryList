@@ -1,21 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-//import App from "./App.jsx";
+import App from "../src/App.tsx";
 import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import theme from "./chakra/theme.ts";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./routes/error-page.tsx";
 import UserList from "./routes/user-list.tsx";
 import LoginPage from "./routes/login-Page.tsx";
 import SignUpPage from "./routes/signup-page.tsx";
+import { Toaster } from "react-hot-toast";
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:4000/api" : "/api";
+export const BASE_URL =
+  import.meta.env.MODE === "development" ? "http://localhost:4000/api" : "/api";
 
 const queryClient = new QueryClient();
 
@@ -39,7 +38,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
-        <RouterProvider router={router} />
+        <RouterProvider router={router}>
+        <Toaster position="bottom-right" />
+          <App />
+        </RouterProvider>
       </ChakraProvider>
     </QueryClientProvider>
   </React.StrictMode>

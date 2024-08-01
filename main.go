@@ -16,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	//"golang.org/x/crypto/bcrypt"
 )
 
 // our grocery item struct
