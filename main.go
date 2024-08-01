@@ -16,7 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	//"golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // our grocery item struct
@@ -49,6 +49,16 @@ type User struct {
 var itemCollection *mongo.Collection
 var listCollection *mongo.Collection
 var userCollection *mongo.Collection
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 func main() {
 	fmt.Println("Hello World")
@@ -289,6 +299,12 @@ func createUser(c *fiber.Ctx) error {
 	//error handle a blank password
 	if user.Password == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Password cannot be empty"})
+	}
+
+	if hashedPassword, passwordErr := HashPassword(user.Password); passwordErr != nil {
+		return passwordErr
+	} else {
+		user.Password = string(hashedPassword)
 	}
 
 	//if email already exists throw error
