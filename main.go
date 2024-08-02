@@ -141,7 +141,6 @@ func main() {
 	log.Fatal(app.Listen("0.0.0.0:" + port))
 }
 
-// the GET function
 func getItems(c *fiber.Ctx) error {
 	var items []Item
 
