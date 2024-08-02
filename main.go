@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/HaydenSeiv/TheGroceryList/controllers"
+	"github.com/HaydenSeiv/TheGroceryList/api"
 	"github.com/HaydenSeiv/TheGroceryList/models"
 )
 
@@ -68,21 +68,22 @@ func main() {
 	}
 
 	//assign the item handlers to their respective functions
-	app.Get("/api/items", controllers.GetItems)
-	app.Post("/api/items", controllers.CreateItem)
-	app.Patch("/api/items/:id", controllers.CompleteItem)
-	app.Patch("/api/itemsupdate/:id/:newTitle", controllers.UpdateItem)
-	app.Delete("/api/items/:id", controllers.DeleteItem)
+	app.Get("/api/items", api.GetItems)
+	app.Post("/api/items", api.CreateItem)
+	app.Patch("/api/items/:id", api.CompleteItem)
+	app.Patch("/api/itemsupdate/:id/:newTitle", api.UpdateItem)
+	app.Delete("/api/items/:id", api.DeleteItem)
 
 	//assign the user handlers
-	app.Get("/api/users", controllers.GetUsers)
-	app.Post("/api/users", controllers.CreateUser)
-	app.Delete("/api/users/:id", controllers.DeleteUser)
+	app.Get("/api/users", api.GetUsers)
+	app.Post("/api/users", api.CreateUser)
+	app.Delete("/api/users/:id", api.DeleteUser)
+	//app.Post("/api/login", api.LoginUser")
 
 	//assign the list handlers
-	app.Get("/api/lists", controllers.GetLists)
-	app.Post("/api/lists", controllers.CreateList)
-	app.Delete("/api/lists/:id", controllers.DeleteList)
+	app.Get("/api/lists", api.GetLists)
+	app.Post("/api/lists", api.CreateList)
+	app.Delete("/api/lists/:id", api.DeleteList)
 
 	//get the port from our enviro vars
 	port := os.Getenv("PORT")
