@@ -2,12 +2,14 @@ module github.com/HaydenSeiv/TheGroceryList
 
 go 1.22.4
 
+require github.com/golang-jwt/jwt v3.2.2+incompatible
+
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/gofiber/fiber v1.14.6 // indirect
 	github.com/gofiber/fiber/v2 v2.52.5 // indirect
 	github.com/gofiber/utils v0.0.10 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect

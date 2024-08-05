@@ -3,8 +3,10 @@ package api
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,6 +14,8 @@ import (
 	"github.com/HaydenSeiv/TheGroceryList/models"
 	"github.com/HaydenSeiv/TheGroceryList/pkg"
 )
+
+const SecretKey = "secret"
 
 func CreateUser(c *fiber.Ctx) error {
 	user := new(models.User)
@@ -132,18 +136,20 @@ func LoginUser(c *fiber.Ctx) error {
 	// Return a success message or error response
 
 	userEmail := c.Params("email")
-	var data map[string]string
+	userPassword := c.Params("password")
 
-	err := c.BodyParser(&data)
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"success": false,
-			"message": "Invalid post request",
-		})
-	}
+	//var data map[string]string = make(map[string]string)
+
+	// err := c.BodyParser(&data)
+	// if err != nil {
+	// 	return c.Status(400).JSON(fiber.Map{
+	// 		"success": false,
+	// 		"message": "Invalid post request",
+	// 	})
+	// }
 
 	//check if user entered password
-	if data["password"] == "" {
+	if userEmail == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"success": false,
 			"message": "Password is required",
@@ -151,7 +157,7 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 	//check if user entered email
-	if data["email"] == "" {
+	if userPassword == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"success": false,
 			"message": "email is required",
@@ -177,7 +183,7 @@ func LoginUser(c *fiber.Ctx) error {
 		}
 	}
 
-	if !pkg.CheckPasswordHash(data["password"], user.Password) {
+	if !pkg.CheckPasswordHash(userPassword, user.Password) {
 		return c.Status(401).JSON(fiber.Map{
 			"success": false,
 			"message": "Incorrect password",
@@ -185,4 +191,64 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		Issuer:    user.UserId.Hex(),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)), //token lasts for 24 hours
+	})
+
+	token, err := claims.SignedString([]byte(SecretKey))
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "could not login"})
+	}
+
+	cookie := fiber.Cookie{
+		Name:     "jwt",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message": "Login success",
+	})
+}
+
+func UserAuth(c *fiber.Ctx) error {
+	cookie := c.Cookies("jwt")
+
+	regClaims := jwt.RegisteredClaims{}
+
+	token, err := jwt.ParseWithClaims(cookie, &regClaims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SecretKey), nil
+	}, jwt.WithLeeway(5*time.Second))
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "unauthenticated"})
+	}
+
+	claims := token.Claims.(jwt.RegisteredClaims)
+
+	var user models.User
+	filter := bson.M{"UserId": claims}
+
+	userFound := models.UserCollection.FindOne(context.TODO(), filter).Decode(&user)
+
+	if userFound != nil {
+		if userFound == mongo.ErrNoDocuments {
+			// User not found
+			return c.Status(400).JSON(fiber.Map{
+				"success": false,
+				"message": "User not found",
+				"error":   map[string]interface{}{},
+			})
+		} else {
+			// Some other error occurred
+			return c.Status(fiber.StatusInternalServerError).SendString("Error checking email")
+		}
+	}
+
+	return c.JSON(user)
 }
