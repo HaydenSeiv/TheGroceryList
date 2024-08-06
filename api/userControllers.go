@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -47,6 +48,9 @@ func CreateUser(c *fiber.Ctx) error {
 	} else {
 		user.Password = hashedPassword
 	}
+
+	//convert email to lower case before saving
+	user.Email = strings.ToLower(user.Email)
 
 	//if email already exists throw error
 	filter := bson.M{"email": user.Email}
@@ -166,6 +170,9 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 
+	//change inputed email to lowercase
+	userEmail = strings.ToLower(userEmail)
+
 	filter := bson.M{"email": userEmail}
 	var user models.User
 	userFound := models.UserCollection.FindOne(context.TODO(), filter).Decode(&user)
@@ -217,7 +224,7 @@ func LoginUser(c *fiber.Ctx) error {
 	})
 }
 
-func UserAuth(c *fiber.Ctx) error {
+func ValidateUserAuth(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {

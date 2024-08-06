@@ -79,7 +79,7 @@ func main() {
 	app.Post("/api/users", api.CreateUser)
 	app.Delete("/api/users/:id", api.DeleteUser)
 	app.Post("/api/login/:email/:password", api.LoginUser)
-	app.Get("/api/login/userauth", api.UserAuth)
+	app.Get("/api/login/userauth", api.ValidateUserAuth)
 
 	//assign the list handlers
 	app.Get("/api/lists", api.GetLists)
