@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -191,7 +192,7 @@ func LoginUser(c *fiber.Ctx) error {
 		})
 	}
 
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.RegisteredClaims{
 		Issuer:    user.UserId.Hex(),
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)), //token lasts for 24 hours
 	})
@@ -219,9 +220,7 @@ func LoginUser(c *fiber.Ctx) error {
 func UserAuth(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
 
-	regClaims := jwt.RegisteredClaims{}
-
-	token, err := jwt.ParseWithClaims(cookie, &regClaims, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SecretKey), nil
 	}, jwt.WithLeeway(5*time.Second))
 
@@ -229,10 +228,15 @@ func UserAuth(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "unauthenticated"})
 	}
 
-	claims := token.Claims.(jwt.RegisteredClaims)
+	claims := token.Claims.(*jwt.RegisteredClaims)
+
+	userID, err := primitive.ObjectIDFromHex(claims.Issuer)
+	if err != nil {
+		fmt.Printf("invalid ObjectID: %v", err)
+	}
 
 	var user models.User
-	filter := bson.M{"UserId": claims}
+	filter := bson.M{"_id": userID}
 
 	userFound := models.UserCollection.FindOne(context.TODO(), filter).Decode(&user)
 
