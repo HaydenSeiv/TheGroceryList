@@ -62,8 +62,9 @@ func main() {
 	//work around cors for dev on local machine
 	if os.Getenv("ENV") != "production" {
 		app.Use(cors.New(cors.Config{
-			AllowOrigins: "http://localhost:5173",
-			AllowHeaders: "Origin, Content - Type, Accept",
+			AllowOrigins:     "http://localhost:5173",
+			AllowHeaders:     "Origin, Content - Type, Accept",
+			AllowCredentials: true,
 		}))
 	}
 
@@ -78,7 +79,7 @@ func main() {
 	app.Get("/api/users", api.GetUsers)
 	app.Post("/api/users", api.CreateUser)
 	app.Delete("/api/users/:id", api.DeleteUser)
-	app.Post("/api/login/:email/:password", api.LoginUser)
+	app.Post("/api/login", api.LoginUser)
 	app.Get("/api/login/userauth", api.ValidateUserAuth)
 	app.Post("/api/logout", api.Logout)
 

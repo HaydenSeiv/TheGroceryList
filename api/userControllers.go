@@ -140,40 +140,40 @@ func LoginUser(c *fiber.Ctx) error {
 	// Generate a session or token for authentication
 	// Return a success message or error response
 
-	userEmail := c.Params("email")
-	userPassword := c.Params("password")
+	// userEmail := c.Params("email")
+	// userPassword := c.Params("password")
 
-	//var data map[string]string = make(map[string]string)
+	var data map[string]string
 
-	// err := c.BodyParser(&data)
-	// if err != nil {
+	err := c.BodyParser(&data)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"success": false,
+			"message": "Invalid post request",
+		})
+	}
+
+	//check if user entered password
+	// if userEmail == "" {
 	// 	return c.Status(400).JSON(fiber.Map{
 	// 		"success": false,
-	// 		"message": "Invalid post request",
+	// 		"message": "Password is required",
+	// 		"error":   map[string]interface{}{},
+	// 	})
+	// }
+	// //check if user entered email
+	// if userPassword == "" {
+	// 	return c.Status(400).JSON(fiber.Map{
+	// 		"success": false,
+	// 		"message": "email is required",
+	// 		"error":   map[string]interface{}{},
 	// 	})
 	// }
 
-	//check if user entered password
-	if userEmail == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"success": false,
-			"message": "Password is required",
-			"error":   map[string]interface{}{},
-		})
-	}
-	//check if user entered email
-	if userPassword == "" {
-		return c.Status(400).JSON(fiber.Map{
-			"success": false,
-			"message": "email is required",
-			"error":   map[string]interface{}{},
-		})
-	}
+	// //change inputed email to lowercase
+	// userEmail = strings.ToLower(userEmail)
 
-	//change inputed email to lowercase
-	userEmail = strings.ToLower(userEmail)
-
-	filter := bson.M{"email": userEmail}
+	filter := bson.M{"email": data["email"]}
 	var user models.User
 	userFound := models.UserCollection.FindOne(context.TODO(), filter).Decode(&user)
 
@@ -191,7 +191,7 @@ func LoginUser(c *fiber.Ctx) error {
 		}
 	}
 
-	if !pkg.CheckPasswordHash(userPassword, user.Password) {
+	if !pkg.CheckPasswordHash(data["password"], user.Password) {
 		return c.Status(401).JSON(fiber.Map{
 			"success": false,
 			"message": "Incorrect password",
