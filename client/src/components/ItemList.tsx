@@ -7,6 +7,7 @@ import { BASE_URL } from "../main";
 //the Item struct, matches "Item" design in both backend and database
 export type Item = {
     _id: number;
+	_listId: number;
     title: string;
     completed: boolean;
 	category: string;

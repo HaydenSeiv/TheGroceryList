@@ -65,6 +65,14 @@ func CreateList(c *fiber.Ctx) error {
 	//assign ID to the one created by database
 	list.ListId = insertResult.InsertedID.(primitive.ObjectID)
 
+	//assign signed in userID
+	user, err := GetAuthenticatedUser(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	list.UserId = user.UserId
+
 	//return success status if no errors triggered
 	return c.Status(201).JSON(list)
 }

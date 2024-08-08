@@ -1,19 +1,17 @@
 import { Container, Stack } from '@chakra-ui/react'
 import React from 'react';
 import Navbar from '../components/Navbar'
-import ItemForm from '../components/ItemForm'
-import ItemList from '../components/ItemList';
 import { Toaster } from 'react-hot-toast';
+import ListOfLists from '../components/ListOfLists';
 
-export default function UserList() {
+export default function UserLists() {
     return (
     <Stack h="100vh">
       
       <Navbar />
       <Toaster position="bottom-right" />
         <Container>
-          <ItemForm />
-          <ItemList />
+            <ListOfLists />
         </Container>
     </Stack>
   );

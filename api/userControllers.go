@@ -224,7 +224,7 @@ func LoginUser(c *fiber.Ctx) error {
 	})
 }
 
-func ValidateUserAuth(c *fiber.Ctx) error {
+func GetAuthenticatedUser(c *fiber.Ctx) (*models.User, error) {
 	cookie := c.Cookies("jwt")
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -232,7 +232,7 @@ func ValidateUserAuth(c *fiber.Ctx) error {
 	}, jwt.WithLeeway(5*time.Second))
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "unauthenticated"})
+		return nil, fmt.Errorf("unauthenticated")
 	}
 
 	claims := token.Claims.(*jwt.RegisteredClaims)
@@ -250,15 +250,21 @@ func ValidateUserAuth(c *fiber.Ctx) error {
 	if userFound != nil {
 		if userFound == mongo.ErrNoDocuments {
 			// User not found
-			return c.Status(400).JSON(fiber.Map{
-				"success": false,
-				"message": "User not found",
-				"error":   map[string]interface{}{},
-			})
+			return nil, fmt.Errorf("user not found")
+
 		} else {
 			// Some other error occurred
-			return c.Status(fiber.StatusInternalServerError).SendString("Error checking email")
+			return nil, fmt.Errorf("error checking user: %v", err)
 		}
+	}
+
+	return &user, nil
+}
+
+func ValidateUserAuth(c *fiber.Ctx) error {
+	user, err := GetAuthenticatedUser(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.JSON(user)

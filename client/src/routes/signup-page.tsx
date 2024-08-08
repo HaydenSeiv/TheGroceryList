@@ -8,7 +8,6 @@ export default function SignUpPage() {
   return (
     <Stack>
       <Toaster position="bottom-right" />
-      <Navbar />
       <SignUpForm />
     </Stack>
   );

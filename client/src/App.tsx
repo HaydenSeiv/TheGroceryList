@@ -8,6 +8,7 @@ import React from "react";
 import UserList from "./routes/user-list";
 import SignUpPage from "./routes/signup-page";
 import { Toaster } from "react-hot-toast";
+import UserLists from "./routes/user-lists";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="list/" element={<UserList />} />
         <Route path="/signup/" element={<SignUpPage />} />
+        <Route path="/userlists/" element={<UserLists />} />
       </Routes>
     </>
   );

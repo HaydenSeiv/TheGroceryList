@@ -12,7 +12,6 @@ export default function LoginPage() {
   return (
     <Stack direction={`column`}>
       <Toaster position="bottom-right" />
-      <Navbar />
       <LoginForm />
     </Stack>
   );

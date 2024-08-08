@@ -11,6 +11,7 @@ import UserList from "./routes/user-list.tsx";
 import LoginPage from "./routes/login-Page.tsx";
 import SignUpPage from "./routes/signup-page.tsx";
 import { Toaster } from "react-hot-toast";
+import UserLists from "./routes/user-lists.tsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const BASE_URL =
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/signup/",
     element: <SignUpPage />,
+  },
+  {
+    path: "/userlists/",
+    element: <UserLists />,
   },
 ]);
 
