@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -15,9 +16,19 @@ import (
 func GetLists(c *fiber.Ctx) error {
 	var lists []models.List
 
+	//Get current user
+	//assign signed in userID
+	user, err := GetAuthenticatedUser(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	filter := bson.M{"_userId": user.UserId}
+	//filter := bson.M{}
+
 	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
 	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
-	cursor, err := models.ListCollection.Find(context.Background(), bson.M{})
+	cursor, err := models.ListCollection.Find(context.Background(), filter)
 
 	if err != nil {
 		log.Fatal(err)
@@ -56,6 +67,18 @@ func CreateList(c *fiber.Ctx) error {
 
 	list.DateCreated = time.Now()
 
+	//assign signed in userID
+	user, err := GetAuthenticatedUser(c)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	fmt.Println(user.UserId)
+
+	list.UserId = user.UserId
+
+	fmt.Println(list.UserId)
+
 	//insert our list into our database collection
 	insertResult, err := models.ListCollection.InsertOne(context.Background(), list)
 	if err != nil {
@@ -64,14 +87,6 @@ func CreateList(c *fiber.Ctx) error {
 
 	//assign ID to the one created by database
 	list.ListId = insertResult.InsertedID.(primitive.ObjectID)
-
-	//assign signed in userID
-	user, err := GetAuthenticatedUser(c)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	list.UserId = user.UserId
 
 	//return success status if no errors triggered
 	return c.Status(201).JSON(list)

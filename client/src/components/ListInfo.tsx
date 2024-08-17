@@ -12,7 +12,8 @@ import { MdDelete } from "react-icons/md";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../main";
 import React, { useState } from "react";
-import { List } from "./ListOfLists.tsx";
+import { List } from "./ListOfLists";
+
 
 const ListInfo = ({ list }: { list: List }) => {
   const queryClient = useQueryClient();
