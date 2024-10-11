@@ -27,11 +27,12 @@ type List struct {
 
 // the users struct to hold user data
 type User struct {
-	UserId    primitive.ObjectID `json:"userId,omitempty" bson:"_id,omitempty"` //unique user ID referencing which user this list belongs too
-	FirstName string             `json:"firstName"`
-	LastName  string             `json:"lastName"`
-	Email     string             `json:"email"`
-	Password  string             `json:"password"`
+	UserId       primitive.ObjectID `json:"userId,omitempty" bson:"_id,omitempty"` //unique user ID referencing which user this list belongs too
+	FirstName    string             `json:"firstName"`
+	LastName     string             `json:"lastName"`
+	Email        string             `json:"email"`
+	Password     string             `json:"password"`
+	CurrentToken string             `json: "currentToken"`
 }
 
 var ItemCollection *mongo.Collection
