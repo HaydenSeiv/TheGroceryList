@@ -32,7 +32,7 @@ type User struct {
 	LastName     string             `json:"lastName"`
 	Email        string             `json:"email"`
 	Password     string             `json:"password"`
-	CurrentToken string             `json: "currentToken"`
+	CurrentToken string             `json:"currentToken"`
 }
 
 var ItemCollection *mongo.Collection

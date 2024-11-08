@@ -49,6 +49,9 @@ export default function LoginForm() {
         setEmail("");
         setPassword("");
 
+        // Store the token
+        localStorage.setItem('token', content.token);
+
         return content;
       } catch (error: any) {
         throw new Error(error);

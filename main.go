@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/HaydenSeiv/TheGroceryList/api"
+	"github.com/HaydenSeiv/TheGroceryList/api/middleware"
 	"github.com/HaydenSeiv/TheGroceryList/models"
 )
 
@@ -63,7 +64,7 @@ func main() {
 	if os.Getenv("ENV") != "production" {
 		app.Use(cors.New(cors.Config{
 			AllowOrigins:     "http://localhost:5173",
-			AllowHeaders:     "Origin, Content - Type, Accept",
+			AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 			AllowCredentials: true,
 		}))
 	}
@@ -84,9 +85,9 @@ func main() {
 	app.Post("/api/logout", api.Logout)
 
 	//assign the list handlers
-	app.Get("/api/lists", api.GetLists)
-	app.Post("/api/lists", api.CreateList)
-	app.Delete("/api/lists/:id", api.DeleteList)
+	app.Get("/api/lists", middleware.AuthRequired(), api.GetLists)
+	app.Post("/api/lists", middleware.AuthRequired(), api.CreateList)
+	app.Delete("/api/lists/:id", middleware.AuthRequired(), api.DeleteList)
 
 	//get the port from our enviro vars
 	port := os.Getenv("PORT")

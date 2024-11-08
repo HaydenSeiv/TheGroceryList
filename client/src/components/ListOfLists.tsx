@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { BASE_URL } from "../main";
 import ListInfo from "./ListInfo";
+import toast from "react-hot-toast";
 
 //the Item struct, matches "Item" design in both backend and database
 export type List = {
@@ -20,16 +21,25 @@ const ListOfLists = () => {
     //function to get items from backend and in turn database
     queryFn: async () => {
       try {
-        const res = await fetch(BASE_URL + "/lists");
-        const data = await res.json();
+        const res = await fetch(BASE_URL + "/lists", {
+          credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
         if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Failed to fetch lists");
         }
 
+        const data = await res.json();
         return data || [];
       } catch (error) {
-        console.log(error);
+        console.error('Error fetching lists:', error);
+        toast.error('Failed to fetch lists');
+        return [];
       }
     },
   });
@@ -41,12 +51,11 @@ const ListOfLists = () => {
           <Spinner size={"xl"} />
         </Flex>
       )}
-      {!isLoading && lists?.length === 0 && (
+      {!isLoading && (!lists || lists.length === 0) && (
         <Stack alignItems={"center"} gap="3">
           <Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
-            All items completed! 🤞
+            No lists found. Create your first list!
           </Text>
-          {/* <img src='/go.png' alt='Go logo' width={70} height={70} /> */}
         </Stack>
       )}
       <Stack gap={3}>

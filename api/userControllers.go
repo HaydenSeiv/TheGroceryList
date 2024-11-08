@@ -210,6 +210,21 @@ func LoginUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "could not login"})
 	}
 
+	// Update user's token in database
+	update := bson.M{
+		"$set": bson.M{
+			"currentToken": token,
+		},
+	}
+	_, updateErr := models.UserCollection.UpdateOne(
+		context.TODO(),
+		bson.M{"_id": user.UserId},
+		update,
+	)
+	if updateErr != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "could not update user token"})
+	}
+
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    token,
@@ -221,11 +236,24 @@ func LoginUser(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Login success",
+		"token":   token, // Send token back to client
 	})
 }
 
 func GetAuthenticatedUser(c *fiber.Ctx) (*models.User, error) {
 	cookie := c.Cookies("jwt")
+
+	// Also check Authorization header if cookie is not present
+	if cookie == "" {
+		authHeader := c.Get("Authorization")
+		if strings.HasPrefix(authHeader, "Bearer ") {
+			cookie = strings.TrimPrefix(authHeader, "Bearer ")
+		}
+	}
+
+	if cookie == "" {
+		return nil, fmt.Errorf("no authentication token provided")
+	}
 
 	token, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SecretKey), nil

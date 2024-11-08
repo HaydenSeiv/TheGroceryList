@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../main";
+import toast from "react-hot-toast";
 
 const CreateListForm = () => {
   //state hook to create a new list name
@@ -21,8 +22,11 @@ const CreateListForm = () => {
             //we send the new list title to the server and await for the response
             const res = await fetch(BASE_URL + "/lists", {
               method: "POST",
+              credentials: 'include',
               headers: {
                 "Content-Type": "application/json",
+                // If you're using Bearer token
+                "Authorization": `Bearer ${localStorage.getItem('token')}`
               },
               //update the body with JSON of new info
               body: JSON.stringify({

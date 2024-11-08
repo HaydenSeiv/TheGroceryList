@@ -13,10 +13,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../main";
 import React, { useState } from "react";
 import { List } from "./ListOfLists";
+import { useNavigate } from "react-router-dom";
 
 
 const ListInfo = ({ list }: { list: List }) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  //function to go to the selected list page onclick - user-list.tsx
+  const goToList = () => {
+    navigate(`/user-list/${list._id}`);
+  };
+
 
   //deleteList function
   const { mutate: deleteList, isPending: isDeleting } = useMutation({
@@ -55,6 +63,8 @@ const ListInfo = ({ list }: { list: List }) => {
         p={2}
         borderRadius={"lg"}
         justifyContent={"space-between"}
+
+        onClick={() => goToList() }
       >
         <Text>{list.listName}</Text>
       </Flex>

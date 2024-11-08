@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -20,9 +19,12 @@ func GetLists(c *fiber.Ctx) error {
 	//assign signed in userID
 	user, err := GetAuthenticatedUser(c)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
 	}
 
+	// Find all lists that belong to this user
 	filter := bson.M{"_userId": user.UserId}
 	//filter := bson.M{}
 
@@ -31,26 +33,22 @@ func GetLists(c *fiber.Ctx) error {
 	cursor, err := models.ListCollection.Find(context.Background(), filter)
 
 	if err != nil {
-		log.Fatal(err)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not fetch lists",
+		})
 	}
 
 	//defer postspones the excution of this code until the surronding function is complete
 	//in this case once we have the items we will close off the cursor (pointer)
 	defer cursor.Close(context.Background())
 
-	for cursor.Next(context.Background()) {
-		var list models.List
-
-		//Decode takes the JSON and turns it into a Go struct (unmarshal), if any errors such as null (nil) it will return err
-		if err := cursor.Decode(&list); err != nil {
-			return err
-		}
-
-		//if no errors, add item to the items array
-		lists = append(lists, list)
+	// Use the already declared lists slice
+	if err := cursor.All(context.Background(), &lists); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not decode lists",
+		})
 	}
 
-	//return the array
 	return c.JSON(lists)
 }
 func CreateList(c *fiber.Ctx) error {
