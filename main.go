@@ -70,7 +70,7 @@ func main() {
 	}
 
 	//assign the item handlers to their respective functions
-	app.Get("/api/items", api.GetItems)
+	app.Get("/api/items/:listId", api.GetItems)
 	app.Post("/api/items", api.CreateItem)
 	app.Patch("/api/items/:id", api.CompleteItem)
 	app.Patch("/api/itemsupdate/:id/:newTitle", api.UpdateItem)

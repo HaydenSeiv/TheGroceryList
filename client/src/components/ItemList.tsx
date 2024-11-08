@@ -14,16 +14,16 @@ export type Item = {
 	catID: number; 
 };
 
-const ItemList = () => {
+const ItemList = ({ listId }: { listId: string | undefined }) => {
 
 	//hook to get items from database in an array
     const {data:items, isLoading} = useQuery<Item[]>({
-        queryKey:["items"],
+        queryKey:["items", listId],
 
 		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
-                const res = await fetch(BASE_URL + "/items")
+                const res = await fetch(`${BASE_URL}/items/${listId}`)
                 const data = await res.json()				
 
                 if(!res.ok){

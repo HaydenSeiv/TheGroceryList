@@ -18,7 +18,8 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="list/" element={<UserList />} />
         <Route path="/signup/" element={<SignUpPage />} />
-        <Route path="/userlists/" element={<UserLists />} />
+        <Route path="/user-lists" element={<UserLists />} />
+        <Route path="/user-list/:listId" element={<UserList />} />
       </Routes>
     </>
   );

@@ -13,11 +13,11 @@ import (
 )
 
 func GetItems(c *fiber.Ctx) error {
+	listId := c.Params("listId")
 	var items []models.Item
-
 	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
 	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
-	cursor, err := models.ItemCollection.Find(context.Background(), bson.M{})
+	cursor, err := models.ItemCollection.Find(context.Background(), bson.M{"_listId": listId})
 
 	if err != nil {
 		log.Fatal(err)
@@ -50,26 +50,24 @@ func CreateItem(c *fiber.Ctx) error {
 		return err
 	}
 
-	//error handle a blank title
 	if item.Title == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Item title/name cannot be empty"})
 	}
+	if item.ListId == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "List ID cannot be empty"})
+	}
 
-	//insert our item into our database collection
 	insertResult, err := models.ItemCollection.InsertOne(context.Background(), item)
 	if err != nil {
 		return err
 	}
 
-	//assign ID to the one created by database
 	item.ID = insertResult.InsertedID.(primitive.ObjectID)
 
-	//return success status if no errors triggered
 	return c.Status(201).JSON(item)
 }
 
 func CompleteItem(c *fiber.Ctx) error {
-	//get the item id -- id is a json string, so we turn it into a type of "primitive" so mongoDB can use
 	id := c.Params("id")
 	objectID, err := primitive.ObjectIDFromHex(id)
 
@@ -77,21 +75,17 @@ func CompleteItem(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Invalid item ID"})
 	}
 
-	//filter items based off of ID
 	filter := bson.M{"_id": objectID}
 
-	//update item status to complete
 	update := []any{
 		bson.M{"$set": bson.M{"completed": bson.M{"$not": "$completed"}}}}
 
-	//push change to the database collection based off the filter and status update
 	_, err = models.ItemCollection.UpdateOne(context.Background(), filter, update)
 
 	if err != nil {
 		return err
 	}
 
-	//if no errors return status of success
 	return c.Status(200).JSON(fiber.Map{"success": true})
 }
 func UpdateItem(c *fiber.Ctx) error {

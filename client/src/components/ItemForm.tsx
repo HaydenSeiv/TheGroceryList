@@ -5,7 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../main";
 import React from "react";
 
-const ItemForm = () => {
+const ItemForm = ({ listId }: { listId: string | undefined }) => {
   //state hook to create a new item name
   const [newItem, setNewItem] = useState("");
 
@@ -70,6 +70,8 @@ const ItemForm = () => {
             title: newItem,
             category: newAisle,
             catID: newCatID,
+            listId,
+            completed: false
           }),
         });
         const data = await res.json();
@@ -89,7 +91,7 @@ const ItemForm = () => {
 
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items"] });
+      queryClient.invalidateQueries({ queryKey: ["items", listId] });
     },
 
     onError: (error: any) => {

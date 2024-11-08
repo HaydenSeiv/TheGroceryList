@@ -22,7 +22,7 @@ const ListInfo = ({ list }: { list: List }) => {
 
   //function to go to the selected list page onclick - user-list.tsx
   const goToList = () => {
-    navigate(`/user-list/${list._id}`);
+    navigate(`/user-list/${list.listId}`);
   };
 
 
@@ -63,6 +63,8 @@ const ListInfo = ({ list }: { list: List }) => {
         p={2}
         borderRadius={"lg"}
         justifyContent={"space-between"}
+
+        cursor={"pointer"}
 
         onClick={() => goToList() }
       >
