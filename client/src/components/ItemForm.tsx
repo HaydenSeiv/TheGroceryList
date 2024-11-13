@@ -58,6 +58,9 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
     //the mutation function is async. e is of type of Formevent
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
+      if (!listId) {
+        throw new Error("No list selected");
+      }
       try {
         //we send the new items title,Category and CatID to the server and await for the response
         const res = await fetch(BASE_URL + "/items", {

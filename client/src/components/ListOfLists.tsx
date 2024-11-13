@@ -35,6 +35,7 @@ const ListOfLists = () => {
         }
 
         const data = await res.json();
+
         return data || [];
       } catch (error) {
         console.error('Error fetching lists:', error);

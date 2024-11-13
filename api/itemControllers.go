@@ -13,7 +13,16 @@ import (
 )
 
 func GetItems(c *fiber.Ctx) error {
-	listId := c.Params("listId")
+
+	//Get current user
+	//assign signed in userID
+	list, err := GetAuthenticatedUser(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Unauthorized",
+		})
+	}
+
 	var items []models.Item
 	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
 	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer

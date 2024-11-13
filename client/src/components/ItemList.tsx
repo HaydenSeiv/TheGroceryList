@@ -3,6 +3,7 @@ import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { BASE_URL } from "../main";
+import toast from "react-hot-toast";
 
 //the Item struct, matches "Item" design in both backend and database
 export type Item = {
@@ -23,16 +24,26 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
-                const res = await fetch(`${BASE_URL}/items/${listId}`)
+                const res = await fetch(`${BASE_URL}/items/${listId}`, {          
+					credentials: 'include',
+					headers: {
+					  'Authorization': `Bearer ${localStorage.getItem('token')}`,
+						'Content-Type': 'application/json'
+					}
+
+				})
                 const data = await res.json()				
 
                 if(!res.ok){
-                    throw new Error(data.error || "Something went wrong")
+					const errorData = await res.json();
+					throw new Error(errorData.error || "Failed to fetch items");
                 }
 				
                 return data || []
             } catch (error) {
                 console.log(error)
+				toast.error('Failed to fetch lists');
+				return [];
             }
         }
     })

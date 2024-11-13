@@ -15,26 +15,29 @@ import React, { useState } from "react";
 import { List } from "./ListOfLists";
 import { useNavigate } from "react-router-dom";
 
-
 const ListInfo = ({ list }: { list: List }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   //function to go to the selected list page onclick - user-list.tsx
   const goToList = () => {
-    navigate(`/user-list/${list.listId}`);
+    navigate(`/list/${list.listId}`);
   };
-
 
   //deleteList function
   const { mutate: deleteList, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteList"],
     mutationFn: async () => {
       try {
-        //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
-        const res = await fetch(BASE_URL + `/list/${list.listId}`, {
-          method: "DELETE", //Delete handler in back end just deletes the entire item
+        const res = await fetch(BASE_URL + `/lists/${list.listId}`, {
+          method: "DELETE",
+          credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
         });
+        
         const data = await res.json();
 
         //if response is not ok, throw error
@@ -49,7 +52,7 @@ const ListInfo = ({ list }: { list: List }) => {
 
     //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items"] });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
     },
   });
 
@@ -63,10 +66,8 @@ const ListInfo = ({ list }: { list: List }) => {
         p={2}
         borderRadius={"lg"}
         justifyContent={"space-between"}
-
         cursor={"pointer"}
-
-        onClick={() => goToList() }
+        onClick={() => goToList()}
       >
         <Text>{list.listName}</Text>
       </Flex>
