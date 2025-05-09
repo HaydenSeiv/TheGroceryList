@@ -63,7 +63,7 @@ func main() {
 	//work around cors for dev on local machine
 	if os.Getenv("ENV") != "production" {
 		app.Use(cors.New(cors.Config{
-			AllowOrigins:     "http://localhost:5173",
+			AllowOrigins:     "http://localhost:5173,http://localhost:5174",
 			AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 			AllowCredentials: true,
 		}))
