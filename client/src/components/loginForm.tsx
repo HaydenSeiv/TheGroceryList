@@ -87,6 +87,7 @@ export default function LoginForm() {
           <FormControl isRequired>
             <FormLabel textAlign={"center"}>Password</FormLabel>
             <Input
+              type="password"
               placeholder="Password"
               onChange={(e) => {
                 setPassword(e.target.value);
