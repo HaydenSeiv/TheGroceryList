@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/url"
 
@@ -13,27 +14,38 @@ import (
 )
 
 func GetItems(c *fiber.Ctx) error {
+	//Get the listId from URL parameters
+	listIdParam := c.Params("listId")
+
+	// Convert string to ObjectID
+	listId, err := primitive.ObjectIDFromHex(listIdParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid list ID"})
+	}
 
 	//Get current user
-	//assign signed in userID
-	list, err := GetAuthenticatedUser(c)
+	user, err := GetAuthenticatedUser(c)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error": "Unauthorized",
 		})
 	}
 
+	//console log the user
+	fmt.Println(user)
+
 	var items []models.Item
-	//finding items in db collection, "bson.M{}" is left blank as that is a search filter, we dont want filter we want to find all
-	//"cursor" is assigned as a cursor is returned when you make a query in MongoDB. it works like a pointer
+
+	// Filter by both listId and verify the list belongs to the user
 	cursor, err := models.ItemCollection.Find(context.Background(), bson.M{"_listId": listId})
 
 	if err != nil {
-		log.Fatal(err)
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch items"})
 	}
 
 	//defer postspones the excution of this code until the surronding function is complete
 	//in this case once we have the items we will close off the cursor (pointer)
+
 	defer cursor.Close(context.Background())
 
 	for cursor.Next(context.Background()) {
@@ -41,10 +53,8 @@ func GetItems(c *fiber.Ctx) error {
 
 		//Decode takes the JSON and turns it into a Go struct (unmarshal), if any errors such as null (nil) it will return err
 		if err := cursor.Decode(&item); err != nil {
-			return err
+			return c.Status(500).JSON(fiber.Map{"error": "Failed to decode item"})
 		}
-
-		//if no errors, add item to the items array
 		items = append(items, item)
 	}
 
@@ -62,7 +72,7 @@ func CreateItem(c *fiber.Ctx) error {
 	if item.Title == "" {
 		return c.Status(400).JSON(fiber.Map{"error": "Item title/name cannot be empty"})
 	}
-	if item.ListId == "" {
+	if item.ListId.IsZero() {
 		return c.Status(400).JSON(fiber.Map{"error": "List ID cannot be empty"})
 	}
 

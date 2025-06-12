@@ -119,7 +119,6 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
             setNewAisle(e.target.value);
             setNewCatID(setCatID(e.target.value));
           }}
-          defaultValue="None"
           placeholder="Select Aisle"
         >
           <option value="Other">Other</option>
