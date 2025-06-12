@@ -27,6 +27,7 @@ type Item struct {
 
 var collection *mongo.Collection
 
+// stupid comment to test git
 func main() {
 	fmt.Println("Hello World")
 
