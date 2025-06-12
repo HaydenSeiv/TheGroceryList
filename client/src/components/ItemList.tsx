@@ -2,36 +2,48 @@ import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { BASE_URL } from "../App";
+import { BASE_URL } from "../main";
+import toast from "react-hot-toast";
 
 //the Item struct, matches "Item" design in both backend and database
 export type Item = {
-    _id: number;
+    id: string;
+	listId: string;
     title: string;
     completed: boolean;
 	category: string;
 	catID: number; 
 };
 
-const ItemList = () => {
+const ItemList = ({ listId }: { listId: string | undefined }) => {
 
 	//hook to get items from database in an array
     const {data:items, isLoading} = useQuery<Item[]>({
-        queryKey:["items"],
+        queryKey:["items", listId],
 
 		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
-                const res = await fetch(BASE_URL + "/items")
+                const res = await fetch(`${BASE_URL}/items/${listId}`, {          
+					credentials: 'include',
+					headers: {
+					  'Authorization': `Bearer ${localStorage.getItem('token')}`,
+						'Content-Type': 'application/json'
+					}
+
+				})
                 const data = await res.json()				
 
                 if(!res.ok){
-                    throw new Error(data.error || "Something went wrong")
+					const errorData = await res.json();
+					throw new Error(errorData.error || "Failed to fetch items");
                 }
 				
                 return data || []
             } catch (error) {
                 console.log(error)
+				toast.error('Failed to fetch lists');
+				return [];
             }
         }
     })
@@ -63,7 +75,7 @@ const ItemList = () => {
 			)}
 			<Stack gap={3}>
 				{items?.map((item) => (
-					<ListItem key={item._id} item={item} />
+					<ListItem key={item.id} item={item} />
 				))}
 			</Stack>
 		</>

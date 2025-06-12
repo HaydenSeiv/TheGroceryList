@@ -2,10 +2,10 @@ import { Button, Flex, Input, Spinner, Select } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { BASE_URL } from "../App";
+import { BASE_URL } from "../main";
 import React from "react";
 
-const ItemForm = () => {
+const ItemForm = ({ listId }: { listId: string | undefined }) => {
   //state hook to create a new item name
   const [newItem, setNewItem] = useState("");
 
@@ -58,6 +58,9 @@ const ItemForm = () => {
     //the mutation function is async. e is of type of Formevent
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
+      if (!listId) {
+        throw new Error("No list selected");
+      }
       try {
         //we send the new items title,Category and CatID to the server and await for the response
         const res = await fetch(BASE_URL + "/items", {
@@ -70,6 +73,8 @@ const ItemForm = () => {
             title: newItem,
             category: newAisle,
             catID: newCatID,
+            listId,
+            completed: false
           }),
         });
         const data = await res.json();
@@ -89,7 +94,7 @@ const ItemForm = () => {
 
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items"] });
+      queryClient.invalidateQueries({ queryKey: ["items", listId] });
     },
 
     onError: (error: any) => {
@@ -114,7 +119,6 @@ const ItemForm = () => {
             setNewAisle(e.target.value);
             setNewCatID(setCatID(e.target.value));
           }}
-          defaultValue="None"
           placeholder="Select Aisle"
         >
           <option value="Other">Other</option>

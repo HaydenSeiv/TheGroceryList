@@ -11,7 +11,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Item } from "./ItemList.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../App";
+import { BASE_URL } from "../main";
 import React, { useState } from "react";
 
 const ListItem = ({ item }: { item: Item }) => {
