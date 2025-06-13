@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello World")
+	fmt.Println("Hello, The Grocery List")
 
 	//if not in production - load our .env file with envirment variables, if there is an error kill program
 	if os.Getenv("ENV") != "production" {
