@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -17,7 +18,13 @@ import (
 	"github.com/HaydenSeiv/TheGroceryList/pkg"
 )
 
-const SecretKey = "secret"
+var SecretKey = func() string {
+	key := os.Getenv("JWT_SECRET_KEY")
+	if key == "" {
+		log.Fatal("JWT_SECRET_KEY environment variable is required")
+	}
+	return key
+}()
 
 func CreateUser(c *fiber.Ctx) error {
 	user := new(models.User)
