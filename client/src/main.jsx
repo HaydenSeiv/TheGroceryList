@@ -15,7 +15,7 @@ import UserLists from "./routes/user-lists.tsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const BASE_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:4000/api" : "/api";
+  import.meta.env.MODE === "development" ? "http://localhost:3999/api" : "/api";
 
 const queryClient = new QueryClient();
 
