@@ -9,10 +9,10 @@ public class User
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
-    [BsonElement("firstName")]
+    [BsonElement("firstname")]
     public required string FirstName { get; set; }
 
-    [BsonElement("lastName")]
+    [BsonElement("lastname")]
     public required string LastName { get; set; }
 
     [BsonElement("email")]

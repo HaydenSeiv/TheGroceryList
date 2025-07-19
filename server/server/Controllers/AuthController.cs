@@ -22,6 +22,7 @@ public class AuthController : ControllerBase
         {
             Console.WriteLine("Attempting to log user in");
             var result = await _userService.LoginAsync(loginDto);
+            Console.WriteLine($"log in Result: {result}");
             
             // Set HTTP-only cookie (equivalent to Go's cookie setting)
             var cookieOptions = new CookieOptions
@@ -33,11 +34,13 @@ public class AuthController : ControllerBase
             };
             
             Response.Cookies.Append("jwt", result!.Token, cookieOptions);
-            
+
+            Console.WriteLine("Login Success");
             return Ok(result);
         }
         catch (UnauthorizedAccessException ex)
         {
+            Console.WriteLine("Login Failed: UnauthorizedAccessException --" + ex.Message);
             return BadRequest(new ApiResponse
             {
                 Success = false,
@@ -47,6 +50,7 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.WriteLine("Login Failed " + ex.Message);
             return StatusCode(500, new ApiResponse
             {
                 Success = false,

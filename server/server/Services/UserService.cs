@@ -95,14 +95,24 @@ public class UserService : IUserService
 
     public async Task<LoginResponseDto?> LoginAsync(LoginDto loginDto)
     {
+        Console.WriteLine("Inside LoginAsync");
         var email = loginDto.Email.ToLowerInvariant();
         var user = await _context.Users.Find(u => u.Email == email).FirstOrDefaultAsync();
+        Console.WriteLine("User retrieved");
 
         if (user == null)
+        {
+            Console.WriteLine("LoginAsync Threw, user null");
             throw new UnauthorizedAccessException("Email not found, please create account");
+        }
+
 
         if (!_passwordService.VerifyPassword(loginDto.Password, user.Password))
+        {
+            Console.WriteLine("LoginAsync Threw, user null");
             throw new UnauthorizedAccessException("Incorrect password");
+        }
+
 
         // Generate JWT token
         var token = _jwtService.GenerateToken(user.Id!);
