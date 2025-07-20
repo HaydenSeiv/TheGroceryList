@@ -3,6 +3,17 @@
 node_modules
 manualAPIcode.txt
 
+# Visual Studio / .NET
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+*.dll
+*.pdb
+
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a

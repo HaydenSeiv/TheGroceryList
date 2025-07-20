@@ -39,7 +39,6 @@ const ListOfLists = () => {
         return data || [];
       } catch (error) {
         console.error('Error fetching lists:', error);
-        toast.error('Failed to fetch lists');
         return [];
       }
     },
