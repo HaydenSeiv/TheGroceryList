@@ -59,12 +59,9 @@ public class ListsController : ControllerBase
     {
         try
         {
-            Console.WriteLine("Inside Create List");
             var userId = GetCurrentUserId();
-            Console.WriteLine($"Current User Id: {userId}");
             if (userId == null)
             {
-                Console.WriteLine("User ID is null. Returning Unauthorized");
                 return Unauthorized(new ApiResponse
                 {
                     Success = false,
@@ -73,9 +70,7 @@ public class ListsController : ControllerBase
                 });
             }
 
-            Console.WriteLine("User Authorized, Creating List");
             var list = await _listService.CreateListAsync(userId, createListDto);
-            Console.WriteLine("List Successfully Created");
 
             return CreatedAtAction(nameof(GetLists), new { id = list?.Id }, list);
         }
