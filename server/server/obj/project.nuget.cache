@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PHVQJiFHBmRYH+xVZiXkRsqxFJazwA59xS7WT0NFkB3HMqCufi8pcZG8WWYpMIlp6hXJsFcx1HRq4eLmwa8b2Q==",
+  "dgSpecHash": "J38kZoXOKwKZ43ATpmnHGKRFebw0CdlxJrSWtfkquCT1h2K7hW6qZ9wCYS++VGJZxpwYmXR99a+mdxyTWP+Y1g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The_Grocery_List_rewrite\\server\\server\\server.csproj",
+  "projectFilePath": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The Grocery List\\server\\server\\server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hseiv\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\hseiv\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",

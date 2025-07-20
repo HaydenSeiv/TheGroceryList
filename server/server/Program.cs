@@ -49,7 +49,7 @@ builder.Services.AddControllers();
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
-var secretKey = jwtSettings?.SecretKey ?? Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? jwtSettings?.SecretKey;
 
 if (string.IsNullOrEmpty(secretKey))
 {

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The_Grocery_List_rewrite\\server\\server\\server.csproj": {}
+    "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The Grocery List\\server\\server\\server.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The_Grocery_List_rewrite\\server\\server\\server.csproj": {
+    "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The Grocery List\\server\\server\\server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The_Grocery_List_rewrite\\server\\server\\server.csproj",
+        "projectUniqueName": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The Grocery List\\server\\server\\server.csproj",
         "projectName": "server",
-        "projectPath": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The_Grocery_List_rewrite\\server\\server\\server.csproj",
+        "projectPath": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The Grocery List\\server\\server\\server.csproj",
         "packagesPath": "C:\\Users\\hseiv\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The_Grocery_List_rewrite\\server\\server\\obj\\",
+        "outputPath": "C:\\Users\\hseiv\\Desktop\\Work\\Projects\\The Grocery List\\server\\server\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
