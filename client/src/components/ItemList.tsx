@@ -23,7 +23,6 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
-				console.log('inside ItemList about to get items. listId: ', listId);
                 const res = await fetch(`${BASE_URL}/items/${listId}`, {          
 					credentials: 'include',
 					headers: {

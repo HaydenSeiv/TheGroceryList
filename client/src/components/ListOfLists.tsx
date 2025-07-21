@@ -35,7 +35,6 @@ const ListOfLists = () => {
         }
 
         const data = await res.json();
-        console.log('ListOfLists returned data', data);
 
         return data || [];
       } catch (error) {
@@ -61,7 +60,6 @@ const ListOfLists = () => {
       )}
       <Stack gap={3}>
         {lists?.map((list) => (
-          console.log('list.id inside ListOfLists map: ', list.id),
           <ListInfo key={list.id} list={list} />
         ))}
       </Stack>

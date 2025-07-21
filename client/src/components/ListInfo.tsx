@@ -20,7 +20,6 @@ const ListInfo = ({ list }: { list: List }) => {
   const navigate = useNavigate();
 
   //function to go to the selected list page onclick - user-list.tsx
-  console.log('list.id', list.id);
   const goToList = () => {
     navigate(`/list/${list.id}`);
   };
