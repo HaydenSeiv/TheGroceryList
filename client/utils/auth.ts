@@ -1,4 +1,5 @@
 export function isAuthenticated(): boolean {
+    console.log('inside isAuthenticated');
     const token = localStorage.getItem('token');
     if (!token) return false;
     
@@ -15,7 +16,7 @@ export function isAuthenticated(): boolean {
             localStorage.removeItem('token'); // Clean up expired token
             return false;
         }
-        
+        console.log('token is valid');
         return true;
     } catch {
         localStorage.removeItem('token'); // Clean up invalid token

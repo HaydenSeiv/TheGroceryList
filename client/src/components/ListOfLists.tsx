@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 //the Item struct, matches "Item" design in both backend and database
 export type List = {
-  listId: string;
+  id: string;
   userId: string;
   listName: string;
   dateCreated: string;
@@ -35,6 +35,7 @@ const ListOfLists = () => {
         }
 
         const data = await res.json();
+        console.log('ListOfLists returned data', data);
 
         return data || [];
       } catch (error) {
@@ -60,7 +61,8 @@ const ListOfLists = () => {
       )}
       <Stack gap={3}>
         {lists?.map((list) => (
-          <ListInfo key={list.listId} list={list} />
+          console.log('list.id inside ListOfLists map: ', list.id),
+          <ListInfo key={list.id} list={list} />
         ))}
       </Stack>
     </>

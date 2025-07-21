@@ -20,8 +20,9 @@ const ListInfo = ({ list }: { list: List }) => {
   const navigate = useNavigate();
 
   //function to go to the selected list page onclick - user-list.tsx
+  console.log('list.id', list.id);
   const goToList = () => {
-    navigate(`/list/${list.listId}`);
+    navigate(`/list/${list.id}`);
   };
 
   //deleteList function
@@ -29,7 +30,7 @@ const ListInfo = ({ list }: { list: List }) => {
     mutationKey: ["deleteList"],
     mutationFn: async () => {
       try {
-        const res = await fetch(BASE_URL + `/lists/${list.listId}`, {
+          const res = await fetch(BASE_URL + `/lists/${list.id}`, {
           method: "DELETE",
           credentials: 'include',
           headers: {

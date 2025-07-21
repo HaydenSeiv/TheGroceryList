@@ -20,10 +20,10 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 	//hook to get items from database in an array
     const {data:items, isLoading} = useQuery<Item[]>({
         queryKey:["items", listId],
-
 		//function to get items from backend and in turn database
         queryFn: async () => {
             try {
+				console.log('inside ItemList about to get items. listId: ', listId);
                 const res = await fetch(`${BASE_URL}/items/${listId}`, {          
 					credentials: 'include',
 					headers: {
@@ -42,7 +42,6 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
                 return data || []
             } catch (error) {
                 console.log(error)
-				toast.error('Failed to fetch lists');
 				return [];
             }
         }
