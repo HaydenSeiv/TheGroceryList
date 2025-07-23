@@ -24,15 +24,17 @@ const ListItem = ({ item }: { item: Item }) => {
   const { mutate: completeItem, isPending: isCompleting } = useMutation({
     mutationKey: ["completeItem"],
     mutationFn: async () => {
+      const token = localStorage.getItem('token');
       try {
         //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
         const res = await fetch(BASE_URL + `/items/${item.id}`, {
           method: "PATCH", //using patch to update, our PATCH handler in backend auto marks as completed
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
         });
-
         //data is assigned the returned json
         const data = await res.json();
-
         //if response is not ok, throw error
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
@@ -52,10 +54,14 @@ const ListItem = ({ item }: { item: Item }) => {
   const { mutate: updateItem, isPending: isupdating } = useMutation({
     mutationKey: ["updateItem"],
     mutationFn: async (updatedTitle: string | null) => {
+      const token = localStorage.getItem('token');
       try {
         //send the route we want with our ID info and the newtitle info using the PATCH hanlder in our backend
-        const res = await fetch(BASE_URL + `/itemsupdate/${item.id}/${updatedTitle}`, {
+        const res = await fetch(BASE_URL + `/items/itemsupdate/${item.id}/${updatedTitle}`, {
           method: "PATCH", //using patch to update
+          headers: {
+            "Authorization": `Bearer ${token}`,
+          },
         });
 
         //data is assigned the returned json
@@ -114,9 +120,13 @@ const ListItem = ({ item }: { item: Item }) => {
     mutationFn: async () => {
       if (item.completed)
         try {
+          const token = localStorage.getItem('token');
           //get item from db, for some reason it works with ".id" which is how it is in backend and not "._id" which is what is used in database and Item struct
           const res = await fetch(BASE_URL + `/items/${item.id}`, {
             method: "DELETE", //Delete handler in back end just deletes the entire item
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            },  
           });
           const data = await res.json();
 

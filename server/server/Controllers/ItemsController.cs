@@ -71,7 +71,6 @@ public class ItemsController : ControllerBase
                     Error = new Dictionary<string, object>()
                 });
             }
-
             var item = await _itemService.CreateItemAsync(createItemDto, userId);
             return CreatedAtAction(nameof(GetItems), new { listId = item?.ListId }, item);
         }

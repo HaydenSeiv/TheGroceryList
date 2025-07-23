@@ -99,7 +99,6 @@ public class ItemService : IItemService
 
         var update = Builders<Item>.Update.Set(i => i.Title, decodedTitle);
         var result = await _context.Items.UpdateOneAsync(i => i.Id == itemId, update);
-        
         return result.ModifiedCount > 0;
     }
 

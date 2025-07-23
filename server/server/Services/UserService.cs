@@ -130,13 +130,13 @@ public class UserService : IUserService
 
     public async Task<UserResponseDto?> GetAuthenticatedUserAsync(string token)
     {
-        Console.WriteLine("🔵 GetAuthenticatedUserAsync called");
+        
         var userId = _jwtService.GetUserIdFromToken(token);
-        Console.WriteLine($"🟡 User ID: {userId}");
+        
         if (userId == null) return null;
 
         var user = await _context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
-        Console.WriteLine($"🟢 User: {user}");
+        
         if (user == null) return null;
 
         return new UserResponseDto

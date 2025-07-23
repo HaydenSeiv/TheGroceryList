@@ -62,11 +62,13 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
         throw new Error("No list selected");
       }
       try {
+        const token = localStorage.getItem('token');
         //we send the new items title,Category and CatID to the server and await for the response
         const res = await fetch(BASE_URL + "/items", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           //update the body with JSON of new info
           body: JSON.stringify({
@@ -78,7 +80,6 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
           }),
         });
         const data = await res.json();
-
         //if response not ok, throw error
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
