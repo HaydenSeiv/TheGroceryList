@@ -21,8 +21,8 @@ function App() {
         <Route path="/signup/" element={<SignUpPage />} />
         {/* <Route path="/user-lists" element={<UserLists />} />
         <Route path="/UserList/" element={<UserList />} /> */}
-        <Route path="/user-lists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
-        <Route path="/list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
+        <Route path="/userlists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
+        <Route path="list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       </Routes>
     </>
   );
