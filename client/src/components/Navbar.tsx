@@ -21,8 +21,8 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-    //used to toggle between light and dark mode
-	const { colorMode, toggleColorMode } = useColorMode();
+  //used to toggle between light and dark mode
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const { mutate: logoutUser, isPending: isLoggingout } = useMutation({
     mutationKey: ["logoutUser"],
@@ -33,7 +33,7 @@ export default function Navbar() {
         const res = await fetch(BASE_URL + `/logout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",          
+          credentials: "include",
         });
         const content = await res.json();
 
@@ -49,18 +49,21 @@ export default function Navbar() {
     },
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
-		queryClient.invalidateQueries({ queryKey: ["logoutUser"] });
-		setTimeout(() => {
-		  toast.success(
-			"Account logged Out succesfully, you will now be redirected to Home"
-		  );
-		}, 2);
-		navigate("/");
-	  },
-  
-	  onError: (error: any) => {
-		toast.error("Log out failed");
-	  },})
+      //remove token from local storage
+      localStorage.removeItem("token");
+      queryClient.invalidateQueries({ queryKey: ["logoutUser"] });
+      setTimeout(() => {
+        toast.success(
+          "Account logged Out succesfully, you will now be redirected to Home"
+        );
+      }, 2);
+      navigate("/");
+    },
+
+    onError: (error: any) => {
+      toast.error("Log out failed");
+    },
+  });
 
   return (
     <Container maxW={"900px"}>
@@ -82,10 +85,12 @@ export default function Navbar() {
             <Button
               mx={2}
               _active={{
-                transform: "scale(.97)",				
-              }}     
-			  onClick={logoutUser}         
-            >Logout</Button>
+                transform: "scale(.97)",
+              }}
+              onClick={logoutUser}
+            >
+              Logout
+            </Button>
           </Flex>
         </Flex>
       </Box>
