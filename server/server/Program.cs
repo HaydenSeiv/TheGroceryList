@@ -78,7 +78,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? 
-            new[] { "http://localhost:5172", "http://localhost:5174" };
+            new[] { "http://localhost:5172", "http://localhost:5174", "https://the-grocery-list.vercel.app" };
 
         policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
@@ -126,4 +126,5 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "3999";
 Console.WriteLine("Hello, The Grocery List ASP.NET API");
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
-app.Run($"http://0.0.0.0:{port}"); 
+//app.Run($"http://0.0.0.0:{port}"); 
+app.Run(); 
