@@ -79,9 +79,9 @@ export default function Navbar() {
               The Grocery List
             </Text>
             {/* Toggle Color Mode */}
-            <Button onClick={toggleColorMode}>
+            {/* <Button onClick={toggleColorMode}>
               {colorMode === "light" ? <IoMoon /> : <LuSun size={20} />}
-            </Button>
+            </Button> */}
             <Button
               mx={2}
               _active={{

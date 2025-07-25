@@ -50,7 +50,7 @@ export default function SignUpForm() {
       try {
         if (!passwordsMatch) {
           toast.error("Passwords do not match");
-          return;
+          throw new Error("Passwords do not match");
         }
         //we send the new items title,Category and CatID to the server and await for the response
         const res = await fetch(BASE_URL + "/users", {
@@ -92,10 +92,6 @@ export default function SignUpForm() {
       setTimeout(() => {
         toast.success("Account created succesfully, you will now be redirected to log in")}, 2);
       navigate("/");
-    },
-
-    onError: (error: any) => {
-      toast.error("An Account with that email already exists");
     },
   });
   return (
@@ -144,7 +140,7 @@ export default function SignUpForm() {
             <FormLabel textAlign={"center"}>Confirm Password</FormLabel>
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="Confirm Password"
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}
