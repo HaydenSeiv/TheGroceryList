@@ -29,6 +29,13 @@ export default function SignUpForm() {
   //state hook to asign new email
   const [newPassword, setNewPassword] = useState("");
 
+  //state hook to confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  //state hook to check if passwords match
+  const passwordsMatch = newPassword === confirmPassword && confirmPassword !== "";
+  const showPasswordError = confirmPassword !== "" && !passwordsMatch;
+
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
@@ -41,6 +48,10 @@ export default function SignUpForm() {
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       try {
+        if (!passwordsMatch) {
+          toast.error("Passwords do not match");
+          return;
+        }
         //we send the new items title,Category and CatID to the server and await for the response
         const res = await fetch(BASE_URL + "/users", {
           method: "POST",
@@ -67,6 +78,7 @@ export default function SignUpForm() {
         setNewLastName("");
         setNewEmail("");
         setNewPassword("");
+        setConfirmPassword("");
 
         return data;
       } catch (error: any) {
@@ -127,7 +139,17 @@ export default function SignUpForm() {
                 setNewPassword(e.target.value);
               }}
             />
-          </FormControl>
+          </FormControl>          
+          <FormControl isRequired isInvalid={showPasswordError}>
+            <FormLabel textAlign={"center"}>Confirm Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Password"
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
+            />
+          </FormControl>  
 
           <Box
             display="flex"
