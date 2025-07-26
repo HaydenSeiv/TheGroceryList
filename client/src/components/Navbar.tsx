@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BASE_URL } from "../main";
 import toast from "react-hot-toast";
 
@@ -20,6 +20,10 @@ export default function Navbar() {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
+
+  //get location and check if on list page for back button
+  const location = useLocation();
+  const isOnListPage = location.pathname.startsWith("/list/");
 
   //used to toggle between light and dark mode
   const { colorMode, toggleColorMode } = useColorMode();
@@ -73,15 +77,32 @@ export default function Navbar() {
         my={4}
         borderRadius={"5"}
       >
-        <Flex h={16} alignItems={"center"} justifyContent={"center"}>
-          <Flex alignItems={"center"} gap={3}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          {/* Left section */}
+          <Box flex="1">
+            {/* Empty or put back button here if you want it on the left */}
+          </Box>
+
+          {/* Center section */}
+          <Box flex="1" textAlign="center">
             <Text fontSize={"lg"} fontWeight={500}>
               The Grocery List
             </Text>
-            {/* Toggle Color Mode */}
-            {/* <Button onClick={toggleColorMode}>
-              {colorMode === "light" ? <IoMoon /> : <LuSun size={20} />}
-            </Button> */}
+          </Box>
+
+          {/* Right section */}
+          <Box flex="1" display="flex" justifyContent="flex-end" gap={3}>
+          {isOnListPage && (
+              <Button
+                mx={2}
+                _active={{
+                  transform: "scale(.97)",
+                }}
+                onClick={() => navigate("/userlists")}
+              >
+                Back to Lists
+              </Button>
+            )}
             <Button
               mx={2}
               _active={{
@@ -91,7 +112,7 @@ export default function Navbar() {
             >
               Logout
             </Button>
-          </Flex>
+          </Box>
         </Flex>
       </Box>
     </Container>
