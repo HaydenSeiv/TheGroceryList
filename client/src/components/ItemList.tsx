@@ -52,7 +52,7 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 
 	return (
 		<>
-			<Text fontSize={"4xl"} textTransform={"uppercase"} fontWeight={"bold"} textAlign={"center"} my={2}
+			<Text fontSize={"xl"} textTransform={"uppercase"} fontWeight={"bold"} textAlign={"center"} my={2}
             bgGradient='linear(to-l, #0b85f8, #00ffff)'
             bgClip='text'
             >
