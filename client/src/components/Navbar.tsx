@@ -85,7 +85,7 @@ export default function Navbar() {
 
           {/* Center section */}
           <Box flex="1" textAlign="center">
-            <Text fontSize={"lg"} fontWeight={500}>
+            <Text fontSize={"2xl"} fontWeight={"bold"}  color={"green.600"} textTransform={"uppercase"}>
               The Grocery List
             </Text>
           </Box>

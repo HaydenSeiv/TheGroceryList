@@ -11,70 +11,71 @@ const CreateListForm = () => {
 
   const queryClient = useQueryClient();
 
-    //createList function to update backend - uses TanStack useMutation hook
-    const { mutate: createList, isPending: isCreating } = useMutation({
-        mutationKey: ["createList"],
-    
-        //the mutation function is async. e is of type of Formevent
-        mutationFn: async (e: React.FormEvent) => {
-          console.log("🔵 Mutation function called");
-          e.preventDefault();
-          console.log("🟢 preventDefault called");
-          try {
-            console.log("🚀 About to make fetch request");
-            //we send the new list title to the server and await for the response
-            const res = await fetch(BASE_URL + "/lists", {
-              method: "POST",
-              credentials: 'include',
-              headers: {
-                "Content-Type": "application/json",
-                // If you're using Bearer token
-                "Authorization": `Bearer ${localStorage.getItem('token')}`
-              },
-              //update the body with JSON of new info
-              body: JSON.stringify({
-                listName: newList,
-              }),
-            });
-            const data = await res.json();
-    
-            //if response not ok, throw error
-            if (!res.ok) {
-              throw new Error(data.error || "Something went wrong");
-            }
-    
-            //reset the input box to be blank
-            setNewList("");
-            return data;
-          } catch (error: any) {
-            throw new Error(error);
-          }
-        },
-            //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
+  //createList function to update backend - uses TanStack useMutation hook
+  const { mutate: createList, isPending: isCreating } = useMutation({
+    mutationKey: ["createList"],
+
+    //the mutation function is async. e is of type of Formevent
+    mutationFn: async (e: React.FormEvent) => {
+      console.log("🔵 Mutation function called");
+      e.preventDefault();
+      console.log("🟢 preventDefault called");
+      try {
+        console.log("🚀 About to make fetch request");
+        //we send the new list title to the server and await for the response
+        const res = await fetch(BASE_URL + "/lists", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            // If you're using Bearer token
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          //update the body with JSON of new info
+          body: JSON.stringify({
+            listName: newList,
+          }),
+        });
+        const data = await res.json();
+
+        //if response not ok, throw error
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+
+        //reset the input box to be blank
+        setNewList("");
+        return data;
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
+    //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["lists"] });
-      },
-  
-      onError: (error: any) => {
-        alert(error.message);
-      },
-    });
+      queryClient.invalidateQueries({ queryKey: ["lists"] });
+    },
+
+    onError: (error: any) => {
+      alert(error.message);
+    },
+  });
 
   return (
     <>
       <Text
-        fontSize={"4xl"}
+        fontSize={"xl"}
         textTransform={"uppercase"}
         fontWeight={"bold"}
         textAlign={"center"}
         my={2}
-        bgGradient="linear(to-l, #0b85f8, #00ffff)"
-        bgClip="text"
+        color={"gray.500"}
+        //bgGradient="linear(to-l, #0b85f8, #00ffff)"
+        //bgClip="text"
       >
-        Grocery Lists
+        Create a New List
       </Text>
       <form onSubmit={createList}>
-        <Flex gap={2}>
+        <Flex gap={2} my={2} justifyContent={"center"}>
           <Input
             type="text"
             value={newList}

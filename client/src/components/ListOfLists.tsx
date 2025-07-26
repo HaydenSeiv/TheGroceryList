@@ -22,11 +22,11 @@ const ListOfLists = () => {
     queryFn: async () => {
       try {
         const res = await fetch(BASE_URL + "/lists", {
-          credentials: 'include',
+          credentials: "include",
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         });
 
         if (!res.ok) {
@@ -38,7 +38,7 @@ const ListOfLists = () => {
 
         return data || [];
       } catch (error) {
-        console.error('Error fetching lists:', error);
+        console.error("Error fetching lists:", error);
         return [];
       }
     },
@@ -51,6 +51,23 @@ const ListOfLists = () => {
           <Spinner size={"xl"} />
         </Flex>
       )}
+      <Text
+        fontSize={"xl"}
+        textTransform={"uppercase"}
+        fontWeight={"bold"}
+        textAlign={"center"}
+        my={2}
+        color={"gray.500"}
+        //bgGradient="linear(to-l, #0b85f8, #00ffff)"
+        //bgClip="text"
+        borderBottom="2px solid"
+        borderColor="gray.500"
+        pb={1}  // Padding bottom for spacing between text and line
+
+      >
+        Your Lists
+      </Text>
+      
       {!isLoading && (!lists || lists.length === 0) && (
         <Stack alignItems={"center"} gap="3">
           <Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
