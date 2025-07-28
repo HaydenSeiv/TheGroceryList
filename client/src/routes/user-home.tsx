@@ -5,6 +5,7 @@ import ItemForm from '../components/ItemForm'
 import ItemList from '../components/ItemList';
 import { Toaster } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
+import HomeMenu from '../components/homeMenu';
 
 export default function UserHome() {
        
@@ -14,6 +15,8 @@ export default function UserHome() {
       <Navbar />
       <Toaster position="bottom-right" />
         <Container>
+            {/* TODO: Add user home components here */}
+            <HomeMenu />
         </Container>
     </Stack>
   );

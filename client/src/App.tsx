@@ -10,6 +10,8 @@ import SignUpPage from "./routes/signup-page";
 import { Toaster } from "react-hot-toast";
 import UserLists from "./routes/user-lists";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UserHome from "./routes/user-home";
+import StoreLayout from "./routes/store-layout";
 
 function App() {
   return (
@@ -19,8 +21,8 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="list/" element={<UserList />} />
         <Route path="/signup/" element={<SignUpPage />} />
-        {/* <Route path="/user-lists" element={<UserLists />} />
-        <Route path="/UserList/" element={<UserList />} /> */}
+        <Route path="/user-home" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
+        <Route path="/store-layout" element={<ProtectedRoute><StoreLayout /></ProtectedRoute>} />
         <Route path="/userlists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
         <Route path="list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       </Routes>

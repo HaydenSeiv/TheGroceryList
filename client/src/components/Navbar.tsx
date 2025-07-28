@@ -23,7 +23,7 @@ export default function Navbar() {
 
   //get location and check if on list page for back button
   const location = useLocation();
-  const isOnListPage = location.pathname.startsWith("/list/");
+  const isOnHomePage = location.pathname.startsWith("/user-home");
 
   //used to toggle between light and dark mode
   const { colorMode, toggleColorMode } = useColorMode();
@@ -92,15 +92,15 @@ export default function Navbar() {
 
           {/* Right section */}
           <Box flex="1" display="flex" justifyContent="flex-end" gap={3}>
-          {isOnListPage && (
+          {!isOnHomePage && (
               <Button
                 mx={2}
                 _active={{
                   transform: "scale(.97)",
                 }}
-                onClick={() => navigate("/userlists")}
+                onClick={() => navigate("/user-home")}
               >
-                Back to Lists
+                Back to Home
               </Button>
             )}
             <Button

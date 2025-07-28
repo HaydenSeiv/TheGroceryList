@@ -65,7 +65,7 @@ export default function LoginForm() {
           "Account logged in succesfully, you will now be redirected to the list"
         );
       }, 2);
-      navigate("/userlists/");
+      navigate("/user-home");
     },
 
     onError: (error: any) => {
