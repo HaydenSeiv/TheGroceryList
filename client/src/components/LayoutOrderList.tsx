@@ -9,7 +9,7 @@ import LayoutItem from "./LayoutItem.tsx";
 export type Aisle = {
     aisleId: string;	
     layoutId: string;
-    aisle: string;
+    aisleName: string;
     aisleOrder: number;
     layoutName: string;
 };
