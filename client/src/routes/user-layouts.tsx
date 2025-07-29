@@ -2,6 +2,8 @@ import { Container, Stack } from "@chakra-ui/react";
 import React from "react";
 import Navbar from "../components/Navbar";
 import { Toaster } from "react-hot-toast";
+import UserLayouts from "../components/UserLayouts";
+import CreateLayoutForm from "../components/CreateLayoutForm";
 
 export default function UserLists() {
   return (
@@ -9,7 +11,8 @@ export default function UserLists() {
       <Navbar />
       <Toaster position="bottom-right" />
       <Container>
-        {/* TODO: Add store layout components here */}
+        <CreateLayoutForm />
+        <UserLayouts />
       </Container>
     </Stack>
   );

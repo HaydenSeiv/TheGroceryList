@@ -17,11 +17,8 @@ const CreateListForm = () => {
 
     //the mutation function is async. e is of type of Formevent
     mutationFn: async (e: React.FormEvent) => {
-      console.log("🔵 Mutation function called");
       e.preventDefault();
-      console.log("🟢 preventDefault called");
       try {
-        console.log("🚀 About to make fetch request");
         //we send the new list title to the server and await for the response
         const res = await fetch(BASE_URL + "/lists", {
           method: "POST",

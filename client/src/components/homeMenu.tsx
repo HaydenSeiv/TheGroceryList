@@ -21,7 +21,7 @@ const menuOptions: MenuOption[] = [
   {
     title: "Store Layouts", 
     description: "Create and edit store layouts",
-    path: "/store-layout", // You'll need to add this route
+    path: "/user-layouts", // You'll need to add this route
     colorScheme: "green"
   }
 ];
