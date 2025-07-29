@@ -6,6 +6,7 @@ import {
   Text,
   Grid,
   GridItem,
+  Input,
 } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -16,9 +17,12 @@ import React, { useState } from "react";
 
 const ListItem = ({ item }: { item: Item }) => {
   const queryClient = useQueryClient();
-  //const [newTitle, setNewTitle] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(item.title);
 
-  //console.log(item); //console log used to see items coming back
+
+
+
 
   //completeItem function used to complete items
   const { mutate: completeItem, isPending: isCompleting } = useMutation({
@@ -82,38 +86,6 @@ const ListItem = ({ item }: { item: Item }) => {
     },
   });
 
-  function setColor(catID) {
-    let textColor;
-
-    switch (catID) {
-      case "Other":
-        textColor = "#9CD9D0";
-        break;
-      case "Veggie":
-        textColor = "#FB4023";
-        break;
-      case "Deli":
-        textColor = "#ff9e00";
-        break;
-      case "Dairy":
-        textColor = "#3ecbbd";
-        break;
-      case "Frozen":
-        textColor = "#FFDC5E";
-        break;
-      case "Bakery":
-        textColor = "#A5BE00";
-        break;
-      case "Pantry":
-        textColor = "#9b5de5";
-        break;
-      default:
-        textColor = "#ffffff";
-    }
-
-    return textColor;
-  }
-
   //deleteItem function
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
     mutationKey: ["deleteItem"],
@@ -149,6 +121,63 @@ const ListItem = ({ item }: { item: Item }) => {
     },
   });
 
+  function setColor(catID) {
+    let textColor;
+
+    switch (catID) {
+      case "Other":
+        textColor = "#9CD9D0";
+        break;
+      case "Veggie":
+        textColor = "#FB4023";
+        break;
+      case "Deli":
+        textColor = "#ff9e00";
+        break;
+      case "Dairy":
+        textColor = "#3ecbbd";
+        break;
+      case "Frozen":
+        textColor = "#FFDC5E";
+        break;
+      case "Bakery":
+        textColor = "#A5BE00";
+        break;
+      case "Pantry":
+        textColor = "#9b5de5";
+        break;
+      default:
+        textColor = "#ffffff";
+    }
+
+    return textColor;
+  }
+
+  const startEditing = () => {
+    setIsEditing(true);
+    setNewTitle(item.title);
+  }
+
+  const saveEdit = () => {    
+    if (newTitle?.trim() !== '') {updateItem(newTitle)}
+    else {console.log("Input is empty")}
+    setIsEditing(false);
+  }
+
+  const cancelEdit = () => {
+    setIsEditing(false);
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      cancelEdit();
+    }
+  }
+
+  
+
   return (
     <Flex gap={2} alignItems={"center"}>
       <Flex
@@ -163,14 +192,19 @@ const ListItem = ({ item }: { item: Item }) => {
         <Text
           color={item.completed ? "green.200" : "yellow.100"}
           textDecoration={item.completed ? "line-through" : "none"}
-          onClick={(e) => {
-            let editTitle = prompt("Please enter new item name", `${item.title}`)   
-            if (editTitle?.trim() !== '') {updateItem(editTitle)}
-            else {console.log("Input is empty")}
-            
-          }}
+          onClick={startEditing}
         >
-          {item.title}
+          {isEditing ? (
+            <Input
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={saveEdit}
+              autoFocus
+            />
+          ) : (
+            item.title
+          )}
         </Text>
         <Text
           color={item.completed ? "green.200" : setColor(item.category)}

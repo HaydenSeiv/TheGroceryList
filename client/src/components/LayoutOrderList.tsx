@@ -1,13 +1,12 @@
 import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
-import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { BASE_URL } from "../main";
-import { Item } from "./ItemList";
+import LayoutItem from "./LayoutItem.tsx";
 
 
 //the Layout struct, matches "Layout" design in both backend and database
-export type Layout = {
+export type Aisle = {
     aisleId: string;	
     layoutId: string;
     aisle: string;
@@ -18,7 +17,7 @@ export type Layout = {
 const LayoutOrderList = ({ layoutId }: { layoutId: string | undefined }) => {
 
 	//hook to get layouts from database in an array
-    const {data:layouts, isLoading} = useQuery<Layout[]>({
+    const {data:aisles, isLoading} = useQuery<Aisle[]>({
         queryKey:["layouts", layoutId],
 		//function to get layouts from backend and in turn database
         queryFn: async () => {
@@ -48,7 +47,7 @@ const LayoutOrderList = ({ layoutId }: { layoutId: string | undefined }) => {
 
 	//sort the array of layouts based off of aisleOrder, this makes it so list is in proper order of aisles.
 
-	layouts?.sort((a, b) => a.aisleOrder - b.aisleOrder)
+	aisles?.sort((a, b) => a.aisleOrder - b.aisleOrder)
 
 	return (
 		<>
@@ -63,7 +62,7 @@ const LayoutOrderList = ({ layoutId }: { layoutId: string | undefined }) => {
 					<Spinner size={"xl"} />
 				</Flex>
 			)}
-			{!isLoading && layouts?.length === 0 && (
+			{!isLoading && aisles?.length === 0 && (
 				<Stack alignItems={"center"} gap='3'>
 					<Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
 						Start making your layout! 🤞
@@ -72,8 +71,8 @@ const LayoutOrderList = ({ layoutId }: { layoutId: string | undefined }) => {
 				</Stack>
 			)}
 			<Stack gap={3}>
-				{layouts?.map((layout) => (
-					<LayoutOrderItem key={layout.aisleId} layout={layout} />
+				{aisles?.map((aisle) => (
+					<LayoutItem key={aisle.aisleId} aisle={aisle} />
 				))}
 			</Stack>
 		</>
