@@ -16,7 +16,9 @@ public class LayoutService : ILayoutService
 
     public async Task<IEnumerable<LayoutResponseDto>> GetUserLayoutsAsync(string userId)
     {
+        Console.WriteLine("Inside GetUserLayoutsAsync Service");
         var layouts = await _context.Layouts.Find(l => l.UserId == userId).ToListAsync();
+        Console.WriteLine($"Layouts Retrieved {layouts}");
         return layouts.Select(l => new LayoutResponseDto
         {
             LayoutId = l.LayoutId ?? string.Empty,

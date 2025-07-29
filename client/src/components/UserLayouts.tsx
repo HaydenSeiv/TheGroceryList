@@ -26,6 +26,7 @@ const UserLayouts = () => {
                 }
             })
             const data = await res.json()
+            console.log("User Layouts: ", data)
             return data
         }
     })

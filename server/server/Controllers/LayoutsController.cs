@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using server.DTOs;
+using server.Middleware;
 using server.Services;
 
 namespace server.Controllers;
 
-    [Route("api/[controller]")]
+    [Route("api/[controller]")]    
     [ApiController]
+    [ServiceFilter(typeof(AuthRequiredAttribute))]
     public class LayoutsController : ControllerBase
     {
         private readonly ILayoutService _layoutService;
