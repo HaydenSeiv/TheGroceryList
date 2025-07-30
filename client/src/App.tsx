@@ -11,7 +11,7 @@ import { Toaster } from "react-hot-toast";
 import UserLists from "./routes/user-lists";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserHome from "./routes/user-home";
-import UserLayouts from "./components/UserLayouts";
+import UserLayoutsPage from "./routes/user-layouts";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="list/" element={<UserList />} />
         <Route path="/signup/" element={<SignUpPage />} />
         <Route path="/user-home" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
-        <Route path="/user-layouts" element={<ProtectedRoute><UserLayouts /></ProtectedRoute>} />
+        <Route path="/user-layouts" element={<ProtectedRoute><UserLayoutsPage /></ProtectedRoute>} />
         <Route path="/userlists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
         <Route path="list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       </Routes>

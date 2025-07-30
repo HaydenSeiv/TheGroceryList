@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import UserLayouts from "../components/UserLayouts";
 import CreateLayoutForm from "../components/CreateLayoutForm";
 
-export default function UserLists() {
+export default function UserLayoutsPage() {
   return (
     <Stack h="100vh">
       <Navbar />
