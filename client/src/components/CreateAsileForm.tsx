@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../main";
+import { Aisle } from "./LayoutOrderList";
 
 const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
   const [newLayoutName, setNewLayoutName] = useState("");
@@ -18,17 +19,16 @@ const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
       e.preventDefault();
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(BASE_URL + "/layout", {
+        const res = await fetch(BASE_URL + "/aisles", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            name: newLayoutName,
             aisle: newAisle,
             aisleOrder: newAisleOrder,
-            layoutId: layoutId,
+            layoutId: layoutId, //this is the layout id
           }),
         });
         if (!res.ok) {
