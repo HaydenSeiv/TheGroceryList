@@ -36,7 +36,7 @@ const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
         }
         const data = await res.json();
         toast.success("Aisle added successfully");
-        queryClient.invalidateQueries({ queryKey: ["layout"] });
+        queryClient.invalidateQueries({ queryKey: ["aisles"] });
       } catch (error: any) {
         throw new Error(error);
       }

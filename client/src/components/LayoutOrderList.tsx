@@ -22,7 +22,7 @@ const LayoutOrderList = ({ layoutId }: { layoutId: string | undefined }) => {
 		//function to get layouts from backend and in turn database
         queryFn: async () => {
             try {
-                const res = await fetch(`${BASE_URL}/layouts/${layoutId}`, {          
+                const res = await fetch(`${BASE_URL}/aisles/${layoutId}`, {          
 					credentials: 'include',
 					headers: {
 					  'Authorization': `Bearer ${localStorage.getItem('token')}`,

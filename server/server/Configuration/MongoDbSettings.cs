@@ -7,6 +7,7 @@ public class MongoDbSettings
     public required string UsersCollectionName { get; set; }
     public required string ListsCollectionName { get; set; }
     public required string LayoutsCollectionName { get; set; }
+    public required string AislesCollectionName { get; set; }
 }
 
 public class JwtSettings

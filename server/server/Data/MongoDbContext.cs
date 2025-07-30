@@ -27,4 +27,7 @@ public class MongoDbContext
 
     public IMongoCollection<Layout> Layouts => 
         _database.GetCollection<Layout>(_settings.LayoutsCollectionName);
+
+    public IMongoCollection<Aisle> Aisles =>
+        _database.GetCollection<Aisle>(_settings.AislesCollectionName);
 } 

@@ -49,10 +49,74 @@ public class AislesController : Controller
             });
         }
     }
+    [HttpPost]
+    public async Task<ActionResult<AisleResponseDto>> CreateAisle(CreateAisleDto createAisleDto)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Unauthorized",
+                    Error = new Dictionary<string, object>()
+                });
+            }
+
+            var aisle = await _aisleService.CreateAisleAsync(createAisleDto, userId);
+            return Ok(aisle);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Could not create aisle",
+                Error = new Dictionary<string, object> { { "details", ex.Message } }
+            });
+        }
+    }
+
+    [HttpDelete("{aisleId}")]
+    public async Task<ActionResult> DeleteAisle(string aisleId)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null)
+        {
+            return Unauthorized(new ApiResponse
+            {
+                Success = false,
+                Message = "Unauthorized",
+                Error = new Dictionary<string, object>()
+            });
+        }
+
+        var result = await _aisleService.DeleteAisleAsync(aisleId, userId);
+        if (!result)
+        {
+            return NotFound(new ApiResponse
+            {
+                Success = false,
+                Message = "Aisle not found",
+                Error = new Dictionary<string, object>()
+            });
+        }
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Aisle deleted successfully"
+        });
+    }
+
+
 
     private string? GetCurrentUserId()
     {
         return HttpContext.Items["UserId"]?.ToString();
     }
-
+    
 }
+
