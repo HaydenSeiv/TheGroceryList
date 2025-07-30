@@ -12,6 +12,7 @@ import UserLists from "./routes/user-lists";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserHome from "./routes/user-home";
 import UserLayoutsPage from "./routes/user-layouts";
+import LayoutCreation from "./routes/layout-creation";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/signup/" element={<SignUpPage />} />
         <Route path="/user-home" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
         <Route path="/user-layouts" element={<ProtectedRoute><UserLayoutsPage /></ProtectedRoute>} />
+        <Route path="/layouts/:layoutId" element={<ProtectedRoute><LayoutCreation /></ProtectedRoute>} />
         <Route path="/userlists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
         <Route path="list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       </Routes>

@@ -5,54 +5,50 @@ import { IoMdAdd } from "react-icons/io";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../main";
 
-const CreateAsileForm = ({ storeId }: { storeId: string }) => {
-    const [newLayoutName, setNewLayoutName] = useState("");
-    const [newAisle, setNewAisle] = useState("");
-    const [newAisleOrder, setNewAisleOrder] = useState("");
+const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
+  const [newLayoutName, setNewLayoutName] = useState("");
+  const [newAisle, setNewAisle] = useState("");
+  const [newAisleOrder, setNewAisleOrder] = useState("");
 
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    const { mutate: addAisle, isPending: isCreating } = useMutation({
-        mutationKey: ["addAisle"],
-        mutationFn: async (e: React.FormEvent) => {
-            e.preventDefault();
-            try {
-                const token = localStorage.getItem('token');
-                const res = await fetch(BASE_URL + "/layout", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        name: newLayoutName,
-                        aisle: newAisle,
-                        aisleOrder: newAisleOrder,
-                        storeId: storeId,
-                    }),
-                });
-                if (!res.ok) {
-                    throw new Error("Failed to add aisle");
-                }
-                const data = await res.json();
-                toast.success("Aisle added successfully");
-                queryClient.invalidateQueries({ queryKey: ["layout"] });
-            } catch (error: any) {
-                throw new Error(error);
-            }
-        },
-    });
-
+  const { mutate: addAisle, isPending: isCreating } = useMutation({
+    mutationKey: ["addAisle"],
+    mutationFn: async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(BASE_URL + "/layout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: newLayoutName,
+            aisle: newAisle,
+            aisleOrder: newAisleOrder,
+            layoutId: layoutId,
+          }),
+        });
+        if (!res.ok) {
+          throw new Error("Failed to add aisle");
+        }
+        const data = await res.json();
+        toast.success("Aisle added successfully");
+        queryClient.invalidateQueries({ queryKey: ["layout"] });
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
+  });
 
   return (
     <form onSubmit={addAisle}>
-      <Flex gap={2}>
-        <Input
-          type="text"
-          value={newLayoutName}
-          onChange={(e) => setNewLayoutName(e.target.value)}
-          placeholder="Enter your store or layout name"
-        />
+      <Flex 
+      gap={2}
+      flexDirection={"column"}
+      >
         <Text>
           Add Aisle or Section such as "Dairy" or "Bakery" Then select where in
           your shopping route it is located ie your first stop "1" or second "2"
@@ -60,13 +56,16 @@ const CreateAsileForm = ({ storeId }: { storeId: string }) => {
         <Text>
           Tip: Try to be more general with your aisle or section names,
           espically with "Pantry" asiles as stores often move items around and
-          you don't want to have to change your layout every time. 
+          you don't want to have to change your layout every time.
         </Text>
         <Input
           type="text"
           value={newAisle}
           onChange={(e) => setNewAisle(e.target.value)}
+          placeholder="Enter your aisle or section name"
         />
+
+        <Text>Enter the order of the aisle or section</Text>
         <Select
           w="240px"
           name="selectedAisle"
@@ -93,8 +92,8 @@ const CreateAsileForm = ({ storeId }: { storeId: string }) => {
           <option value="14">15</option>
         </Select>
         <Button type="submit" colorScheme="blue" leftIcon={<IoMdAdd />}>
-                  {/* if createItem function is running, show loading spinner  */}
-                  {isCreating ? <Spinner size={"xs"} /> : "Add Aisle"}
+          {/* if createItem function is running, show loading spinner  */}
+          {isCreating ? <Spinner size={"xs"} /> : "Add Aisle"}
         </Button>
       </Flex>
     </form>
