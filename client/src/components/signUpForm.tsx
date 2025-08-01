@@ -121,6 +121,7 @@ export default function SignUpForm() {
             <Input
               type="email"
               placeholder="Email"
+              autoComplete="email"
               onChange={(e) => {
                 setNewEmail(e.target.value);
               }}
@@ -131,6 +132,7 @@ export default function SignUpForm() {
             <Input
               type="password"
               placeholder="Password"
+              autoComplete="new-password"
               onChange={(e) => {
                 setNewPassword(e.target.value);
               }}
@@ -141,6 +143,7 @@ export default function SignUpForm() {
             <Input
               type="password"
               placeholder="Confirm Password"
+              autoComplete="new-password"
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}

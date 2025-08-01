@@ -80,6 +80,7 @@ export default function LoginForm() {
           <FormControl isRequired>
             <FormLabel textAlign={"center"}>Email</FormLabel>
             <Input placeholder="Email"
+              autoComplete="email"
                onChange={(e) => {
                 setEmail(e.target.value);
               }} />
@@ -89,6 +90,7 @@ export default function LoginForm() {
             <Input
               type="password"
               placeholder="Password"
+              autoComplete="current-password"
               onChange={(e) => {
                 setPassword(e.target.value);
               }}

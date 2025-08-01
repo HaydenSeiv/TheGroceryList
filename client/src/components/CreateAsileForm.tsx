@@ -73,7 +73,7 @@ const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
           onChange={(e) => {
             setNewAisleOrder(e.target.value);
           }}
-          placeholder="Select 'Stop' number in your Route"
+          placeholder="Select 'Stop' number"
         >
           <option value="0">1</option>
           <option value="1">2</option>
