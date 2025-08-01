@@ -9,6 +9,8 @@ const LayoutItem = ({ aisle }: { aisle: Aisle }) => {
             <Flex>
                 <Text>{aisle.aisleName}</Text>
                 <Spacer />
+                <Text>Aisle Order: {aisle.aisleOrder + 1} </Text>
+                <Spacer />
                 <IconButton aria-label="Delete" icon={<MdDelete />} />
             </Flex>
         </Box>

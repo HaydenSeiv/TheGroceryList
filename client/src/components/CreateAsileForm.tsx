@@ -26,7 +26,7 @@ const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            aisle: newAisle,
+            aisleName: newAisle,
             aisleOrder: newAisleOrder,
             layoutId: layoutId, //this is the layout id
           }),
@@ -36,7 +36,7 @@ const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
         }
         const data = await res.json();
         toast.success("Aisle added successfully");
-        queryClient.invalidateQueries({ queryKey: ["aisles"] });
+        queryClient.invalidateQueries({ queryKey: ["layouts", layoutId] });
       } catch (error: any) {
         throw new Error(error);
       }
