@@ -20,10 +20,6 @@ const ListItem = ({ item }: { item: Item }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(item.title);
 
-
-
-
-
   //completeItem function used to complete items
   const { mutate: completeItem, isPending: isCompleting } = useMutation({
     mutationKey: ["completeItem"],
@@ -121,29 +117,29 @@ const ListItem = ({ item }: { item: Item }) => {
     },
   });
 
-  function setColor(catID) {
+  function setColor(aisleOrder: number) {
     let textColor;
 
-    switch (catID) {
-      case "Other":
+    switch (aisleOrder) {
+      case 0:
         textColor = "#9CD9D0";
         break;
-      case "Veggie":
+      case 1:
         textColor = "#FB4023";
         break;
-      case "Deli":
+      case 2:
         textColor = "#ff9e00";
         break;
-      case "Dairy":
+      case 3:
         textColor = "#3ecbbd";
         break;
-      case "Frozen":
+      case 4:
         textColor = "#FFDC5E";
         break;
-      case "Bakery":
+      case 5:
         textColor = "#A5BE00";
         break;
-      case "Pantry":
+      case 6:
         textColor = "#9b5de5";
         break;
       default:
@@ -190,7 +186,7 @@ const ListItem = ({ item }: { item: Item }) => {
         justifyContent={"space-between"}        
       >
         <Text
-          color={item.completed ? "green.200" : "yellow.100"}
+          color={item.completed ? "green.200" : setColor(item.aisleOrder)}
           textDecoration={item.completed ? "line-through" : "none"}
           onClick={startEditing}
         >
@@ -207,10 +203,10 @@ const ListItem = ({ item }: { item: Item }) => {
           )}
         </Text>
         <Text
-          color={item.completed ? "green.200" : setColor(item.category)}
+          color={item.completed ? "green.200" : setColor(item.aisleOrder)}
           textDecoration={item.completed ? "line-through" : "none"}
         >
-          {item.category}
+          {item.aisleName}
         </Text>
       </Flex>
       <Flex gap={2} alignItems={"center"}>

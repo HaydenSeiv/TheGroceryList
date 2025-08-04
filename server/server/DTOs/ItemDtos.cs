@@ -5,7 +5,7 @@ public class CreateItemDto
     public required string ListId { get; set; }
     public required string Title { get; set; }
     public string? Category { get; set; }
-    public int? CatID { get; set; }
+    public int? AisleOrder { get; set; }
 }
 
 public class UpdateItemDto
@@ -20,5 +20,5 @@ public class ItemResponseDto
     public bool Completed { get; set; }
     public string Title { get; set; } = string.Empty;
     public string? Category { get; set; }
-    public int? CatID { get; set; }
+    public int? AisleOrder { get; set; }
 } 

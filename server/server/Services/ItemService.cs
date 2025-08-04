@@ -30,7 +30,8 @@ public class ItemService : IItemService
             Completed = i.Completed,
             Title = i.Title,
             Category = i.Category,
-            CatID = i.CatID
+            AisleOrder = i.AisleOrder
+
         });
     }
 
@@ -52,7 +53,7 @@ public class ItemService : IItemService
             ListId = createItemDto.ListId,
             Title = createItemDto.Title,
             Category = createItemDto.Category,
-            CatID = createItemDto.CatID,
+            AisleOrder = createItemDto.AisleOrder,
             Completed = false
         };
 
@@ -65,7 +66,7 @@ public class ItemService : IItemService
             Completed = item.Completed,
             Title = item.Title,
             Category = item.Category,
-            CatID = item.CatID
+            AisleOrder = item.AisleOrder
         };
     }
 

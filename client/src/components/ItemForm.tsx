@@ -11,7 +11,9 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
   const [newItem, setNewItem] = useState("");
 
   //state hook to asign a new Aisle
-  const [assignedAisle, setAssignedAisle] = useState("None");
+  const [aisleOrder, setAisleOrder] = useState(0);
+
+  const [aisleName, setAisleName] = useState("");
 
   const queryClient = useQueryClient(); 
 
@@ -37,11 +39,15 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
           //update the body with JSON of new info
           body: JSON.stringify({
             title: newItem,
-            category: assignedAisle,           
+            aisleOrder: aisleOrder,           
             listId,
+            aisleName: aisleName,
             completed: false
           }),
         });
+
+        console.log(aisleName);
+
         const data = await res.json();
         //if response not ok, throw error
         if (!res.ok) {
@@ -93,9 +99,10 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
         <Select
           w="240px"
           name="selectedAisle"
-          value={assignedAisle}
+          value={aisleOrder}
           onChange={(e) => {
-            setAssignedAisle(e.target.value);
+            setAisleOrder(parseInt(e.target.value) );
+            setAisleName(aisles?.find(aisle => aisle.aisleOrder === parseInt(e.target.value))?.aisleName || "");
           }}
           placeholder="Select Aisle"
         >  {aisles?.map((aisle) => (

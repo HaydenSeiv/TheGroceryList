@@ -11,8 +11,8 @@ export type Item = {
 	listId: string;
     title: string;
     completed: boolean;
-	category: string;
-	catID: number; 
+	aisleName: string;
+	aisleOrder: number; 
 };
 
 const ItemList = ({ listId }: { listId: string | undefined }) => {
@@ -48,7 +48,7 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 
 	//sort the array of items based off of Category ID, this makes it so list is in proper order of aisles.
 	//In the future may want to make it so user can decided own order of aisles to match their store
-	items?.sort((a, b) => a.catID - b.catID)
+	items?.sort((a, b) => a.aisleOrder - b.aisleOrder)
 
 	return (
 		<>
@@ -72,7 +72,7 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 				</Stack>
 			)}
 			<Stack gap={3}>
-				{items?.map((item) => (
+				{items?.map((item) => (					
 					<ListItem key={item.id} item={item} />
 				))}
 			</Stack>

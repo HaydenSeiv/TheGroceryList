@@ -22,6 +22,6 @@ public class Item
     [BsonElement("category")]
     public string? Category { get; set; }
 
-    [BsonElement("catID")]
-    public int? CatID { get; set; }
+    [BsonElement("aisleOrder")]
+    public int? AisleOrder { get; set; }
 } 
