@@ -22,8 +22,22 @@ public class ListService : IListService
             Id = l.Id ?? string.Empty,
             UserId = l.UserId,
             ListName = l.ListName,
-            DateCreated = l.DateCreated
+            DateCreated = l.DateCreated,
+            LayoutId = l.LayoutId,
         });
+    }
+
+    public async Task<ListResponseDto?> GetListAsync(string listId)
+    {
+        var list = await _context.Lists.Find(l => l.Id == listId).FirstOrDefaultAsync();
+        return list != null ? new ListResponseDto
+        {
+            Id = list.Id ?? string.Empty,
+            UserId = list.UserId,
+            ListName = list.ListName,
+            DateCreated = list.DateCreated,
+            LayoutId = list.LayoutId,
+        } : null;
     }
 
     public async Task<ListResponseDto?> CreateListAsync(string userId, CreateListDto createListDto)
@@ -35,7 +49,9 @@ public class ListService : IListService
         {
             UserId = userId,
             ListName = createListDto.ListName,
-            DateCreated = DateTime.UtcNow
+            DateCreated = DateTime.UtcNow,
+            LayoutId = createListDto.LayoutId,
+
         };
 
         await _context.Lists.InsertOneAsync(groceryList);
@@ -45,7 +61,8 @@ public class ListService : IListService
             Id = groceryList.Id ?? string.Empty,
             UserId = groceryList.UserId,
             ListName = groceryList.ListName,
-            DateCreated = groceryList.DateCreated
+            DateCreated = groceryList.DateCreated,
+            LayoutId = groceryList.LayoutId,
         };
     }
 

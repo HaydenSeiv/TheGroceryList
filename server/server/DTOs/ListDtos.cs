@@ -3,6 +3,7 @@ namespace server.DTOs;
 public class CreateListDto
 {
     public required string ListName { get; set; }
+    public string LayoutId { get; set; } = string.Empty;
 }
 
 public class ListResponseDto
@@ -11,4 +12,5 @@ public class ListResponseDto
     public string UserId { get; set; } = string.Empty;
     public string ListName { get; set; } = string.Empty;
     public DateTime DateCreated { get; set; }
+    public string LayoutId { get; set; } = string.Empty;
 } 

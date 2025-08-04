@@ -11,6 +11,7 @@ export type List = {
   userId: string;
   listName: string;
   dateCreated: string;
+  layoutId: string;
 };
 
 const ListOfLists = () => {

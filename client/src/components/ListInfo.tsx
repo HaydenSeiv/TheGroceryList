@@ -6,6 +6,7 @@ import {
   Text,
   Grid,
   GridItem,
+  Spacer,
 } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -70,6 +71,8 @@ const ListInfo = ({ list }: { list: List }) => {
         onClick={() => goToList()}
       >
         <Text>{list.listName}</Text>
+        <Spacer />
+        <Text>{list.layoutName}</Text>
       </Flex>
       <Flex gap={2} alignItems={"center"}>
         <Box color={"red.500"} cursor={"pointer"} onClick={() => deleteList()}>

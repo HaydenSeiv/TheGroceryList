@@ -1,61 +1,25 @@
-import { Button, Flex, Input, Spinner, Select } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Flex, Input, Spinner, Select} from "@chakra-ui/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../main";
 import React from "react";
+import { Aisle } from "./LayoutOrderList";
 
-const ItemForm = ({ listId }: { listId: string | undefined }) => {
+const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: string | undefined }) => {
   //state hook to create a new item name
   const [newItem, setNewItem] = useState("");
 
   //state hook to asign a new Aisle
-  const [newAisle, setNewAisle] = useState("None");
+  const [assignedAisle, setAssignedAisle] = useState("None");
 
-  //state hook that assigns the proper Category ID based off of aisle
-  const [newCatID, setNewCatID] = useState("");
-
-  const queryClient = useQueryClient();
-
-  //Function that takes the select category (string) and assigns the correct CatID
-  function setCatID(category) {
-    let catID;
-
-    //switch case that goes through each aisle name and assigns Category ID
-    switch (category) {
-      case "Other":
-        catID = 0;
-        break;
-      case "Veggie":
-        catID = 1;
-        break;
-      case "Deli":
-        catID = 2;
-        break;
-      case "Dairy":
-        catID = 3;
-        break;
-      case "Frozen":
-        catID = 4;
-        break;
-      case "Bakery":
-        catID = 5;
-        break;
-      case "Pantry":
-        catID = 6;
-        break;
-      default:
-        catID = -1;
-    }
-
-    return catID;
-  }
+  const queryClient = useQueryClient(); 
 
   //createItem function to update backend - uses TanStack useMutation hook
   const { mutate: createItem, isPending: isCreating } = useMutation({
     mutationKey: ["createItem"],
 
-    //the mutation function is async. e is of type of Formevent
+
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       if (!listId) {
@@ -73,8 +37,7 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
           //update the body with JSON of new info
           body: JSON.stringify({
             title: newItem,
-            category: newAisle,
-            catID: newCatID,
+            category: assignedAisle,           
             listId,
             completed: false
           }),
@@ -103,6 +66,21 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
     },
   });
 
+  const {data:aisles, isLoading} = useQuery<Aisle[]>({
+    queryKey:["aisles"],
+    queryFn: async () => {
+      const res = await fetch(BASE_URL + "/aisles/" + layoutId, {
+        credentials: "include",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
+        }
+      });
+      const data = await res.json();
+      return data;
+    }
+  });
+
   return (
     <form onSubmit={createItem}>
       <Flex gap={2}>
@@ -115,20 +93,16 @@ const ItemForm = ({ listId }: { listId: string | undefined }) => {
         <Select
           w="240px"
           name="selectedAisle"
-          value={newAisle}
+          value={assignedAisle}
           onChange={(e) => {
-            setNewAisle(e.target.value);
-            setNewCatID(setCatID(e.target.value));
+            setAssignedAisle(e.target.value);
           }}
           placeholder="Select Aisle"
-        >
-          <option value="Other">Other</option>
-          <option value="Veggie">Veggie/fruit</option>
-          <option value="Deli">Deli/Meat</option>
-          <option value="Dairy">Dairy</option>
-          <option value="Frozen">Frozen</option>
-          <option value="Bakery">Bakery</option>
-          <option value="Pantry">Pantry</option>
+        >  {aisles?.map((aisle) => (
+            <option key={aisle.aisleId} value={aisle.aisleOrder}>
+              {aisle.aisleName}
+            </option>
+          ))}
         </Select>
         <Button
           mx={2}

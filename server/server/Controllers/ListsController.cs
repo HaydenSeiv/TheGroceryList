@@ -26,7 +26,7 @@ public class ListsController : ControllerBase
         {
             Console.WriteLine("Inside Get Lists");
             var userId = GetCurrentUserId();
-            Console.WriteLine($"Current User Id: {userId}"); 
+            Console.WriteLine($"Current User Id: {userId}");
             if (userId == null)
             {
                 Console.WriteLine("User ID is null. Returning Unauthorized");
@@ -51,6 +51,24 @@ public class ListsController : ControllerBase
                 Message = "Could not fetch lists",
                 Error = new Dictionary<string, object> { { "details", ex.Message } }
             });
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ListResponseDto>> GetList(string id)
+    {
+        try
+        {
+            var list = await _listService.GetListAsync(id);
+            if (list == null)
+            {
+                return NotFound(new ApiResponse { Success = false, Message = "List not found" });
+            }
+            return Ok(list);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ApiResponse { Success = false, Message = "Could not fetch list", Error = new Dictionary<string, object> { { "details", ex.Message } } });
         }
     }
 
@@ -138,4 +156,4 @@ public class ListsController : ControllerBase
     {
         return HttpContext.Items["UserId"]?.ToString();
     }
-} 
+}

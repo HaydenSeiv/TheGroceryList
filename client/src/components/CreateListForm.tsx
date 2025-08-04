@@ -1,15 +1,40 @@
-import { Button, Flex, Input, Spinner, Text } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Button,
+  Flex,
+  Input,
+  Select,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../main";
-import toast from "react-hot-toast";
+import { Layout } from "./UserLayouts";
 
 const CreateListForm = () => {
   //state hook to create a new list name
   const [newList, setNewList] = useState("");
+  const [layout, setLayout] = useState("");
 
   const queryClient = useQueryClient();
+
+  const { data: layouts, isLoading } = useQuery<Layout[]>({
+    queryKey: ["layouts"],
+    queryFn: async () => {
+      console.log("fetching layouts");
+      const res = await fetch(`${BASE_URL}/layouts`, {
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      console.log("User Layouts: ", data);
+      return data;
+    },
+  });
 
   //createList function to update backend - uses TanStack useMutation hook
   const { mutate: createList, isPending: isCreating } = useMutation({
@@ -31,6 +56,7 @@ const CreateListForm = () => {
           //update the body with JSON of new info
           body: JSON.stringify({
             listName: newList,
+            layoutId: layout,
           }),
         });
         const data = await res.json();
@@ -76,9 +102,22 @@ const CreateListForm = () => {
           <Input
             type="text"
             value={newList}
+            placeholder="Enter list name"
             onChange={(e) => setNewList(e.target.value)}
             ref={(input) => input && input.focus()}
           />
+          <Select
+            placeholder="Select Store Layout"
+            onChange={(e) => {
+              setLayout(e.target.value);
+            }}
+          >
+            {layouts?.map((layout) => (
+              <option key={layout.layoutId} value={layout.layoutId}>
+                {layout.layoutName}
+              </option>
+            ))}
+          </Select>
           <Button
             mx={2}
             type="submit"

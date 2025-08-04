@@ -18,4 +18,7 @@ public class GroceryList
 
     [BsonElement("_dateCreated")]
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+
+    [BsonElement("layoutId")]
+    public required string LayoutId { get; set; }
 } 
