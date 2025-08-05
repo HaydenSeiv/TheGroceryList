@@ -10,10 +10,8 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
   //state hook to create a new item name
   const [newItem, setNewItem] = useState("");
 
-  //state hook to asign a new Aisle
-  const [aisleOrder, setAisleOrder] = useState(0);
-
-  const [aisleName, setAisleName] = useState("");
+  //state hook to assign a new Aisle
+  const [selectedAisleId, setSelectedAisleId] = useState("");
 
   const queryClient = useQueryClient(); 
 
@@ -29,7 +27,7 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
       }
       try {
         const token = localStorage.getItem('token');
-        //we send the new items title,Category and CatID to the server and await for the response
+        //we send the new items title and aisleId to the server and await for the response
         const res = await fetch(BASE_URL + "/items", {
           method: "POST",
           headers: {
@@ -39,14 +37,10 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
           //update the body with JSON of new info
           body: JSON.stringify({
             title: newItem,
-            aisleOrder: aisleOrder,           
+            aisleId: selectedAisleId || undefined,           
             listId,
-            aisleName: aisleName,
-            completed: false
           }),
         });
-
-        console.log(aisleName);
 
         const data = await res.json();
         //if response not ok, throw error
@@ -54,8 +48,9 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
           throw new Error(data.error || "Something went wrong");
         }
 
-        //reset the input box to be blank
+        //reset the input fields to be blank
         setNewItem("");
+        setSelectedAisleId("");
         return data;
       } catch (error: any) {
         throw new Error(error);
@@ -99,14 +94,11 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
         <Select
           w="240px"
           name="selectedAisle"
-          value={aisleOrder}
-          onChange={(e) => {
-            setAisleOrder(parseInt(e.target.value) );
-            setAisleName(aisles?.find(aisle => aisle.aisleOrder === parseInt(e.target.value))?.aisleName || "");
-          }}
+          value={selectedAisleId}
+          onChange={(e) => setSelectedAisleId(e.target.value)}
           placeholder="Select Aisle"
         >  {aisles?.map((aisle) => (
-            <option key={aisle.aisleId} value={aisle.aisleOrder}>
+            <option key={aisle.aisleId} value={aisle.aisleId}>
               {aisle.aisleName}
             </option>
           ))}

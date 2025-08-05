@@ -11,11 +11,12 @@ export type Item = {
 	listId: string;
     title: string;
     completed: boolean;
+	aisleId?: string;
 	aisleName: string;
-	aisleOrder: number; 
+	aisleOrder?: number; 
 };
 
-const ItemList = ({ listId }: { listId: string | undefined }) => {
+const ItemList = ({ listId, layoutId }: { listId: string | undefined, layoutId: string | undefined }) => {
 
 	//hook to get items from database in an array
     const {data:items, isLoading} = useQuery<Item[]>({
@@ -46,9 +47,14 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
         }
     })
 
-	//sort the array of items based off of Category ID, this makes it so list is in proper order of aisles.
-	//In the future may want to make it so user can decided own order of aisles to match their store
-	items?.sort((a, b) => a.aisleOrder - b.aisleOrder)
+	//sort the array of items based off of aisle order, this makes it so list is in proper order of aisles.
+	//Items without aisles will appear at the end
+	items?.sort((a, b) => {
+		if (a.aisleOrder == null && b.aisleOrder == null) return 0;
+		if (a.aisleOrder == null) return 1;
+		if (b.aisleOrder == null) return -1;
+		return a.aisleOrder - b.aisleOrder;
+	})
 
 	return (
 		<>
@@ -73,7 +79,7 @@ const ItemList = ({ listId }: { listId: string | undefined }) => {
 			)}
 			<Stack gap={3}>
 				{items?.map((item) => (					
-					<ListItem key={item.id} item={item} />
+					<ListItem key={item.id} item={item} layoutId={layoutId} />
 				))}
 			</Stack>
 		</>

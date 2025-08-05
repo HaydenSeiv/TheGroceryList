@@ -47,7 +47,7 @@ export default function UserList() {
       <Toaster position="bottom-right" />
       <Container>
         <ItemForm listId={listId} layoutId={layoutId} />
-        <ItemList listId={listId} />
+        <ItemList listId={listId} layoutId={layoutId}/>
       </Container>
     </Stack>
   );

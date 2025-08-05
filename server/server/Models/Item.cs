@@ -19,9 +19,7 @@ public class Item
     [BsonElement("title")]
     public required string Title { get; set; }
 
-    [BsonElement("category")]
-    public string? Category { get; set; }
-
-    [BsonElement("aisleOrder")]
-    public int? AisleOrder { get; set; }
+    [BsonElement("aisleId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? AisleId { get; set; }
 } 

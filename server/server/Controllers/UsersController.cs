@@ -62,6 +62,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
+            
             return StatusCode(500, new ApiResponse
             {
                 Success = false,

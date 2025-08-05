@@ -11,11 +11,12 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Item } from "./ItemList.tsx";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../main";
 import React, { useState } from "react";
+import { Aisle } from "./LayoutOrderList";
 
-const ListItem = ({ item }: { item: Item }) => {
+const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined }) => {
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(item.title);
@@ -80,6 +81,21 @@ const ListItem = ({ item }: { item: Item }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items"] });
     },
+  });
+
+  const {data:aisles, isLoading} = useQuery<Aisle[]>({
+    queryKey:["aisles"],
+    queryFn: async () => {
+      const res = await fetch(BASE_URL + "/aisles/" + layoutId, {
+        credentials: "include",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
+        }
+      });
+      const data = await res.json();
+      return data;
+    }
   });
 
   //deleteItem function
@@ -203,10 +219,10 @@ const ListItem = ({ item }: { item: Item }) => {
           )}
         </Text>
         <Text
-          color={item.completed ? "green.200" : setColor(item.aisleOrder)}
+          color={item.completed ? "green.200" : setColor(item.aisleOrder || 0)}
           textDecoration={item.completed ? "line-through" : "none"}
         >
-          {item.aisleName}
+          {item.aisleName || "No Aisle"}
         </Text>
       </Flex>
       <Flex gap={2} alignItems={"center"}>

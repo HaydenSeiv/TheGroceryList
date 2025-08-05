@@ -23,16 +23,28 @@ public class ItemService : IItemService
             throw new UnauthorizedAccessException("List not found or access denied");
 
         var items = await _context.Items.Find(i => i.ListId == listId).ToListAsync();
-        return items.Select(i => new ItemResponseDto
+        
+        var itemResponses = new List<ItemResponseDto>();
+        
+        foreach (var item in items)
         {
-            Id = i.Id ?? string.Empty,
-            ListId = i.ListId,
-            Completed = i.Completed,
-            Title = i.Title,
-            Category = i.Category,
-            AisleOrder = i.AisleOrder
-
-        });
+            var aisle = item.AisleId != null 
+                ? await _context.Aisles.Find(a => a.AisleId == item.AisleId).FirstOrDefaultAsync()
+                : null;
+                
+            itemResponses.Add(new ItemResponseDto
+            {
+                Id = item.Id ?? string.Empty,
+                ListId = item.ListId,
+                Completed = item.Completed,
+                Title = item.Title,
+                AisleId = item.AisleId,
+                AisleName = aisle?.AisleName ?? string.Empty,
+                AisleOrder = aisle?.AisleOrder
+            });
+        }
+        
+        return itemResponses;
     }
 
     public async Task<ItemResponseDto?> CreateItemAsync(CreateItemDto createItemDto, string userId)
@@ -48,12 +60,25 @@ public class ItemService : IItemService
         if (list == null)
             throw new UnauthorizedAccessException("List not found or access denied");
 
+        // If aisleId is provided, verify it exists and belongs to user's layout
+        Aisle? aisle = null;
+        if (!string.IsNullOrWhiteSpace(createItemDto.AisleId))
+        {
+            aisle = await _context.Aisles.Find(a => a.AisleId == createItemDto.AisleId).FirstOrDefaultAsync();
+            if (aisle == null)
+                throw new ArgumentException("Aisle not found");
+                
+            // Verify the aisle belongs to a layout owned by the user
+            var layout = await _context.Layouts.Find(l => l.LayoutId == aisle.LayoutId && l.UserId == userId).FirstOrDefaultAsync();
+            if (layout == null)
+                throw new UnauthorizedAccessException("Aisle access denied");
+        }
+
         var item = new Item
         {
             ListId = createItemDto.ListId,
             Title = createItemDto.Title,
-            Category = createItemDto.Category,
-            AisleOrder = createItemDto.AisleOrder,
+            AisleId = createItemDto.AisleId,
             Completed = false
         };
 
@@ -65,8 +90,9 @@ public class ItemService : IItemService
             ListId = item.ListId,
             Completed = item.Completed,
             Title = item.Title,
-            Category = item.Category,
-            AisleOrder = item.AisleOrder
+            AisleId = item.AisleId,
+            AisleName = aisle?.AisleName ?? string.Empty,
+            AisleOrder = aisle?.AisleOrder
         };
     }
 
