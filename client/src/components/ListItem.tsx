@@ -158,6 +158,41 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
       case 6:
         textColor = "#9b5de5";
         break;
+      case 7:
+        textColor = "#00b4d8";
+        break;
+      case 8:
+        textColor = "#9CD9D0";
+        break;
+      case 9:
+        textColor = "#FB4023";
+        break;
+      case 10:
+        textColor = "#f72585";
+        break;
+      case 11:
+        textColor = "#ff9e00";
+        break;
+      case 12:
+        textColor = "#3ecbbd";
+        break;
+      case 13:
+        textColor = "#FFDC5E";
+        break;
+      case 14:
+        textColor = "#A5BE00";
+        break;
+      case 15:
+        textColor = "#FB4023";
+        break;
+      case 16:
+        textColor = "#9b5de5";
+        break;
+      case 17:
+        textColor = "#00b4d8";
+        break;
+      case 18:
+        textColor = "#9CD9D0";
       default:
         textColor = "#ffffff";
     }
