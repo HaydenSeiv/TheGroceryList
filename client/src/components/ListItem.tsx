@@ -194,7 +194,7 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
     <Flex 
       gap={{ base: 2, md: 3 }} 
       alignItems={"center"}
-      direction={{ base: "column", sm: "row" }}
+      direction={{ base: "row", sm: "row" }}
     >
       <Flex
         flex={1}
@@ -207,14 +207,14 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
         justifyContent={"space-between"}
         minH={{ base: "50px", md: "auto" }}
         w={{ base: "100%", sm: "auto" }}
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "row", md: "row" }}
         gap={{ base: 2, md: 0 }}
       >
         <Box 
           flex={1} 
           onClick={startEditing}
           cursor="pointer"
-          w={{ base: "100%", md: "auto" }}
+          w={{ base: "auto", md: "auto" }}
         >
           {isEditing ? (
             <Input
@@ -232,7 +232,7 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
               textDecoration={item.completed ? "line-through" : "none"}
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"
-              textAlign={{ base: "center", md: "left" }}
+              textAlign={{ base: "left", md: "left" }}
               noOfLines={2}
             >
               {item.title}
@@ -245,7 +245,7 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
           textDecoration={item.completed ? "line-through" : "none"}
           fontSize={{ base: "xs", md: "sm" }}
           fontWeight="medium"
-          textAlign={{ base: "center", md: "right" }}
+          textAlign={{ base: "right", md: "right" }}
           minW={{ md: "80px" }}
           opacity={0.8}
         >
@@ -254,16 +254,18 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
       </Flex>
       
       <Flex 
-        gap={{ base: 3, md: 2 }} 
+        gap={{ base: 0, md: 2 }} 
         alignItems={"center"}
-        justify={{ base: "center", sm: "flex-end" }}
-        w={{ base: "100%", sm: "auto" }}
+        justify={{ base: "flex-end", sm: "flex-end" }}
+        w={{ base: "auto", sm: "auto" }}
       >
         <Box
           color={"green.500"}
           cursor={"pointer"}
           onClick={() => completeItem()}
           p={2}
+          ml={{ base: -1, md: 0 }}  
+          mr={{ base: -1, md: 0 }}
           borderRadius="md"
           _hover={{ bg: "green.50", _dark: { bg: "green.900" } }}
           _active={{ transform: "scale(0.95)" }}
@@ -277,6 +279,8 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
           cursor={"pointer"} 
           onClick={() => deleteItem()}
           p={2}
+          ml={{ base: -1, md: 0 }}  
+          mr={{ base: -1, md: 0 }}
           borderRadius="md"
           _hover={{ bg: "red.50", _dark: { bg: "red.900" } }}
           _active={{ transform: "scale(0.95)" }}
