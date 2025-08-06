@@ -1,4 +1,4 @@
-import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Stack, Text, Box } from "@chakra-ui/react";
 import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
@@ -57,32 +57,44 @@ const ItemList = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
 	})
 
 	return (
-		<>
-			<Text fontSize={"xl"} textTransform={"uppercase"} fontWeight={"bold"} textAlign={"center"} my={2}
-            bgGradient='linear(to-l, #0b85f8, #00ffff)'
-            bgClip='text'
-            >
+		<Box w="100%">
+			<Text 
+				fontSize={{ base: "lg", md: "xl" }} 
+				textTransform={"uppercase"} 
+				fontWeight={"bold"} 
+				textAlign={"center"} 
+				mb={{ base: 4, md: 6 }}
+				bgGradient='linear(to-l, #0b85f8, #00ffff)'
+				bgClip='text'
+			>
 				Grocery List
 			</Text>
+			
 			{isLoading && (
-				<Flex justifyContent={"center"} my={4}>
+				<Flex justifyContent={"center"} my={{ base: 6, md: 8 }}>
 					<Spinner size={"xl"} />
 				</Flex>
 			)}
+			
 			{!isLoading && items?.length === 0 && (
-				<Stack alignItems={"center"} gap='3'>
-					<Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
-						All items completed! 🤞
+				<Stack alignItems={"center"} spacing={{ base: 4, md: 6 }} py={{ base: 8, md: 12 }}>
+					<Text 
+						fontSize={{ base: "md", md: "lg" }} 
+						textAlign={"center"} 
+						color={"gray.500"}
+						_dark={{ color: "gray.400" }}
+					>
+						All items completed! 🎉
 					</Text>
-					{/* <img src='/go.png' alt='Go logo' width={70} height={70} /> */}
 				</Stack>
 			)}
-			<Stack gap={3}>
+			
+			<Stack spacing={{ base: 2, md: 3 }}>
 				{items?.map((item) => (					
 					<ListItem key={item.id} item={item} layoutId={layoutId} />
 				))}
 			</Stack>
-		</>
+		</Box>
 	);
 };
 export default ItemList;

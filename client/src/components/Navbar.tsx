@@ -70,41 +70,69 @@ export default function Navbar() {
   });
 
   return (
-    <Container maxW={"900px"}>
+    <Container maxW={"900px"} px={{ base: 2, md: 4 }}>
       <Box
         bg={useColorModeValue("gray.400", "gray.700")}
-        px={4}
-        my={4}
+        px={{ base: 2, md: 4 }}
+        py={{ base: 2, md: 0 }}
+        my={{ base: 2, md: 4 }}
         borderRadius={"5"}
       >
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          {/* Left section */}
-          <Box flex="1">
+        <Flex 
+          h={{ base: "auto", md: 16 }} 
+          alignItems={"center"} 
+          justifyContent={"space-between"}
+          direction={{ base: "column", sm: "row" }}
+          gap={{ base: 2, sm: 0 }}
+        >
+          {/* Left section - hidden on mobile */}
+          <Box flex={{ base: "none", sm: "1" }} display={{ base: "none", sm: "block" }}>
             {/* Empty or put back button here if you want it on the left */}
           </Box>
 
           {/* Center section */}
-          <Box flex="1" textAlign="center">
-            <Text fontSize={"2xl"} fontWeight={"bold"}  color={"green.600"} textTransform={"uppercase"}>
-              The Grocery List
+          <Box 
+            flex={{ base: "none", sm: "1" }} 
+            textAlign="center"
+            order={{ base: 1, sm: 0 }}
+          >
+            <Text 
+              fontSize={{ base: "lg", sm: "xl", md: "2xl" }} 
+              fontWeight={"bold"} 
+              color={"green.600"} 
+              textTransform={"uppercase"}
+              noOfLines={1}
+            >
+              <Box display={{ base: "block", md: "none" }}>Grocery List</Box>
+              <Box display={{ base: "none", md: "block" }}>The Grocery List</Box>
             </Text>
           </Box>
 
           {/* Right section */}
-          <Box flex="1" display="flex" justifyContent="flex-end" gap={3}>
+          <Box 
+            flex={{ base: "none", sm: "1" }} 
+            display="flex" 
+            justifyContent={{ base: "center", sm: "flex-end" }} 
+            gap={{ base: 2, md: 3 }}
+            flexWrap={{ base: "wrap", sm: "nowrap" }}
+            order={{ base: 2, sm: 0 }}
+          >
           {!isOnHomePage && (
               <Button
-                mx={2}
+                size={{ base: "sm", md: "md" }}
+                mx={{ base: 0, md: 2 }}
                 _active={{
                   transform: "scale(.97)",
                 }}
                 onClick={() => navigate("/user-home")}
               >
-                Back to Home
+                <Box display={{ base: "none", md: "block" }}>Back to Home</Box>
+                <Box display={{ base: "block", md: "none" }}>Back</Box>
               </Button>
             )}
             <Button
-              mx={2}
+              size={{ base: "sm", md: "md" }}
+              mx={{ base: 0, md: 2 }}
               _active={{
                 transform: "scale(.97)",
               }}

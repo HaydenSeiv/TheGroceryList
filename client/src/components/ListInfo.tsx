@@ -58,28 +58,68 @@ const ListInfo = ({ list }: { list: List }) => {
   });
 
   return (
-    <Flex gap={2} alignItems={"center"}>
+    <Flex 
+      gap={{ base: 2, md: 3 }} 
+      alignItems={"center"}
+      direction={{ base: "column", sm: "row" }}
+    >
       <Flex
         flex={1}
         alignItems={"center"}
         border={"1px"}
         borderColor={"gray.600"}
-        p={2}
+        _dark={{ borderColor: "gray.400" }}
+        p={{ base: 4, md: 4 }}
         borderRadius={"lg"}
         justifyContent={"space-between"}
         cursor={"pointer"}
         onClick={() => goToList()}
+        w={{ base: "100%", sm: "auto" }}
+        _hover={{ 
+          borderColor: "blue.500",
+          transform: "translateY(-1px)",
+          boxShadow: "md"
+        }}
+        _active={{ transform: "scale(0.98)" }}
+        transition="all 0.2s"
+        direction={{ base: "column", md: "row" }}
+        gap={{ base: 2, md: 0 }}
+        minH={{ base: "60px", md: "auto" }}
       >
-        <Text>{list.listName}</Text>
-        <Spacer />
-        <Text>{list.layoutName}</Text>
+        <Text 
+          fontSize={{ base: "md", md: "lg" }}
+          fontWeight="semibold"
+          color="blue.600"
+          _dark={{ color: "blue.400" }}
+          textAlign={{ base: "center", md: "left" }}
+        >
+          {list.listName}
+        </Text>
+        <Text 
+          fontSize={{ base: "xs", md: "sm" }}
+          color="gray.500"
+          _dark={{ color: "gray.400" }}
+          textAlign={{ base: "center", md: "right" }}
+          opacity={0.8}
+        >
+          {list.layoutName || "No Layout"}
+        </Text>
       </Flex>
-      <Flex gap={2} alignItems={"center"}>
-        <Box color={"red.500"} cursor={"pointer"} onClick={() => deleteList()}>
-          {!isDeleting && <MdDelete size={25} />}
-          {isDeleting && <Spinner size={"sm"} />}
-        </Box>
-      </Flex>
+      
+      <Box 
+        color={"red.500"} 
+        cursor={"pointer"} 
+        onClick={() => deleteList()}
+        p={2}
+        borderRadius="md"
+        _hover={{ bg: "red.50", _dark: { bg: "red.900" } }}
+        _active={{ transform: "scale(0.95)" }}
+        transition="all 0.2s"
+        alignSelf={{ base: "center", sm: "auto" }}
+      >
+        {!isDeleting && <MdDelete size={20} />}
+        {isDeleting && <Spinner size={"sm"} />}
+      </Box>
     </Flex>
   );
 };

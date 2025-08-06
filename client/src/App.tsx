@@ -1,4 +1,4 @@
-import { Container, Stack } from "@chakra-ui/react";
+import { Container, Stack, Box } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import ItemForm from "./components/ItemForm";
 import ItemList from "./components/ItemList";
@@ -16,8 +16,16 @@ import LayoutCreation from "./routes/layout-creation";
 
 function App() {
   return (
-    <>
-    <Toaster position="bottom-right" />
+    <Box minH="100vh" w="100%" overflowX="hidden">
+      <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            fontSize: '14px',
+            maxWidth: '90vw',
+          }
+        }}
+      />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="list/" element={<UserList />} />
@@ -28,7 +36,7 @@ function App() {
         <Route path="/userlists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
         <Route path="list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
       </Routes>
-    </>
+    </Box>
   );
 }
 

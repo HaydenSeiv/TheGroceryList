@@ -1,4 +1,4 @@
-import { Container, Stack } from '@chakra-ui/react'
+import { Container, Stack, VStack, Box } from '@chakra-ui/react'
 import React from 'react';
 import Navbar from '../components/Navbar'
 import ItemForm from '../components/ItemForm'
@@ -10,14 +10,16 @@ import HomeMenu from '../components/homeMenu';
 export default function UserHome() {
        
     return (
-    <Stack h="100vh">
-      
+    <VStack minH="100vh" spacing={0} w="100%">
       <Navbar />
-      <Toaster position="bottom-right" />
-        <Container>
-            {/* TODO: Add user home components here */}
-            <HomeMenu />
-        </Container>
-    </Stack>
+      <Container 
+        maxW="900px" 
+        flex="1" 
+        px={{ base: 4, md: 6 }}
+        py={{ base: 4, md: 6 }}
+      >
+        <HomeMenu />
+      </Container>
+    </VStack>
   );
 }

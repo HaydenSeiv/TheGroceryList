@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Spinner, Select} from "@chakra-ui/react";
+import { Button, Flex, Input, Spinner, Select, Box } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
@@ -84,34 +84,60 @@ const ItemForm = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
 
   return (
     <form onSubmit={createItem}>
-      <Flex gap={2}>
+      <Flex 
+        gap={{ base: 2, md: 3 }} 
+        direction={{ base: "column", md: "row" }}
+        align={{ base: "stretch", md: "flex-start" }}
+      >
         <Input
           type="text"
           value={newItem}
+          placeholder="Add new item..."
+          size={{ base: "md", md: "lg" }}
+          borderRadius="md"
+          _focus={{
+            borderColor: "blue.500",
+            boxShadow: "0 0 0 1px blue.500"
+          }}
           onChange={(e) => setNewItem(e.target.value)}
           ref={(input) => input && input.focus()}
+          flex={{ md: 1 }}
         />
         <Select
-          w="240px"
+          w={{ base: "100%", md: "200px" }}
+          size={{ base: "md", md: "lg" }}
           name="selectedAisle"
           value={selectedAisleId}
+          borderRadius="md"
+          _focus={{
+            borderColor: "blue.500",
+            boxShadow: "0 0 0 1px blue.500"
+          }}
           onChange={(e) => setSelectedAisleId(e.target.value)}
           placeholder="Select Aisle"
-        >  {aisles?.map((aisle) => (
+        >  
+          {aisles?.map((aisle) => (
             <option key={aisle.aisleId} value={aisle.aisleId}>
               {aisle.aisleName}
             </option>
           ))}
         </Select>
         <Button
-          mx={2}
           type="submit"
+          colorScheme="blue"
+          size={{ base: "md", md: "lg" }}
+          minW={{ base: "100%", md: "auto" }}
+          px={{ md: 6 }}
+          isLoading={isCreating}
+          loadingText="Adding..."
           _active={{
             transform: "scale(.97)",
           }}
         >
-          {/* if createItem function is running, show loading spinner  */}
-          {isCreating ? <Spinner size={"xs"} /> : <IoMdAdd size={30} />}
+          {!isCreating && <IoMdAdd size={20} />}
+          <Box ml={isCreating ? 0 : 2} display={{ base: "block", md: "none" }}>
+            Add Item
+          </Box>
         </Button>
       </Flex>
     </form>

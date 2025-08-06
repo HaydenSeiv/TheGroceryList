@@ -191,20 +191,30 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
   
 
   return (
-    <Flex gap={2} alignItems={"center"}>
+    <Flex 
+      gap={{ base: 2, md: 3 }} 
+      alignItems={"center"}
+      direction={{ base: "column", sm: "row" }}
+    >
       <Flex
         flex={1}
         alignItems={"center"}
         border={"1px"}
         borderColor={"gray.600"}
-        p={2}
+        _dark={{ borderColor: "gray.400" }}
+        p={{ base: 3, md: 4 }}
         borderRadius={"lg"}
-        justifyContent={"space-between"}        
+        justifyContent={"space-between"}
+        minH={{ base: "50px", md: "auto" }}
+        w={{ base: "100%", sm: "auto" }}
+        direction={{ base: "column", md: "row" }}
+        gap={{ base: 2, md: 0 }}
       >
-        <Text
-          color={item.completed ? "green.200" : setColor(item.aisleOrder)}
-          textDecoration={item.completed ? "line-through" : "none"}
+        <Box 
+          flex={1} 
           onClick={startEditing}
+          cursor="pointer"
+          w={{ base: "100%", md: "auto" }}
         >
           {isEditing ? (
             <Input
@@ -213,29 +223,66 @@ const ListItem = ({ item, layoutId }: { item: Item, layoutId: string | undefined
               onKeyDown={handleKeyDown}
               onBlur={saveEdit}
               autoFocus
+              size={{ base: "sm", md: "md" }}
+              w="100%"
             />
           ) : (
-            item.title
+            <Text
+              color={item.completed ? "green.200" : setColor(item.aisleOrder)}
+              textDecoration={item.completed ? "line-through" : "none"}
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="medium"
+              textAlign={{ base: "center", md: "left" }}
+              noOfLines={2}
+            >
+              {item.title}
+            </Text>
           )}
-        </Text>
+        </Box>
+        
         <Text
           color={item.completed ? "green.200" : setColor(item.aisleOrder || 0)}
           textDecoration={item.completed ? "line-through" : "none"}
+          fontSize={{ base: "xs", md: "sm" }}
+          fontWeight="medium"
+          textAlign={{ base: "center", md: "right" }}
+          minW={{ md: "80px" }}
+          opacity={0.8}
         >
           {item.aisleName || "No Aisle"}
         </Text>
       </Flex>
-      <Flex gap={2} alignItems={"center"}>
+      
+      <Flex 
+        gap={{ base: 3, md: 2 }} 
+        alignItems={"center"}
+        justify={{ base: "center", sm: "flex-end" }}
+        w={{ base: "100%", sm: "auto" }}
+      >
         <Box
           color={"green.500"}
           cursor={"pointer"}
           onClick={() => completeItem()}
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "green.50", _dark: { bg: "green.900" } }}
+          _active={{ transform: "scale(0.95)" }}
+          transition="all 0.2s"
         >
-          {!isCompleting && <FaCheckCircle size={20} />}
+          {!isCompleting && <FaCheckCircle size={18} />}
           {isCompleting && <Spinner size={"sm"} />}
         </Box>
-        <Box color={"red.500"} cursor={"pointer"} onClick={() => deleteItem()}>
-          {!isDeleting && <MdDelete size={25} />}
+        <Box 
+          color={"red.500"} 
+          cursor={"pointer"} 
+          onClick={() => deleteItem()}
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "red.50", _dark: { bg: "red.900" } }}
+          _active={{ transform: "scale(0.95)" }}
+          transition="all 0.2s"
+        >
+          {!isDeleting && <MdDelete size={20} />}
           {isDeleting && <Spinner size={"sm"} />}
         </Box>
       </Flex>

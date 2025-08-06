@@ -1,4 +1,4 @@
-import { Container, Stack } from "@chakra-ui/react";
+import { Container, Stack, VStack, Box, Spinner, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import Navbar from "../components/Navbar";
 import ItemForm from "../components/ItemForm";
@@ -34,21 +34,45 @@ export default function UserList() {
   });
   
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <VStack minH="100vh" justify="center" align="center" spacing={4}>
+        <Navbar />
+        <Flex flex="1" align="center" justify="center">
+          <VStack spacing={4}>
+            <Spinner size="xl" />
+            <Text>Loading your list...</Text>
+          </VStack>
+        </Flex>
+      </VStack>
+    );
   }
 
   if (!listData || !listData.layoutId) {
-    return <div>List or layout not found</div>;
+    return (
+      <VStack minH="100vh" justify="center" align="center" spacing={4}>
+        <Navbar />
+        <Flex flex="1" align="center" justify="center">
+          <Text color="red.500" fontSize="lg">List or layout not found</Text>
+        </Flex>
+      </VStack>
+    );
   }
+  
   const layoutId = listData.layoutId;
   return (
-    <Stack h="100vh">
+    <VStack minH="100vh" spacing={0} w="100%">
       <Navbar />
-      <Toaster position="bottom-right" />
-      <Container>
-        <ItemForm listId={listId} layoutId={layoutId} />
-        <ItemList listId={listId} layoutId={layoutId}/>
+      <Container 
+        maxW="900px" 
+        flex="1" 
+        px={{ base: 4, md: 6 }}
+        py={{ base: 4, md: 6 }}
+      >
+        <VStack spacing={{ base: 4, md: 6 }} align="stretch">
+          <ItemForm listId={listId} layoutId={layoutId} />
+          <ItemList listId={listId} layoutId={layoutId}/>
+        </VStack>
       </Container>
-    </Stack>
+    </VStack>
   );
 }

@@ -1,4 +1,4 @@
-import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
+import { Flex, Spinner, Stack, Text, Box } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { BASE_URL } from "../main";
@@ -46,42 +46,49 @@ const ListOfLists = () => {
   });
 
   return (
-    <>
+    <Box w="100%">
       {isLoading && (
-        <Flex justifyContent={"center"} my={4}>
+        <Flex justifyContent={"center"} my={{ base: 6, md: 8 }}>
           <Spinner size={"xl"} />
         </Flex>
       )}
+      
       <Text
-        fontSize={"xl"}
+        fontSize={{ base: "lg", md: "xl" }}
         textTransform={"uppercase"}
         fontWeight={"bold"}
         textAlign={"center"}
-        my={2}
+        mb={{ base: 4, md: 6 }}
         color={"gray.500"}
-        //bgGradient="linear(to-l, #0b85f8, #00ffff)"
-        //bgClip="text"
+        _dark={{ color: "gray.400" }}
         borderBottom="2px solid"
         borderColor="gray.500"
-        pb={1}  // Padding bottom for spacing between text and line
-
+        _dark={{ borderColor: "gray.400" }}
+        pb={2}
       >
         Your Lists
       </Text>
       
       {!isLoading && (!lists || lists.length === 0) && (
-        <Stack alignItems={"center"} gap="3">
-          <Text fontSize={"xl"} textAlign={"center"} color={"gray.500"}>
-            No lists found. Create your first list!
+        <Stack alignItems={"center"} spacing={{ base: 4, md: 6 }} py={{ base: 8, md: 12 }}>
+          <Text 
+            fontSize={{ base: "md", md: "lg" }} 
+            textAlign={"center"} 
+            color={"gray.500"}
+            _dark={{ color: "gray.400" }}
+            maxW="300px"
+          >
+            No lists found. Create your first list above to get started!
           </Text>
         </Stack>
       )}
-      <Stack gap={3}>
+      
+      <Stack spacing={{ base: 3, md: 4 }}>
         {lists?.map((list) => (
           <ListInfo key={list.id} list={list} />
         ))}
       </Stack>
-    </>
+    </Box>
   );
 };
 export default ListOfLists;

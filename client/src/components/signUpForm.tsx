@@ -95,70 +95,139 @@ export default function SignUpForm() {
     },
   });
   return (
-    <Container>
+    <Box w="100%">
       <form onSubmit={createUser}>
-        <Stack display="flex" alignItems="center" justifyContent="center">
+        <Stack spacing={{ base: 4, md: 5 }} align="center">
+          <Stack direction={{ base: "column", sm: "row" }} spacing={{ base: 4, sm: 4 }} w="100%">
+            <FormControl isRequired>
+              <FormLabel 
+                textAlign="center" 
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="medium"
+              >
+                First name
+              </FormLabel>
+              <Input
+                placeholder="Enter first name"
+                size={{ base: "md", md: "lg" }}
+                borderRadius="md"
+                _focus={{
+                  borderColor: "green.500",
+                  boxShadow: "0 0 0 1px green.500"
+                }}
+                onChange={(e) => {
+                  setNewFirstName(e.target.value);
+                }}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel 
+                textAlign="center" 
+                fontSize={{ base: "sm", md: "md" }}
+                fontWeight="medium"
+              >
+                Last name
+              </FormLabel>
+              <Input
+                placeholder="Enter last name"
+                size={{ base: "md", md: "lg" }}
+                borderRadius="md"
+                _focus={{
+                  borderColor: "green.500",
+                  boxShadow: "0 0 0 1px green.500"
+                }}
+                onChange={(e) => {
+                  setNewLastName(e.target.value);
+                }}
+              />
+            </FormControl>
+          </Stack>
+
           <FormControl isRequired>
-            <FormLabel textAlign={"center"}>First name</FormLabel>
-            <Input
-              placeholder="First name"
-              onChange={(e) => {
-                setNewFirstName(e.target.value);
-              }}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel textAlign={"center"}>Last name</FormLabel>
-            <Input
-              placeholder="Last name"
-              onChange={(e) => {
-                setNewLastName(e.target.value);
-              }}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel textAlign={"center"}>Email address</FormLabel>
+            <FormLabel 
+              textAlign="center" 
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="medium"
+            >
+              Email address
+            </FormLabel>
             <Input
               type="email"
-              placeholder="Email"
+              placeholder="Enter your email"
               autoComplete="email"
+              size={{ base: "md", md: "lg" }}
+              borderRadius="md"
+              _focus={{
+                borderColor: "green.500",
+                boxShadow: "0 0 0 1px green.500"
+              }}
               onChange={(e) => {
                 setNewEmail(e.target.value);
               }}
             />
           </FormControl>
+
           <FormControl isRequired>
-            <FormLabel textAlign={"center"}>Password</FormLabel>
+            <FormLabel 
+              textAlign="center" 
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="medium"
+            >
+              Password
+            </FormLabel>
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="Create a password"
               autoComplete="new-password"
+              size={{ base: "md", md: "lg" }}
+              borderRadius="md"
+              _focus={{
+                borderColor: "green.500",
+                boxShadow: "0 0 0 1px green.500"
+              }}
               onChange={(e) => {
                 setNewPassword(e.target.value);
               }}
             />
           </FormControl>          
+
           <FormControl isRequired isInvalid={showPasswordError}>
-            <FormLabel textAlign={"center"}>Confirm Password</FormLabel>
+            <FormLabel 
+              textAlign="center" 
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="medium"
+            >
+              Confirm Password
+            </FormLabel>
             <Input
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Confirm your password"
               autoComplete="new-password"
+              size={{ base: "md", md: "lg" }}
+              borderRadius="md"
+              _focus={{
+                borderColor: "green.500",
+                boxShadow: "0 0 0 1px green.500"
+              }}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}
             />
           </FormControl>  
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            gap={3}
+          <Stack 
+            direction={{ base: "column", sm: "row" }}
+            spacing={{ base: 3, sm: 4 }}
+            w="100%"
+            align="center"
+            justify="center"
           >
             <Button
-              mx={2}
+              variant="outline"
+              colorScheme="gray"
+              size={{ base: "md", md: "lg" }}
+              w={{ base: "100%", sm: "auto" }}
+              minW={{ sm: "140px" }}
               _active={{
                 transform: "scale(.97)",
               }}
@@ -166,18 +235,22 @@ export default function SignUpForm() {
               <Link to={`/`}>Back to Log In</Link>
             </Button>
             <Button
-              mx={2}
               type="submit"
+              colorScheme="green"
+              size={{ base: "md", md: "lg" }}
+              w={{ base: "100%", sm: "auto" }}
+              minW={{ sm: "140px" }}
+              isLoading={isCreating}
+              loadingText="Creating..."
               _active={{
                 transform: "scale(.97)",
               }}
             >
-              {/* if createUser function is running, show loading spinner  */}
-              {isCreating ? <Spinner size={"xs"} /> : "Create Account"}
+              Create Account
             </Button>
-          </Box>
+          </Stack>
         </Stack>
       </form>
-    </Container>
+    </Box>
   );
 }

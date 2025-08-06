@@ -5,6 +5,8 @@ import {
   Select,
   Spinner,
   Text,
+  Box,
+  Stack,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
@@ -84,30 +86,45 @@ const CreateListForm = () => {
   });
 
   return (
-    <>
+    <Box w="100%">
       <Text
-        fontSize={"xl"}
+        fontSize={{ base: "lg", md: "xl" }}
         textTransform={"uppercase"}
         fontWeight={"bold"}
         textAlign={"center"}
-        my={2}
+        mb={{ base: 4, md: 6 }}
         color={"gray.500"}
-        //bgGradient="linear(to-l, #0b85f8, #00ffff)"
-        //bgClip="text"
+        _dark={{ color: "gray.400" }}
       >
         Create a New List
       </Text>
       <form onSubmit={createList}>
-        <Flex gap={2} my={2} justifyContent={"center"}>
+        <Stack 
+          direction={{ base: "column", md: "row" }}
+          spacing={{ base: 3, md: 2 }}
+          align={{ base: "stretch", md: "flex-end" }}
+        >
           <Input
             type="text"
             value={newList}
             placeholder="Enter list name"
+            size={{ base: "md", md: "lg" }}
+            borderRadius="md"
+            _focus={{
+              borderColor: "blue.500",
+              boxShadow: "0 0 0 1px blue.500"
+            }}
             onChange={(e) => setNewList(e.target.value)}
             ref={(input) => input && input.focus()}
           />
           <Select
             placeholder="Select Store Layout"
+            size={{ base: "md", md: "lg" }}
+            borderRadius="md"
+            _focus={{
+              borderColor: "blue.500",
+              boxShadow: "0 0 0 1px blue.500"
+            }}
             onChange={(e) => {
               setLayout(e.target.value);
             }}
@@ -119,18 +136,25 @@ const CreateListForm = () => {
             ))}
           </Select>
           <Button
-            mx={2}
             type="submit"
+            colorScheme="blue"
+            size={{ base: "md", md: "lg" }}
+            minW={{ base: "100%", md: "auto" }}
+            px={{ md: 6 }}
+            isLoading={isCreating}
+            loadingText="Creating..."
             _active={{
               transform: "scale(.97)",
             }}
           >
-            {/* if createList function is running, show loading spinner  */}
-            {isCreating ? <Spinner size={"xs"} /> : <IoMdAdd size={30} />}
+            {!isCreating && <IoMdAdd size={20} />}
+            <Box ml={isCreating ? 0 : 2} display={{ base: "block", md: "none" }}>
+              Create List
+            </Box>
           </Button>
-        </Flex>
+        </Stack>
       </form>
-    </>
+    </Box>
   );
 };
 export default CreateListForm;

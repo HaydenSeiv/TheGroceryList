@@ -74,39 +74,71 @@ export default function LoginForm() {
   });
 
   return (
-    <Container>
+    <Box w="100%">
       <form onSubmit={loginUser}>
-        <Stack display="flex" alignItems="center" justifyContent="center">
+        <Stack spacing={{ base: 4, md: 6 }} align="center">
           <FormControl isRequired>
-            <FormLabel textAlign={"center"}>Email</FormLabel>
-            <Input placeholder="Email"
+            <FormLabel 
+              textAlign="center" 
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="medium"
+            >
+              Email
+            </FormLabel>
+            <Input 
+              placeholder="Enter your email"
               autoComplete="email"
-               onChange={(e) => {
+              size={{ base: "md", md: "lg" }}
+              borderRadius="md"
+              _focus={{
+                borderColor: "green.500",
+                boxShadow: "0 0 0 1px green.500"
+              }}
+              onChange={(e) => {
                 setEmail(e.target.value);
-              }} />
+              }} 
+            />
           </FormControl>
+          
           <FormControl isRequired>
-            <FormLabel textAlign={"center"}>Password</FormLabel>
+            <FormLabel 
+              textAlign="center"
+              fontSize={{ base: "sm", md: "md" }}
+              fontWeight="medium"
+            >
+              Password
+            </FormLabel>
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="Enter your password"
               autoComplete="current-password"
+              size={{ base: "md", md: "lg" }}
+              borderRadius="md"
+              _focus={{
+                borderColor: "green.500",
+                boxShadow: "0 0 0 1px green.500"
+              }}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
             />
           </FormControl>
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            gap={3}
+          <Stack 
+            direction={{ base: "column", sm: "row" }}
+            spacing={{ base: 3, sm: 4 }}
+            w="100%"
+            align="center"
+            justify="center"
           >
             <Button
-              mx={2}
               type="submit"
+              colorScheme="green"
+              size={{ base: "md", md: "lg" }}
+              w={{ base: "100%", sm: "auto" }}
+              minW={{ sm: "120px" }}
+              isLoading={isLoggingIn}
+              loadingText="Logging in..."
               _active={{
                 transform: "scale(.97)",
               }}
@@ -114,16 +146,20 @@ export default function LoginForm() {
               Log In
             </Button>
             <Button
-              mx={2}
+              variant="outline"
+              colorScheme="green"
+              size={{ base: "md", md: "lg" }}
+              w={{ base: "100%", sm: "auto" }}
+              minW={{ sm: "140px" }}
               _active={{
                 transform: "scale(.97)",
               }}
             >
               <Link to={`/signup/`}>Create Account</Link>
             </Button>
-          </Box>
+          </Stack>
         </Stack>
       </form>
-    </Container>
+    </Box>
   );
 }
