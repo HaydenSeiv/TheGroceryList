@@ -23,8 +23,7 @@ const CreateListForm = () => {
 
   const { data: layouts, isLoading } = useQuery<Layout[]>({
     queryKey: ["layouts"],
-    queryFn: async () => {
-      console.log("fetching layouts");
+    queryFn: async () => {      
       const res = await fetch(`${BASE_URL}/layouts`, {
         credentials: "include",
         headers: {
@@ -32,8 +31,7 @@ const CreateListForm = () => {
           "Content-Type": "application/json",
         },
       });
-      const data = await res.json();
-      console.log("User Layouts: ", data);
+      const data = await res.json();      
       return data;
     },
   });
