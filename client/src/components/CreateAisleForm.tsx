@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../main";
-import { Aisle } from "./LayoutOrderList";
 
-const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
+const CreateAisleForm = ({ layoutId }: { layoutId: string }) => {
   const [newLayoutName, setNewLayoutName] = useState("");
   const [newAisle, setNewAisle] = useState("");
   const [newAisleOrder, setNewAisleOrder] = useState("");
@@ -100,4 +99,4 @@ const CreateAsileForm = ({ layoutId }: { layoutId: string }) => {
   );
 };
 
-export default CreateAsileForm;
+export default CreateAisleForm;

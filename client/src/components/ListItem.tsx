@@ -1,11 +1,8 @@
 import {
-  Badge,
   Box,
   Flex,
   Spinner,
   Text,
-  Grid,
-  GridItem,
   Input,
 } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";

@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import theme from "./chakra/theme.ts";
 import { BrowserRouter } from "react-router-dom";
 
-// eslint-disable-next-line react-refresh/only-export-components
+ 
 export const BASE_URL =
   import.meta.env.MODE === "development" ? import.meta.env.VITE_API_BASE_URL : "https://grocerylistserver.azurewebsites.net/api";
 

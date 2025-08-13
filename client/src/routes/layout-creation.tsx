@@ -2,7 +2,7 @@ import { Container, Stack } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 import { Toaster } from "react-hot-toast";
 import React from "react";
-import CreateAsileForm from "../components/CreateAsileForm";
+import CreateAisleForm from "../components/CreateAisleForm";
 import { useParams } from "react-router-dom";
 import LayoutOrderList from "../components/LayoutOrderList";
 
@@ -15,7 +15,7 @@ export default function LayoutCreation() {
           <Navbar />
           <Toaster position="bottom-right" />
           <Container>
-            <CreateAsileForm layoutId={layoutId || ""} />
+            <CreateAisleForm layoutId={layoutId || ""} />
             <LayoutOrderList layoutId={layoutId || ""} />
           </Container>
         </Stack>
