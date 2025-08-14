@@ -1,16 +1,10 @@
-import {
-  Button,
-  Input,
-  Select,
-  Text,
-  Box,
-  Stack,
-} from "@chakra-ui/react";
+import { Button, Input, Select, Text, Box, Stack } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../main";
 import { Layout } from "./UserLayouts";
+import { toast } from "react-hot-toast";
 
 const CreateListForm = () => {
   //state hook to create a new list name
@@ -21,7 +15,7 @@ const CreateListForm = () => {
 
   const { data: layouts, isLoading } = useQuery<Layout[]>({
     queryKey: ["layouts"],
-    queryFn: async () => {      
+    queryFn: async () => {
       const res = await fetch(`${BASE_URL}/layouts`, {
         credentials: "include",
         headers: {
@@ -29,7 +23,7 @@ const CreateListForm = () => {
           "Content-Type": "application/json",
         },
       });
-      const data = await res.json();      
+      const data = await res.json();
       return data;
     },
   });
@@ -41,6 +35,16 @@ const CreateListForm = () => {
     //the mutation function is async. e is of type of Formevent
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
+
+      if (!newList.trim()) {
+        toast.error("Please enter a list name");
+        return;
+      }
+
+      if (!layout) {
+        toast.error("Please select a store layout");
+        return;
+      }
       try {
         //we send the new list title to the server and await for the response
         const res = await fetch(BASE_URL + "/lists", {
@@ -58,6 +62,7 @@ const CreateListForm = () => {
           }),
         });
         const data = await res.json();
+        console.log(data);
 
         //if response not ok, throw error
         if (!res.ok) {
@@ -77,7 +82,8 @@ const CreateListForm = () => {
     },
 
     onError: (error: any) => {
-      alert(error.message);
+      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     },
   });
 
@@ -95,7 +101,7 @@ const CreateListForm = () => {
         Create a New List
       </Text>
       <form onSubmit={createList}>
-        <Stack 
+        <Stack
           direction={{ base: "column", md: "row" }}
           spacing={{ base: 3, md: 2 }}
           align={{ base: "stretch", md: "flex-end" }}
@@ -108,7 +114,7 @@ const CreateListForm = () => {
             borderRadius="md"
             _focus={{
               borderColor: "blue.500",
-              boxShadow: "0 0 0 1px blue.500"
+              boxShadow: "0 0 0 1px blue.500",
             }}
             onChange={(e) => setNewList(e.target.value)}
             ref={(input) => input && input.focus()}
@@ -119,7 +125,7 @@ const CreateListForm = () => {
             borderRadius="md"
             _focus={{
               borderColor: "blue.500",
-              boxShadow: "0 0 0 1px blue.500"
+              boxShadow: "0 0 0 1px blue.500",
             }}
             onChange={(e) => {
               setLayout(e.target.value);
@@ -144,7 +150,10 @@ const CreateListForm = () => {
             }}
           >
             {!isCreating && <IoMdAdd size={20} />}
-            <Box ml={isCreating ? 0 : 2} display={{ base: "block", md: "none" }}>
+            <Box
+              ml={isCreating ? 0 : 2}
+              display={{ base: "block", md: "none" }}
+            >
               Create List
             </Box>
           </Button>

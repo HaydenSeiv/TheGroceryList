@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using server.DTOs;
 using server.Middleware;
 using server.Services;
-
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace server.Controllers;
 
     [Route("api/[controller]")]    
     [ApiController]
-    [ServiceFilter(typeof(AuthRequiredAttribute))]
+    [Authorize]
     public class LayoutsController : ControllerBase
     {
         private readonly ILayoutService _layoutService;
@@ -135,6 +136,6 @@ namespace server.Controllers;
 
     private string? GetCurrentUserId()
     {
-        return HttpContext.Items["UserId"]?.ToString();
+        return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
 }

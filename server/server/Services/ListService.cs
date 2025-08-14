@@ -27,9 +27,10 @@ public class ListService : IListService
         });
     }
 
-    public async Task<ListResponseDto?> GetListAsync(string listId)
+    public async Task<ListResponseDto?> GetListAsync(string listId, string userId)
     {
-        var list = await _context.Lists.Find(l => l.Id == listId).FirstOrDefaultAsync();
+        var list = await _context.Lists.Find(l => l.Id == listId && l.UserId == userId).FirstOrDefaultAsync();
+   
         return list != null ? new ListResponseDto
         {
             Id = list.Id ?? string.Empty,

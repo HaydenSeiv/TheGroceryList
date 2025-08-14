@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using server.DTOs;
 using server.Services;
-
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ItemsController : ControllerBase
 {
     private readonly IItemService _itemService;
@@ -22,7 +24,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var userId = await GetCurrentUserIdAsync();
+            var userId = GetCurrentUserId();
             if (userId == null)
             {
                 return Unauthorized(new ApiResponse
@@ -61,7 +63,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var userId = await GetCurrentUserIdAsync();
+            var userId = GetCurrentUserId();
             if (userId == null)
             {
                 return Unauthorized(new ApiResponse
@@ -108,7 +110,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var userId = await GetCurrentUserIdAsync();
+            var userId = GetCurrentUserId();
             if (userId == null)
             {
                 return Unauthorized(new ApiResponse
@@ -148,7 +150,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var userId = await GetCurrentUserIdAsync();
+            var userId = GetCurrentUserId();
             if (userId == null)
             {
                 return Unauthorized(new ApiResponse
@@ -188,7 +190,7 @@ public class ItemsController : ControllerBase
     {
         try
         {
-            var userId = await GetCurrentUserIdAsync();
+            var userId = GetCurrentUserId();
             if (userId == null)
             {
                 return Unauthorized(new ApiResponse
@@ -223,13 +225,9 @@ public class ItemsController : ControllerBase
         }
     }
 
-    private async Task<string?> GetCurrentUserIdAsync()
+    private string? GetCurrentUserId()
     {
-        var token = GetTokenFromRequest();
-        if (string.IsNullOrEmpty(token)) return null;
-
-        var user = await _userService.GetAuthenticatedUserAsync(token);
-        return user?.Id;
+        return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
 
     private string? GetTokenFromRequest()
@@ -249,4 +247,4 @@ public class ItemsController : ControllerBase
 
         return null;
     }
-} 
+}

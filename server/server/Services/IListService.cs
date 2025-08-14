@@ -6,7 +6,7 @@ public interface IListService
 {
     Task<IEnumerable<ListResponseDto>> GetUserListsAsync(string userId);
 
-    Task<ListResponseDto?> GetListAsync(string listId);
+    Task<ListResponseDto?> GetListAsync(string listId, string userId);
     Task<ListResponseDto?> CreateListAsync(string userId, CreateListDto createListDto);
     Task<bool> DeleteListAsync(string listId, string userId);
 } 

@@ -3,12 +3,14 @@ using server.DTOs;
 using server.Middleware;
 using server.Services;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[ServiceFilter(typeof(AuthRequiredAttribute))]
+[Authorize]
 public class AislesController : Controller
 {
     private readonly IAisleService _aisleService;
@@ -129,7 +131,7 @@ public class AislesController : Controller
 
     private string? GetCurrentUserId()
     {
-        return HttpContext.Items["UserId"]?.ToString();
+        return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
     
 }

@@ -2,12 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using server.DTOs;
 using server.Services;
 using server.Middleware;
-
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[ServiceFilter(typeof(AuthRequiredAttribute))]
+[Authorize]
 public class ListsController : ControllerBase
 {
     private readonly IListService _listService;
@@ -59,7 +60,14 @@ public class ListsController : ControllerBase
     {
         try
         {
-            var list = await _listService.GetListAsync(id);
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new ApiResponse { Success = false, Message = "Unauthorized" });
+            }
+
+            
+            var list = await _listService.GetListAsync(id, userId);
             if (list == null)
             {
                 return NotFound(new ApiResponse { Success = false, Message = "List not found" });
@@ -78,6 +86,7 @@ public class ListsController : ControllerBase
         try
         {
             var userId = GetCurrentUserId();
+            Console.WriteLine($"Current User Id: {userId}");
             if (userId == null)
             {
                 return Unauthorized(new ApiResponse
@@ -154,6 +163,6 @@ public class ListsController : ControllerBase
 
     private string? GetCurrentUserId()
     {
-        return HttpContext.Items["UserId"]?.ToString();
+        return HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
 }
