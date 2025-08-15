@@ -99,11 +99,19 @@ export default function Navbar() {
               color={"green.600"}
               textTransform={"uppercase"}
               noOfLines={1}
+              display={{ base: "block", md: "none" }}
             >
-              <Box display={{ base: "block", md: "none" }}>Grocery List</Box>
-              <Box display={{ base: "none", md: "block" }}>
-                The Grocery List
-              </Box>
+              Grocery List
+            </Text>
+            <Text
+              fontSize={{ base: "lg", sm: "xl", md: "2xl" }}
+              fontWeight={"bold"}
+              color={"green.600"}
+              textTransform={"uppercase"}
+              noOfLines={1}
+              display={{ base: "none", md: "block" }}
+            >
+              The Grocery List
             </Text>
           </Box>
 
