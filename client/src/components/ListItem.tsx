@@ -9,7 +9,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Item } from "./ItemList.tsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import React, { useState } from "react";
 import { Aisle } from "./LayoutOrderList";
 

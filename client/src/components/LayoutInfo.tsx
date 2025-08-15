@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "./UserLayouts";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import { Flex, Spinner, Text, Box } from "@chakra-ui/react";
 import { MdDelete } from "react-icons/md";
 import React from "react";

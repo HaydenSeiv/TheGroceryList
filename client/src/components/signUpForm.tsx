@@ -11,7 +11,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import { IoMdAdd } from "react-icons/io";
 import {toast} from "react-hot-toast";
 

@@ -2,7 +2,7 @@ import { Box, Text, Flex, Spacer, Button, IconButton } from "@chakra-ui/react";
 import React from "react";
 import { MdDelete } from "react-icons/md";
 import { Aisle } from "./LayoutOrderList";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const LayoutItem = ({ aisle }: { aisle: Aisle }) => {

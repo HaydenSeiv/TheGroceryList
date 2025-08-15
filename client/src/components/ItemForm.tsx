@@ -2,7 +2,7 @@ import { Button, Flex, Input, Spinner, Select, Box } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import React from "react";
 import { Aisle } from "./LayoutOrderList";
 

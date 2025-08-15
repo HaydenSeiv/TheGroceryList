@@ -5,7 +5,7 @@ import ItemForm from "../components/ItemForm";
 import ItemList from "../components/ItemList";
 import { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import { List } from "../components/ListOfLists";
 import { useQuery } from "@tanstack/react-query";
 

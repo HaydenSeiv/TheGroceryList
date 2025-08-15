@@ -1,7 +1,7 @@
 import { Flex, Spinner, Stack, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import LayoutItem from "./LayoutItem.tsx";
 
 

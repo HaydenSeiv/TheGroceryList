@@ -2,7 +2,7 @@ import { Button, Input, Select, Text, Box, Stack } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import { Layout } from "./UserLayouts";
 import { toast } from "react-hot-toast";
 

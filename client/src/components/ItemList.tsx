@@ -2,7 +2,7 @@ import { Flex, Spinner, Stack, Text, Box } from "@chakra-ui/react";
 import ListItem from "./ListItem";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import toast from "react-hot-toast";
 
 //the Item struct, matches "Item" design in both backend and database

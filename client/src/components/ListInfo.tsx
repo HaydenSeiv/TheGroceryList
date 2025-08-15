@@ -11,7 +11,7 @@ import {
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import React, { useState } from "react";
 import { List } from "./ListOfLists";
 import { useNavigate } from "react-router-dom";

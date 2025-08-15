@@ -12,7 +12,7 @@ import React from "react";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
-import { BASE_URL } from "../main";
+import { BASE_URL } from "../../utils/config";
 import toast from "react-hot-toast";
 
 export default function Navbar() {
