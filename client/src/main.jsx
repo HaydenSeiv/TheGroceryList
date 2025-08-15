@@ -8,7 +8,30 @@ import theme from "./chakra/theme.ts";
 import { BrowserRouter } from "react-router-dom";
 
  
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      onError: (error) => {
+        if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+          // Clear auth state
+          localStorage.removeItem('token');
+          // Navigate to login
+          window.location.href = '/login';
+        }
+      }
+    },
+    mutations: {
+      onError: (error) => {
+        if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+          // Clear auth state
+          localStorage.removeItem('token');
+          // Navigate to login
+          window.location.href = '/login';
+        }
+      }
+    }
+  }
+});
 
 
 
