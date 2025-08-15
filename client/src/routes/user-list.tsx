@@ -1,9 +1,7 @@
-import { Container, Stack, VStack, Box, Spinner, Flex, Text } from "@chakra-ui/react";
-import React from "react";
+import { Container, VStack, Spinner, Flex, Text } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 import ItemForm from "../components/ItemForm";
 import ItemList from "../components/ItemList";
-import { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
 import { List } from "../components/ListOfLists";

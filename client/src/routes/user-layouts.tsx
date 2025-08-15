@@ -1,7 +1,5 @@
-import { Container, Stack, VStack } from "@chakra-ui/react";
-import React from "react";
+import { Container, VStack } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
-import { Toaster } from "react-hot-toast";
 import UserLayouts from "../components/UserLayouts";
 import CreateLayoutForm from "../components/CreateLayoutForm";
 

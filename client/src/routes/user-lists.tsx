@@ -1,7 +1,5 @@
-import { Container, Stack, VStack, Box } from "@chakra-ui/react";
-import React from "react";
+import { Container, VStack } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
-import { Toaster } from "react-hot-toast";
 import ListOfLists from "../components/ListOfLists";
 import CreateListForm from "../components/CreateListForm";
 

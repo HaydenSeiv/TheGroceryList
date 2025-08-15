@@ -1,8 +1,5 @@
-import { Stack, VStack, Container, Box } from "@chakra-ui/react";
-import React from "react";
-import Navbar from "../components/Navbar";
+import { VStack, Container, Box } from "@chakra-ui/react";
 import SignUpForm from "../components/signUpForm";
-import { Toaster } from "react-hot-toast";
 import AppTitle from "../components/AppTitle";
 
 export default function SignUpPage() {
