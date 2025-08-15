@@ -37,7 +37,7 @@ const ItemList = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
 					const errorData = await res.json();
 					throw new Error(errorData.error || "Failed to fetch items");
                 }
-				
+
 				const data = await res.json()		
                 return data || []
             } catch (error) {
@@ -49,12 +49,13 @@ const ItemList = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
 
 	//sort the array of items based off of aisle order, this makes it so list is in proper order of aisles.
 	//Items without aisles will appear at the end
-	items?.sort((a, b) => {
+	//create a copy of the items array so we don't mutate the original array
+	const sortedItems = items ? items.sort((a, b) => {
 		if (a.aisleOrder == null && b.aisleOrder == null) return 0;
 		if (a.aisleOrder == null) return 1;
 		if (b.aisleOrder == null) return -1;
 		return a.aisleOrder - b.aisleOrder;
-	})
+	}) : [];
 
 	return (
 		<Box w="100%">
@@ -90,7 +91,7 @@ const ItemList = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
 			)}
 			
 			<Stack spacing={{ base: 2, md: 3 }}>
-				{items?.map((item) => (					
+				{sortedItems?.map((item) => (					
 					<ListItem key={item.id} item={item} layoutId={layoutId} />
 				))}
 			</Stack>
