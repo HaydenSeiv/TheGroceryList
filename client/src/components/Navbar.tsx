@@ -3,14 +3,11 @@ import {
   Flex,
   Button,
   useColorModeValue,
-  useColorMode,
   Text,
   Container,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
-import { IoMoon } from "react-icons/io5";
-import { LuSun } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
 import toast from "react-hot-toast";
@@ -25,10 +22,7 @@ export default function Navbar() {
   const location = useLocation();
   const isOnHomePage = location.pathname.startsWith("/user-home");
 
-  //used to toggle between light and dark mode
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  const { mutate: logoutUser, isPending: isLoggingout } = useMutation({
+  const { mutate: logoutUser } = useMutation({
     mutationKey: ["logoutUser"],
 
     mutationFn: async (e: React.FormEvent) => {
@@ -78,46 +72,51 @@ export default function Navbar() {
         my={{ base: 2, md: 4 }}
         borderRadius={"5"}
       >
-        <Flex 
-          h={{ base: "auto", md: 16 }} 
-          alignItems={"center"} 
+        <Flex
+          h={{ base: "auto", md: 16 }}
+          alignItems={"center"}
           justifyContent={"space-between"}
           direction={{ base: "column", sm: "row" }}
           gap={{ base: 2, sm: 0 }}
         >
           {/* Left section - hidden on mobile */}
-          <Box flex={{ base: "none", sm: "1" }} display={{ base: "none", sm: "block" }}>
+          <Box
+            flex={{ base: "none", sm: "1" }}
+            display={{ base: "none", sm: "block" }}
+          >
             {/* Empty or put back button here if you want it on the left */}
           </Box>
 
           {/* Center section */}
-          <Box 
-            flex={{ base: "none", sm: "1" }} 
+          <Box
+            flex={{ base: "none", sm: "1" }}
             textAlign="center"
             order={{ base: 1, sm: 0 }}
           >
-            <Text 
-              fontSize={{ base: "lg", sm: "xl", md: "2xl" }} 
-              fontWeight={"bold"} 
-              color={"green.600"} 
+            <Text
+              fontSize={{ base: "lg", sm: "xl", md: "2xl" }}
+              fontWeight={"bold"}
+              color={"green.600"}
               textTransform={"uppercase"}
               noOfLines={1}
             >
               <Box display={{ base: "block", md: "none" }}>Grocery List</Box>
-              <Box display={{ base: "none", md: "block" }}>The Grocery List</Box>
+              <Box display={{ base: "none", md: "block" }}>
+                The Grocery List
+              </Box>
             </Text>
           </Box>
 
           {/* Right section */}
-          <Box 
-            flex={{ base: "none", sm: "1" }} 
-            display="flex" 
-            justifyContent={{ base: "center", sm: "flex-end" }} 
+          <Box
+            flex={{ base: "none", sm: "1" }}
+            display="flex"
+            justifyContent={{ base: "center", sm: "flex-end" }}
             gap={{ base: 2, md: 3 }}
             flexWrap={{ base: "wrap", sm: "nowrap" }}
             order={{ base: 2, sm: 0 }}
           >
-          {!isOnHomePage && (
+            {!isOnHomePage && (
               <Button
                 size={{ base: "sm", md: "md" }}
                 mx={{ base: 0, md: 2 }}

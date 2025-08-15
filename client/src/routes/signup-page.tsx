@@ -1,5 +1,5 @@
 import { VStack, Container, Box } from "@chakra-ui/react";
-import SignUpForm from "../components/signUpForm";
+import SignUpForm from "../components/SignUpForm";
 import AppTitle from "../components/AppTitle";
 
 export default function SignUpPage() {

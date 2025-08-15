@@ -1,9 +1,7 @@
 import { Flex, Spinner, Stack, Text, Box } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { BASE_URL } from "../../utils/config";
 import ListInfo from "./ListInfo";
-import toast from "react-hot-toast";
 
 //the Item struct, matches "Item" design in both backend and database
 export type List = {
@@ -52,7 +50,7 @@ const ListOfLists = () => {
           <Spinner size={"xl"} />
         </Flex>
       )}
-      
+
       <Text
         fontSize={{ base: "lg", md: "xl" }}
         textTransform={"uppercase"}
@@ -68,12 +66,16 @@ const ListOfLists = () => {
       >
         Your Lists
       </Text>
-      
+
       {!isLoading && (!lists || lists.length === 0) && (
-        <Stack alignItems={"center"} spacing={{ base: 4, md: 6 }} py={{ base: 8, md: 12 }}>
-          <Text 
-            fontSize={{ base: "md", md: "lg" }} 
-            textAlign={"center"} 
+        <Stack
+          alignItems={"center"}
+          spacing={{ base: 4, md: 6 }}
+          py={{ base: 8, md: 12 }}
+        >
+          <Text
+            fontSize={{ base: "md", md: "lg" }}
+            textAlign={"center"}
             color={"gray.500"}
             _dark={{ color: "gray.400" }}
             maxW="300px"
@@ -82,7 +84,7 @@ const ListOfLists = () => {
           </Text>
         </Stack>
       )}
-      
+
       <Stack spacing={{ base: 3, md: 4 }}>
         {lists?.map((list) => (
           <ListInfo key={list.id} list={list} />

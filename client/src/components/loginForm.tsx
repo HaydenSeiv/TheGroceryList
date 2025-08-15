@@ -5,13 +5,10 @@ import {
   Input,
   Box,
   Button,
-  Container,
-  Spinner,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { BASE_URL } from "../../utils/config";
-import { IoMdAdd } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -50,7 +47,7 @@ export default function LoginForm() {
         setPassword("");
 
         // Store the token
-        localStorage.setItem('token', content.token);
+        localStorage.setItem("token", content.token);
 
         return content;
       } catch (error: any) {
@@ -78,30 +75,30 @@ export default function LoginForm() {
       <form onSubmit={loginUser}>
         <Stack spacing={{ base: 4, md: 6 }} align="center">
           <FormControl isRequired>
-            <FormLabel 
-              textAlign="center" 
+            <FormLabel
+              textAlign="center"
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"
             >
               Email
             </FormLabel>
-            <Input 
+            <Input
               placeholder="Enter your email"
               autoComplete="email"
               size={{ base: "md", md: "lg" }}
               borderRadius="md"
               _focus={{
                 borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500"
+                boxShadow: "0 0 0 1px green.500",
               }}
               onChange={(e) => {
                 setEmail(e.target.value);
-              }} 
+              }}
             />
           </FormControl>
-          
+
           <FormControl isRequired>
-            <FormLabel 
+            <FormLabel
               textAlign="center"
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"
@@ -116,7 +113,7 @@ export default function LoginForm() {
               borderRadius="md"
               _focus={{
                 borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500"
+                boxShadow: "0 0 0 1px green.500",
               }}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -124,7 +121,7 @@ export default function LoginForm() {
             />
           </FormControl>
 
-          <Stack 
+          <Stack
             direction={{ base: "column", sm: "row" }}
             spacing={{ base: 3, sm: 4 }}
             w="100%"

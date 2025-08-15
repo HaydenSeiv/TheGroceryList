@@ -5,16 +5,12 @@ import {
   Input,
   Box,
   Button,
-  Container,
-  Spinner,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../utils/config";
-import { IoMdAdd } from "react-icons/io";
-import {toast} from "react-hot-toast";
-
+import { toast } from "react-hot-toast";
 
 export default function SignUpForm() {
   //state hook to create a new first name
@@ -33,7 +29,8 @@ export default function SignUpForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   //state hook to check if passwords match
-  const passwordsMatch = newPassword === confirmPassword && confirmPassword !== "";
+  const passwordsMatch =
+    newPassword === confirmPassword && confirmPassword !== "";
   const showPasswordError = confirmPassword !== "" && !passwordsMatch;
 
   const queryClient = useQueryClient();
@@ -90,7 +87,10 @@ export default function SignUpForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       setTimeout(() => {
-        toast.success("Account created succesfully, you will now be redirected to log in")}, 2);
+        toast.success(
+          "Account created succesfully, you will now be redirected to log in"
+        );
+      }, 2);
       navigate("/");
     },
   });
@@ -98,10 +98,14 @@ export default function SignUpForm() {
     <Box w="100%">
       <form onSubmit={createUser}>
         <Stack spacing={{ base: 4, md: 5 }} align="center">
-          <Stack direction={{ base: "column", sm: "row" }} spacing={{ base: 4, sm: 4 }} w="100%">
+          <Stack
+            direction={{ base: "column", sm: "row" }}
+            spacing={{ base: 4, sm: 4 }}
+            w="100%"
+          >
             <FormControl isRequired>
-              <FormLabel 
-                textAlign="center" 
+              <FormLabel
+                textAlign="center"
                 fontSize={{ base: "sm", md: "md" }}
                 fontWeight="medium"
               >
@@ -113,7 +117,7 @@ export default function SignUpForm() {
                 borderRadius="md"
                 _focus={{
                   borderColor: "green.500",
-                  boxShadow: "0 0 0 1px green.500"
+                  boxShadow: "0 0 0 1px green.500",
                 }}
                 onChange={(e) => {
                   setNewFirstName(e.target.value);
@@ -121,8 +125,8 @@ export default function SignUpForm() {
               />
             </FormControl>
             <FormControl isRequired>
-              <FormLabel 
-                textAlign="center" 
+              <FormLabel
+                textAlign="center"
                 fontSize={{ base: "sm", md: "md" }}
                 fontWeight="medium"
               >
@@ -134,7 +138,7 @@ export default function SignUpForm() {
                 borderRadius="md"
                 _focus={{
                   borderColor: "green.500",
-                  boxShadow: "0 0 0 1px green.500"
+                  boxShadow: "0 0 0 1px green.500",
                 }}
                 onChange={(e) => {
                   setNewLastName(e.target.value);
@@ -144,8 +148,8 @@ export default function SignUpForm() {
           </Stack>
 
           <FormControl isRequired>
-            <FormLabel 
-              textAlign="center" 
+            <FormLabel
+              textAlign="center"
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"
             >
@@ -159,7 +163,7 @@ export default function SignUpForm() {
               borderRadius="md"
               _focus={{
                 borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500"
+                boxShadow: "0 0 0 1px green.500",
               }}
               onChange={(e) => {
                 setNewEmail(e.target.value);
@@ -168,8 +172,8 @@ export default function SignUpForm() {
           </FormControl>
 
           <FormControl isRequired>
-            <FormLabel 
-              textAlign="center" 
+            <FormLabel
+              textAlign="center"
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"
             >
@@ -183,17 +187,17 @@ export default function SignUpForm() {
               borderRadius="md"
               _focus={{
                 borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500"
+                boxShadow: "0 0 0 1px green.500",
               }}
               onChange={(e) => {
                 setNewPassword(e.target.value);
               }}
             />
-          </FormControl>          
+          </FormControl>
 
           <FormControl isRequired isInvalid={showPasswordError}>
-            <FormLabel 
-              textAlign="center" 
+            <FormLabel
+              textAlign="center"
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"
             >
@@ -207,15 +211,15 @@ export default function SignUpForm() {
               borderRadius="md"
               _focus={{
                 borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500"
+                boxShadow: "0 0 0 1px green.500",
               }}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
               }}
             />
-          </FormControl>  
+          </FormControl>
 
-          <Stack 
+          <Stack
             direction={{ base: "column", sm: "row" }}
             spacing={{ base: 3, sm: 4 }}
             w="100%"

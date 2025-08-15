@@ -1,18 +1,7 @@
-import {
-  Badge,
-  Box,
-  Flex,
-  Spinner,
-  Text,
-  Grid,
-  GridItem,
-  Spacer,
-} from "@chakra-ui/react";
-import { FaCheckCircle } from "react-icons/fa";
+import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import { MdDelete } from "react-icons/md";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../../utils/config";
-import React, { useState } from "react";
 import { List } from "./ListOfLists";
 import { useNavigate } from "react-router-dom";
 
@@ -30,15 +19,15 @@ const ListInfo = ({ list }: { list: List }) => {
     mutationKey: ["deleteList"],
     mutationFn: async () => {
       try {
-          const res = await fetch(BASE_URL + `/lists/${list.id}`, {
+        const res = await fetch(BASE_URL + `/lists/${list.id}`, {
           method: "DELETE",
-          credentials: 'include',
+          credentials: "include",
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         });
-        
+
         const data = await res.json();
 
         //if response is not ok, throw error
@@ -58,8 +47,8 @@ const ListInfo = ({ list }: { list: List }) => {
   });
 
   return (
-    <Flex 
-      gap={{ base: 2, md: 3 }} 
+    <Flex
+      gap={{ base: 2, md: 3 }}
       alignItems={"center"}
       direction={{ base: "column", sm: "row" }}
     >
@@ -75,10 +64,10 @@ const ListInfo = ({ list }: { list: List }) => {
         cursor={"pointer"}
         onClick={() => goToList()}
         w={{ base: "100%", sm: "auto" }}
-        _hover={{ 
+        _hover={{
           borderColor: "blue.500",
           transform: "translateY(-1px)",
-          boxShadow: "md"
+          boxShadow: "md",
         }}
         _active={{ transform: "scale(0.98)" }}
         transition="all 0.2s"
@@ -86,7 +75,7 @@ const ListInfo = ({ list }: { list: List }) => {
         gap={{ base: 2, md: 0 }}
         minH={{ base: "60px", md: "auto" }}
       >
-        <Text 
+        <Text
           fontSize={{ base: "md", md: "lg" }}
           fontWeight="semibold"
           color="blue.600"
@@ -95,7 +84,7 @@ const ListInfo = ({ list }: { list: List }) => {
         >
           {list.listName}
         </Text>
-        <Text 
+        <Text
           fontSize={{ base: "xs", md: "sm" }}
           color="gray.500"
           _dark={{ color: "gray.400" }}
@@ -105,10 +94,10 @@ const ListInfo = ({ list }: { list: List }) => {
           {list.layoutName || "No Layout"}
         </Text>
       </Flex>
-      
-      <Box 
-        color={"red.500"} 
-        cursor={"pointer"} 
+
+      <Box
+        color={"red.500"}
+        cursor={"pointer"}
         onClick={() => deleteList()}
         p={2}
         borderRadius="md"

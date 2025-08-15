@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { BASE_URL } from "../../utils/config";
-import toast from "react-hot-toast";
 
 const CreateLayoutForm = () => {
   //state hook to create a new list name
@@ -16,7 +15,7 @@ const CreateLayoutForm = () => {
     mutationKey: ["createLayout"],
 
     //the mutation function is async. e is of type of Formevent
-    mutationFn: async (e: React.FormEvent) => {      
+    mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
       try {
         //we send the new list title to the server and await for the response
