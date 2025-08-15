@@ -31,14 +31,14 @@ const ItemList = ({ listId, layoutId }: { listId: string | undefined, layoutId: 
 						'Content-Type': 'application/json'
 					}
 
-				})
-                const data = await res.json()				
+				})               		
 
                 if(!res.ok){
 					const errorData = await res.json();
 					throw new Error(errorData.error || "Failed to fetch items");
                 }
 				
+				const data = await res.json()		
                 return data || []
             } catch (error) {
                 console.log(error)
