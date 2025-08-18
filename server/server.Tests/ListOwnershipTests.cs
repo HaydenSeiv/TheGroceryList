@@ -19,7 +19,7 @@ public class ListOwnershipTests : TestBase
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         // Create a list
-        var createListDto = new CreateListDto { Title = "My Test List" };
+        var createListDto = new CreateListDto { ListName = "My Test List" };
         var createResponse = await _client.PostAsync("/api/lists", CreateJsonContent(createListDto));
         var listContent = await createResponse.Content.ReadAsStringAsync();
         var createdList = JsonSerializer.Deserialize<ListResponseDto>(listContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -40,7 +40,7 @@ public class ListOwnershipTests : TestBase
 
         // User 1 creates a list
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user1Token);
-        var createListDto = new CreateListDto { Title = "User 1's List" };
+        var createListDto = new CreateListDto { ListName = "User 1's List" };
         var createResponse = await _client.PostAsync("/api/lists", CreateJsonContent(createListDto));
         var listContent = await createResponse.Content.ReadAsStringAsync();
         var createdList = JsonSerializer.Deserialize<ListResponseDto>(listContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

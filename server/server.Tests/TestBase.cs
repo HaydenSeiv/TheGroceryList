@@ -17,7 +17,7 @@ public class TestBase : IClassFixture<WebApplicationFactory<Program>>
         {
             builder.ConfigureAppConfiguration((context, config) =>
             {
-                config.AddJsonFile("appsettings.Test.json");
+                config.AddJsonFile(Path.Combine("../server.Tests", "appsettings.Test.json"), optional: true);
             });
         });
         

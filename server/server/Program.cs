@@ -130,3 +130,7 @@ Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
 //app.Run($"http://0.0.0.0:{port}"); 
 app.Run(); 
+
+
+// Make the implicit Program class public so integration tests can access it
+public partial class Program { }
