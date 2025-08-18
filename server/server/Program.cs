@@ -18,15 +18,29 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
-// Configure JWT settings
-builder.Services.Configure<JwtSettings>(
-    builder.Configuration.GetSection("JwtSettings"));
+// Configure JWT settings with environment variable override
+var jwtConfigSection = builder.Configuration.GetSection("JwtSettings");
+var tempJwtSettings = jwtConfigSection.Get<JwtSettings>() ?? new JwtSettings();
+
+// Apply environment variable override
+var envSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+if (!string.IsNullOrEmpty(envSecretKey))
+{
+    tempJwtSettings.SecretKey = envSecretKey;
+}
+
+// Register the configured settings
+builder.Services.Configure<JwtSettings>(options =>
+{
+    jwtConfigSection.Bind(options);
+    options.SecretKey = tempJwtSettings.SecretKey;
+});
 
 // Add MongoDB
 builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("MongoDB") ?? 
-        Environment.GetEnvironmentVariable("MONGODB_URI") ?? 
+    var connectionString = builder.Configuration.GetConnectionString("MongoDB") ??
+        Environment.GetEnvironmentVariable("MONGODB_URI") ??
         "mongodb://localhost:27016";
     return new MongoClient(connectionString);
 });
@@ -79,7 +93,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? 
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ??
             new[] { "http://localhost:5172", "http://localhost:5174", "https://the-grocery-list.vercel.app" };
 
         policy.WithOrigins(allowedOrigins)
@@ -117,7 +131,7 @@ if (app.Environment.IsProduction())
 {
     app.UseDefaultFiles();
     app.UseStaticFiles();
-    
+
     // Fallback to serving the client app for any unmatched routes
     app.MapFallbackToFile("index.html");
 }
@@ -129,7 +143,7 @@ Console.WriteLine("Hello, The Grocery List ASP.NET API");
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 
 //app.Run($"http://0.0.0.0:{port}"); 
-app.Run(); 
+app.Run();
 
 
 // Make the implicit Program class public so integration tests can access it
