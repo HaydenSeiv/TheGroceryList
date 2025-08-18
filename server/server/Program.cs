@@ -20,7 +20,7 @@ builder.Services.Configure<MongoDbSettings>(
 
 // Configure JWT settings with environment variable override
 var jwtConfigSection = builder.Configuration.GetSection("JwtSettings");
-var tempJwtSettings = jwtConfigSection.Get<JwtSettings>() ?? new JwtSettings();
+var tempJwtSettings = jwtConfigSection.Get<JwtSettings>()!;
 
 // Apply environment variable override
 var envSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
