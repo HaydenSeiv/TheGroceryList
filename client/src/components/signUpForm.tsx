@@ -78,8 +78,8 @@ export default function SignUpForm() {
         setConfirmPassword("");
 
         return data;
-      } catch (error: any) {
-        throw new Error(error);
+      } catch (error: unknown) {
+        throw new Error(error as string);
       }
     },
 

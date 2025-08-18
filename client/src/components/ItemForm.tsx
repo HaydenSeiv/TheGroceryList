@@ -57,8 +57,8 @@ const ItemForm = ({
         setNewItem("");
         setSelectedAisleId("");
         return data;
-      } catch (error: any) {
-        throw new Error(error);
+      } catch (error: unknown) {
+        throw new Error(error as string);
       }
     },
 
@@ -67,12 +67,12 @@ const ItemForm = ({
       queryClient.invalidateQueries({ queryKey: ["items", listId] });
     },
 
-    onError: (error: any) => {
-      alert(error.message);
+    onError: (error: unknown) => {
+      alert((error as Error).message);
     },
   });
 
-  const { data: aisles, isLoading } = useQuery<Aisle[]>({
+  const { data: aisles} = useQuery<Aisle[]>({
     queryKey: ["aisles"],
     queryFn: async () => {
       const res = await fetch(BASE_URL + "/aisles/" + layoutId, {

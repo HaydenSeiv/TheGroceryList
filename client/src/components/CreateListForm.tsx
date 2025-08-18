@@ -13,7 +13,7 @@ const CreateListForm = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: layouts, isLoading } = useQuery<Layout[]>({
+  const { data: layouts} = useQuery<Layout[]>({
     queryKey: ["layouts"],
     queryFn: async () => {
       const res = await fetch(`${BASE_URL}/layouts`, {
@@ -72,8 +72,8 @@ const CreateListForm = () => {
         //reset the input box to be blank
         setNewList("");
         return data;
-      } catch (error: any) {
-        throw new Error(error);
+      } catch (error: unknown) {
+        throw new Error(error as string);
       }
     },
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
@@ -81,9 +81,9 @@ const CreateListForm = () => {
       queryClient.invalidateQueries({ queryKey: ["lists"] });
     },
 
-    onError: (error: any) => {
-      alert(error.response.data.message);
-      toast.error(error.response.data.message);
+    onError: (error: unknown) => {
+      alert((error as Error).message);
+      toast.error((error as Error).message);
     },
   });
 

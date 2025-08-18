@@ -84,7 +84,8 @@ const ListInfo = ({ list }: { list: List }) => {
         >
           {list.listName}
         </Text>
-        <Text
+        {/* TODO: fix, pull layout name from list from backend?*/}
+        {/* <Text
           fontSize={{ base: "xs", md: "sm" }}
           color="gray.500"
           _dark={{ color: "gray.400" }}
@@ -92,7 +93,7 @@ const ListInfo = ({ list }: { list: List }) => {
           opacity={0.8}
         >
           {list.layoutName || "No Layout"}
-        </Text>
+        </Text> */}
       </Flex>
 
       <Box

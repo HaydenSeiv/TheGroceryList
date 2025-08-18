@@ -41,8 +41,8 @@ export default function Navbar() {
         }
 
         return content;
-      } catch (error: any) {
-        throw new Error(error);
+      } catch (error: unknown) {
+        throw new Error(error as string);
       }
     },
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
@@ -58,7 +58,7 @@ export default function Navbar() {
       navigate("/");
     },
 
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error("Log out failed");
     },
   });

@@ -61,7 +61,6 @@ const ListOfLists = () => {
         _dark={{ color: "gray.400" }}
         borderBottom="2px solid"
         borderColor="gray.500"
-        _dark={{ borderColor: "gray.400" }}
         pb={2}
       >
         Your Lists

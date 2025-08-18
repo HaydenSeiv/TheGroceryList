@@ -5,7 +5,7 @@ interface AppTitleProps {
   className?: string;
 }
 
-const AppTitle: React.FC<AppTitleProps> = ({ className }) => {
+const AppTitle: React.FC<AppTitleProps> = () => {
   return (
     <Box textAlign="center" mb={{ base: 4, md: 6 }}>
       <Heading

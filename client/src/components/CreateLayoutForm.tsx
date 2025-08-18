@@ -42,8 +42,8 @@ const CreateLayoutForm = () => {
         //reset the input box to be blank
         setNewLayout("");
         return data;
-      } catch (error: any) {
-        throw new Error(error);
+      } catch (error: unknown) {
+        throw new Error(error as string);
       }
     },
     //onsuccess we invalidate the query to make sure nothing is fetched again or sent by accident as it has been completed and is now out of date
@@ -51,8 +51,8 @@ const CreateLayoutForm = () => {
       queryClient.invalidateQueries({ queryKey: ["layouts"] });
     },
 
-    onError: (error: any) => {
-      alert(error.message);
+    onError: (error: unknown) => {
+      alert((error as Error).message);
     },
   });
 

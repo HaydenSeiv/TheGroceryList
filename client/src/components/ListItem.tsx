@@ -49,7 +49,7 @@ const ListItem = ({
   });
 
   //updateItem function used to update item text
-  const { mutate: updateItem, isPending: isupdating } = useMutation({
+  const { mutate: updateItem} = useMutation({
     mutationKey: ["updateItem"],
     mutationFn: async (updatedTitle: string | null) => {
       const token = localStorage.getItem("token");
@@ -83,7 +83,7 @@ const ListItem = ({
     },
   });
 
-  const { data: aisles, isLoading } = useQuery<Aisle[]>({
+  const { data: _aisles } = useQuery<Aisle[]>({
     queryKey: ["aisles"],
     queryFn: async () => {
       const res = await fetch(BASE_URL + "/aisles/" + layoutId, {
@@ -193,6 +193,7 @@ const ListItem = ({
         break;
       case 18:
         textColor = "#9CD9D0";
+        break;
       default:
         textColor = "#ffffff";
     }
@@ -264,7 +265,7 @@ const ListItem = ({
             />
           ) : (
             <Text
-              color={item.completed ? "green.200" : setColor(item.aisleOrder)}
+              color={item.completed ? "green.200" : setColor(item.aisleOrder || 0)}
               textDecoration={item.completed ? "line-through" : "none"}
               fontSize={{ base: "sm", md: "md" }}
               fontWeight="medium"

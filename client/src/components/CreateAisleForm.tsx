@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { BASE_URL } from "../../utils/config";
 
 const CreateAisleForm = ({ layoutId }: { layoutId: string }) => {
-  const [newLayoutName, setNewLayoutName] = useState("");
+  //const [newLayoutName, setNewLayoutName] = useState("");
   const [newAisle, setNewAisle] = useState("");
   const [newAisleOrder, setNewAisleOrder] = useState("");
 
@@ -33,11 +33,11 @@ const CreateAisleForm = ({ layoutId }: { layoutId: string }) => {
         if (!res.ok) {
           throw new Error("Failed to add aisle");
         }
-        const data = await res.json();
+        //const data = await res.json();
         toast.success("Aisle added successfully");
         queryClient.invalidateQueries({ queryKey: ["layouts", layoutId] });
-      } catch (error: any) {
-        throw new Error(error);
+      } catch (error: unknown) {
+        throw new Error(error as string);
       }
     },
   });
