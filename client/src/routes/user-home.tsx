@@ -1,6 +1,6 @@
 import { Container, VStack } from '@chakra-ui/react'
 import Navbar from '../components/Navbar'
-import HomeMenu from '../components/homeMenu';
+import HomeMenu from '../components/HomeMenu';
 
 export default function UserHome() {
        

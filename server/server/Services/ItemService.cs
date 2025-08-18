@@ -25,13 +25,28 @@ public class ItemService : IItemService
         var items = await _context.Items.Find(i => i.ListId == listId).ToListAsync();
         
         var itemResponses = new List<ItemResponseDto>();
+
+        //collect aisle IDs from items
+        var aisleIds = items.Where(i => !string.IsNullOrEmpty(i.AisleId))
+                   .Select(i => i.AisleId!)
+                   .Distinct()
+                   .ToList();
+
+        //batch aisles
+        var aisles = aisleIds.Any() 
+        ? await _context.Aisles.Find(a => aisleIds.Contains(a.AisleId)).ToListAsync()
+        : new List<Aisle>();
+
+
+        //create a dictionary to map aisle IDs to aisle orders
+        var aisleMap = aisles.ToDictionary(a => a.AisleId!, a => a);
         
+        //using dictionary aisle map, get name and order and return them in the item response
         foreach (var item in items)
         {
-            var aisle = item.AisleId != null 
-                ? await _context.Aisles.Find(a => a.AisleId == item.AisleId).FirstOrDefaultAsync()
-                : null;
-                
+            var aisleId = item.AisleId;
+            var aisle = aisleId != null ? aisleMap[aisleId] : null;
+
             itemResponses.Add(new ItemResponseDto
             {
                 Id = item.Id ?? string.Empty,
@@ -39,11 +54,11 @@ public class ItemService : IItemService
                 Completed = item.Completed,
                 Title = item.Title,
                 AisleId = item.AisleId,
+
                 AisleName = aisle?.AisleName ?? string.Empty,
                 AisleOrder = aisle?.AisleOrder
             });
         }
-        
         return itemResponses;
     }
 

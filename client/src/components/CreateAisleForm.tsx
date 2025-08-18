@@ -44,10 +44,7 @@ const CreateAisleForm = ({ layoutId }: { layoutId: string }) => {
 
   return (
     <form onSubmit={addAisle}>
-      <Flex 
-      gap={2}
-      flexDirection={"column"}
-      >
+      <Flex gap={2} flexDirection={"column"}>
         <Text>
           Add Aisle or Section such as "Dairy" or "Bakery" Then select where in
           your shopping route it is located ie your first stop "1" or second "2"
