@@ -60,6 +60,7 @@ export default function Navbar() {
 
     onError: (error: unknown) => {
       toast.error("Log out failed");
+      console.log(error);
     },
   });
 

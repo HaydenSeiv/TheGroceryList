@@ -67,6 +67,7 @@ export default function LoginForm() {
 
     onError: (error: unknown) => {
       toast.error("Log in failed");
+      console.log(error);
     },
   });
 
