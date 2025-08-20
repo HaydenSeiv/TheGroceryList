@@ -25,9 +25,9 @@ public class JwtService : IJwtService
             new Claim(JwtRegisteredClaimNames.Sub, userId),
             new Claim(JwtRegisteredClaimNames.Iss, _jwtSettings.Issuer),
             new Claim(JwtRegisteredClaimNames.Aud, _jwtSettings.Audience),
-            new Claim(JwtRegisteredClaimNames.Exp, 
+            new Claim(JwtRegisteredClaimNames.Exp,
                 new DateTimeOffset(DateTime.UtcNow.AddHours(_jwtSettings.ExpiryHours)).ToUnixTimeSeconds().ToString()),
-            new Claim(JwtRegisteredClaimNames.Iat, 
+            new Claim(JwtRegisteredClaimNames.Iat,
                 new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString())
         };
 
@@ -80,16 +80,30 @@ public class JwtService : IJwtService
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, userId),
-            new Claim(ClaimTypes.Email, email),
-            new Claim(JwtRegisteredClaimNames.Exp, 
-                new DateTimeOffset(DateTime.UtcNow.AddHours(_jwtSettings.ExpiryHours)).ToUnixTimeSeconds().ToString()),
-            new Claim(JwtRegisteredClaimNames.Iat, 
-                new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString())
+            //user claims
+            new Claim(ClaimTypes.NameIdentifier, userId), //user id for identity
+            new Claim(ClaimTypes.Email, email), //user email
+            new Claim("tokenType", "passwordReset"), 
+            new Claim("nonce", Guid.NewGuid().ToString()), 
+            new Claim(JwtRegisteredClaimNames.Exp,
+                new DateTimeOffset(DateTime.UtcNow.AddMinutes(15)).ToUnixTimeSeconds().ToString()), //expiry time, 15 minutes
+            new Claim(JwtRegisteredClaimNames.Iat,
+                new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString()), // record current time
+            
         };
 
         var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
 
+        var token = new JwtSecurityToken(
+            issuer: _jwtSettings.Issuer,
+            audience: _jwtSettings.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(_jwtSettings.ExpiryHours),
+            signingCredentials: credentials
+
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     public PasswordResetClaims? ValidatePasswordResetToken(string token)
@@ -110,4 +124,4 @@ public class JwtService : IJwtService
         var claims = principal.Claims.ToDictionary(c => c.Type, c => c.Value);
         return new PasswordResetClaims { UserId = claims[ClaimTypes.NameIdentifier], Email = claims[ClaimTypes.Email], Expiration = validatedToken.ValidTo };
     }
-} 
+}
