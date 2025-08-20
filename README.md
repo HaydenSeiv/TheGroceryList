@@ -2,7 +2,9 @@
 
 <div align="center">
 
-![Grocery List Logo](client/src/assets/shopping-cart-supermarket-svgrepo-com.svg)
+<div align="center">
+  <img src="client/src/assets/shopping-cart-supermarket-svgrepo-com.svg" alt="Grocery List Logo" style="width: 33%; height: 33%;">
+</div>
 
 *A modern, full-stack grocery shopping management application*
 
