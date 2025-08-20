@@ -74,4 +74,40 @@ public class JwtService : IJwtService
         var principal = ValidateToken(token);
         return principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
+
+    //password reset JWT tokens
+    public string GeneratePasswordResetToken(string userId, string email)
+    {
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Email, email),
+            new Claim(JwtRegisteredClaimNames.Exp, 
+                new DateTimeOffset(DateTime.UtcNow.AddHours(_jwtSettings.ExpiryHours)).ToUnixTimeSeconds().ToString()),
+            new Claim(JwtRegisteredClaimNames.Iat, 
+                new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString())
+        };
+
+        var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
+
+    }
+
+    public PasswordResetClaims? ValidatePasswordResetToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = _jwtSettings.Issuer,
+            ValidAudience = _jwtSettings.Audience,
+            IssuerSigningKey = _key,
+            ClockSkew = TimeSpan.FromSeconds(5)
+        };
+        var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+        var claims = principal.Claims.ToDictionary(c => c.Type, c => c.Value);
+        return new PasswordResetClaims { UserId = claims[ClaimTypes.NameIdentifier], Email = claims[ClaimTypes.Email], Expiration = validatedToken.ValidTo };
+    }
 } 

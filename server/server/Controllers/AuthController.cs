@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
             Console.WriteLine("Attempting to log user in");
             var result = await _userService.LoginAsync(loginDto);
             Console.WriteLine($"log in Result: {result}");
-            
+
             // Set HTTP-only cookie (equivalent to Go's cookie setting)
             var cookieOptions = new CookieOptions
             {
@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
                 SameSite = SameSiteMode.Strict,
                 Secure = true // Set to false for development if not using HTTPS
             };
-            
+
             Response.Cookies.Append("jwt", result!.Token, cookieOptions);
 
             Console.WriteLine("Login Success");
@@ -112,9 +112,9 @@ public class AuthController : ControllerBase
                 Expires = DateTime.UtcNow.AddHours(-1), // Expire the cookie
                 SameSite = SameSiteMode.Strict
             };
-            
+
             Response.Cookies.Append("jwt", "", cookieOptions);
-            
+
             return Ok(new ApiResponse { Success = true, Message = "success" });
         }
         catch (Exception ex)
@@ -126,6 +126,23 @@ public class AuthController : ControllerBase
                 Error = new Dictionary<string, object> { { "details", ex.Message } }
             });
         }
+    }
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+    {
+        // 1. Find user by email
+        // 2. Generate JWT reset token (not stored in DB!)
+        // 3. Send email with JWT token in URL
+        // 4. Always return success (security best practice)
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+    {
+        // 1. Validate JWT token
+        // 2. Extract user ID from token claims
+        // 3. Update password in database
+        // 4. Token automatically becomes invalid after expiration
     }
 
     private string? GetTokenFromRequest()
@@ -145,4 +162,4 @@ public class AuthController : ControllerBase
 
         return null;
     }
-} 
+}
