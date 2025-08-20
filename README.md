@@ -29,13 +29,6 @@
 
 The Grocery List organizes your shopping by store layout. Map your grocery store's aisles once, and your lists will automatically sort items in the order you'll encounter them while shopping. It's a straightforward solution to make grocery shopping faster and more organized.
 
-### Key Highlights
-- **Smart Store Layouts**: Create and customize your store's aisle layout for efficient shopping routes
-- **User Authentication**: Secure JWT-based authentication system
-- **Real-time Updates**: Instant synchronization across devices
-- **Responsive Design**: Seamless experience on desktop and mobile devices
-- **Persistent Storage**: Your data is safely stored and accessible anytime
-
 ## ✨ Features
 
 ### Core Functionality
