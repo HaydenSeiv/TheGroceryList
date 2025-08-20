@@ -27,7 +27,7 @@
 
 ## 🎯 About
 
-The Grocery List is a comprehensive shopping management application that revolutionizes how you plan and execute your grocery shopping trips. By allowing users to create custom store layouts and organize items accordingly, it provides an optimized shopping experience that saves time and reduces forgotten items.
+The Grocery List organizes your shopping by store layout. Map your grocery store's aisles once, and your lists will automatically sort items in the order you'll encounter them while shopping. It's a straightforward solution to make grocery shopping faster and more organized.
 
 ### Key Highlights
 - **Smart Store Layouts**: Create and customize your store's aisle layout for efficient shopping routes
