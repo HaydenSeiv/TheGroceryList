@@ -83,8 +83,8 @@ public class JwtService : IJwtService
             //user claims
             new Claim(ClaimTypes.NameIdentifier, userId), //user id for identity
             new Claim(ClaimTypes.Email, email), //user email
-            new Claim("tokenType", "passwordReset"), 
-            new Claim("nonce", Guid.NewGuid().ToString()), 
+            new Claim("tokenType", "passwordReset"),
+            new Claim("nonce", Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Exp,
                 new DateTimeOffset(DateTime.UtcNow.AddMinutes(15)).ToUnixTimeSeconds().ToString()), //expiry time, 15 minutes
             new Claim(JwtRegisteredClaimNames.Iat,
@@ -98,7 +98,7 @@ public class JwtService : IJwtService
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(_jwtSettings.ExpiryHours),
+            expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: credentials
 
         );
@@ -108,20 +108,65 @@ public class JwtService : IJwtService
 
     public PasswordResetClaims? ValidatePasswordResetToken(string token)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = new TokenValidationParameters
+        try
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = _jwtSettings.Issuer,
-            ValidAudience = _jwtSettings.Audience,
-            IssuerSigningKey = _key,
-            ClockSkew = TimeSpan.FromSeconds(5)
-        };
-        var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-        var claims = principal.Claims.ToDictionary(c => c.Type, c => c.Value);
-        return new PasswordResetClaims { UserId = claims[ClaimTypes.NameIdentifier], Email = claims[ClaimTypes.Email], Expiration = validatedToken.ValidTo };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = _jwtSettings.Issuer,
+                ValidAudience = _jwtSettings.Audience,
+                IssuerSigningKey = _key,
+                ClockSkew = TimeSpan.FromSeconds(5) //allow time difference between server and client
+            };
+
+
+            //validate token
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            var claims = principal.Claims.ToDictionary(c => c.Type, c => c.Value); //convert claims to dictionary for easy lookup
+
+            // Verify this is actually a password reset token
+            if (!claims.ContainsKey("tokenType") || claims["tokenType"] != "passwordReset")
+            {
+                return null;
+            }
+
+            // Verify required claims exist
+            if (!claims.ContainsKey(ClaimTypes.NameIdentifier) ||
+                !claims.ContainsKey(ClaimTypes.Email))
+            {
+                return null;
+            }
+
+            // TODO: Add blacklist check
+            // if (await IsTokenBlacklisted(claims["nonce"]))
+            // {
+            //     return null;
+            // }
+
+
+            return new PasswordResetClaims { UserId = claims[ClaimTypes.NameIdentifier], Email = claims[ClaimTypes.Email], Expiration = validatedToken.ValidTo };
+
+        }
+        catch (SecurityTokenExpiredException)
+        {
+            // Token expired - this is expected behavior
+            return null;
+        }
+        catch (SecurityTokenValidationException)
+        {
+            // Invalid signature, wrong issuer/audience, etc.
+            return null;
+        }
+        catch (Exception)
+        {
+            // Malformed token, parsing errors, etc.
+            return null;
+        }
+
     }
+
 }
