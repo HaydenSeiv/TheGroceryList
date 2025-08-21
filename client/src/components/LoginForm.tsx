@@ -11,6 +11,8 @@ import React, { useState } from "react";
 import { BASE_URL } from "../../utils/config";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Link as RouterLink } from "react-router-dom";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -97,7 +99,6 @@ export default function LoginForm() {
               }}
             />
           </FormControl>
-
           <FormControl isRequired>
             <FormLabel
               textAlign="center"
@@ -121,7 +122,6 @@ export default function LoginForm() {
               }}
             />
           </FormControl>
-
           <Stack
             direction={{ base: "column", sm: "row" }}
             spacing={{ base: 3, sm: 4 }}
@@ -134,12 +134,14 @@ export default function LoginForm() {
               colorScheme="green"
               size={{ base: "md", md: "lg" }}
               w={{ base: "100%", sm: "auto" }}
-              minW={{ sm: "120px" }}
+              minW={{ sm: "140px" }}
               isLoading={isLoggingIn}
               loadingText="Logging in..."
               _active={{
                 transform: "scale(.97)",
               }}
+              flex={{ base: "none", sm: "1" }}
+              maxW={{ sm: "200px" }}
             >
               Log In
             </Button>
@@ -152,10 +154,22 @@ export default function LoginForm() {
               _active={{
                 transform: "scale(.97)",
               }}
+              flex={{ base: "none", sm: "1" }}
+              maxW={{ sm: "200px" }}
             >
               <Link to={`/signup/`}>Create Account</Link>
             </Button>
           </Stack>
+
+          <ChakraLink
+            as={RouterLink}
+            to="/forgot-password"
+            fontSize="sm"
+            color="green.500"
+            _hover={{ textDecoration: "underline" }}
+          >
+            Forgot Password?
+          </ChakraLink>
         </Stack>
       </form>
     </Box>

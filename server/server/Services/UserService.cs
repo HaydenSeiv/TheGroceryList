@@ -44,6 +44,19 @@ public class UserService : IUserService
         };
     }
 
+    public async Task<UserResponseDto?> GetUserByEmailAsync(string email)
+    {
+        var user = await _context.Users.Find(u => u.Email == email).FirstOrDefaultAsync();
+        if (user == null) return null;
+        return new UserResponseDto
+        {
+            Id = user.Id ?? string.Empty,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
+    }
+
     public async Task<UserResponseDto?> CreateUserAsync(CreateUserDto createUserDto)
     {
         // Validate input
@@ -128,13 +141,13 @@ public class UserService : IUserService
 
     public async Task<UserResponseDto?> GetAuthenticatedUserAsync(string token)
     {
-        
+
         var userId = _jwtService.GetUserIdFromToken(token);
-        
+
         if (userId == null) return null;
 
         var user = await _context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
-        
+
         if (user == null) return null;
 
         return new UserResponseDto
@@ -145,4 +158,4 @@ public class UserService : IUserService
             Email = user.Email
         };
     }
-} 
+}

@@ -76,13 +76,13 @@ public class JwtService : IJwtService
     }
 
     //password reset JWT tokens
-    public string GeneratePasswordResetToken(string userId, string email)
+    public string GeneratePasswordResetToken(string userId)
     {
         var claims = new[]
         {
             //user claims
             new Claim(ClaimTypes.NameIdentifier, userId), //user id for identity
-            new Claim(ClaimTypes.Email, email), //user email
+            //new Claim(ClaimTypes.Email, email), //user email - probably do not want to store this in the token for privacy reasons
             new Claim("tokenType", "passwordReset"),
             new Claim("nonce", Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Exp,

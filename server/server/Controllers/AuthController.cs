@@ -131,9 +131,25 @@ public class AuthController : ControllerBase
     public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
         // 1. Find user by email
+
+        var user = await _userService.GetUserByEmailAsync(dto.Email.ToLowerInvariant());
+
+        if (user == null)
+        {
+            return BadRequest(new ApiResponse { Success = false, Message = "User not found" });
+        }
+
         // 2. Generate JWT reset token (not stored in DB!)
+        var token = _jwtService.GeneratePasswordResetToken(user.Id);
+
+
+        // TODO: Send email with JWT token in URL
         // 3. Send email with JWT token in URL
+
+
         // 4. Always return success (security best practice)
+        return Ok(new ApiResponse { Success = true, Message = "Password reset email sent" });
+
     }
 
     [HttpPost("reset-password")]
