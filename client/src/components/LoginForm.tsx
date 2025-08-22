@@ -78,32 +78,21 @@ export default function LoginForm() {
       <form onSubmit={loginUser}>
         <Stack spacing={{ base: 4, md: 6 }} align="center">
           <FormControl isRequired>
-            <FormLabel
-              textAlign="center"
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
-            >
+            <FormLabel>
               Email
             </FormLabel>
             <Input
               placeholder="Enter your email"
               autoComplete="email"
               size={{ base: "md", md: "lg" }}
-              borderRadius="md"
-              _focus={{
-                borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500",
-              }}
+              borderRadius="md"              
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
             />
           </FormControl>
           <FormControl isRequired>
-            <FormLabel
-              textAlign="center"
-              fontSize={{ base: "sm", md: "md" }}
-              fontWeight="medium"
+            <FormLabel          
             >
               Password
             </FormLabel>
@@ -111,12 +100,7 @@ export default function LoginForm() {
               type="password"
               placeholder="Enter your password"
               autoComplete="current-password"
-              size={{ base: "md", md: "lg" }}
-              borderRadius="md"
-              _focus={{
-                borderColor: "green.500",
-                boxShadow: "0 0 0 1px green.500",
-              }}
+              size={{ base: "md", md: "lg" }}                            
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
@@ -137,9 +121,6 @@ export default function LoginForm() {
               minW={{ sm: "140px" }}
               isLoading={isLoggingIn}
               loadingText="Logging in..."
-              _active={{
-                transform: "scale(.97)",
-              }}
               flex={{ base: "none", sm: "1" }}
               maxW={{ sm: "200px" }}
             >
@@ -151,9 +132,6 @@ export default function LoginForm() {
               size={{ base: "md", md: "lg" }}
               w={{ base: "100%", sm: "auto" }}
               minW={{ sm: "140px" }}
-              _active={{
-                transform: "scale(.97)",
-              }}
               flex={{ base: "none", sm: "1" }}
               maxW={{ sm: "200px" }}
             >
