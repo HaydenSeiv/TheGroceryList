@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import UserHome from "./routes/user-home";
 import UserLayoutsPage from "./routes/user-layouts";
 import LayoutCreation from "./routes/layout-creation";
+import ForgotPassword from "./routes/forgot-password";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="list/" element={<UserList />} />
         <Route path="/signup/" element={<SignUpPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/user-home" element={<ProtectedRoute><UserHome /></ProtectedRoute>} />
         <Route path="/user-layouts" element={<ProtectedRoute><UserLayoutsPage /></ProtectedRoute>} />
         <Route path="/layouts/:layoutId" element={<ProtectedRoute><LayoutCreation /></ProtectedRoute>} />

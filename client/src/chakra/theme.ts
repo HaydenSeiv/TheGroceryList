@@ -33,7 +33,7 @@ const theme = extendTheme({
             boxShadow: "0 0 0 1px green.500",
           },
         },
-      },
+       },
       sizes: {
         formDefault: {
           field: {
