@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using server.Configuration;
+using server.DTOs;
 
 namespace server.Services;
 

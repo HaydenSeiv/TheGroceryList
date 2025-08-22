@@ -9,10 +9,14 @@ namespace server.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
+    private readonly IJwtService _jwtService;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, IEmailService emailService, IJwtService jwtService  )
     {
         _userService = userService;
+        _emailService = emailService;
+        _jwtService = jwtService;
     }
 
     [HttpPost("login")]
@@ -131,6 +135,8 @@ public class AuthController : ControllerBase
     public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
         // 1. Find user by email
+        Console.WriteLine("Inside Forgot Password");
+        Console.WriteLine(dto.Email);
 
         var user = await _userService.GetUserByEmailAsync(dto.Email.ToLowerInvariant());
 
@@ -138,6 +144,7 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new ApiResponse { Success = false, Message = "User not found" });
         }
+        Console.WriteLine("User found");
 
         // 2. Generate JWT reset token (not stored in DB!)
         var token = _jwtService.GeneratePasswordResetToken(user.Id);
@@ -145,21 +152,24 @@ public class AuthController : ControllerBase
 
         // TODO: Send email with JWT token in URL
         // 3. Send email with JWT token in URL
-
+        var emailResponse = await _emailService.SendEmail();
+        Console.WriteLine("Email sent");
+        Console.WriteLine(emailResponse.Content);
 
         // 4. Always return success (security best practice)
         return Ok(new ApiResponse { Success = true, Message = "Password reset email sent" });
 
     }
 
-    [HttpPost("reset-password")]
-    public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
-    {
-        // 1. Validate JWT token
-        // 2. Extract user ID from token claims
-        // 3. Update password in database
-        // 4. Token automatically becomes invalid after expiration
-    }
+    //[HttpPost("reset-password")]
+    //public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+    //{
+    //    // 1. Validate JWT token
+    //    // 2. Extract user ID from token claims
+    //    // 3. Update password in database
+    //    // 4. Token automatically becomes invalid after expiration
+        
+    //}
 
     private string? GetTokenFromRequest()
     {

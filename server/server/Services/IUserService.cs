@@ -12,7 +12,9 @@ public interface IUserService
     Task<LoginResponseDto?> LoginAsync(LoginDto loginDto);
     Task<UserResponseDto?> GetAuthenticatedUserAsync(string token);
 
+    Task<UserResponseDto?> GetUserByEmailAsync(string email);
+
     //password reset
-    Task<bool> SendPasswordResetEmailAsync(string email);
+    //Task<bool> SendPasswordResetEmailAsync(string email);
     Task<bool> ResetPasswordWithTokenAsync(string jwtToken, string newPassword);
 }

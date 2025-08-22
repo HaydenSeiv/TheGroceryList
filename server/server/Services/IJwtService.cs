@@ -1,5 +1,5 @@
 using System.Security.Claims;
-
+using server.DTOs;
 namespace server.Services;
 
 public interface IJwtService
@@ -10,6 +10,6 @@ public interface IJwtService
     string? GetUserIdFromToken(string token);
 
     //password reset JWT tokens
-    string GeneratePasswordResetToken(string userId, string email);
+    string GeneratePasswordResetToken(string userId);
     PasswordResetClaims? ValidatePasswordResetToken(string token);
 }

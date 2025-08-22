@@ -8,10 +8,10 @@ using System.Threading;
 
 namespace server.Services;
 
-public class EmailService
+public class EmailService : IEmailService
 {
     //Test email service - remove this later
-    public static async Task<RestResponse> SendEmail()
+    public async Task<RestResponse> SendEmail()
     {
         var options = new RestClientOptions("https://api.mailgun.net")
         {

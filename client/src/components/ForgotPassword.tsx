@@ -10,6 +10,7 @@ import {
   import { useState } from "react";
   import { useMutation } from "@tanstack/react-query";
   import toast from "react-hot-toast";
+import { BASE_URL } from "../../utils/config";
   
   export default function ForgotPasswordForm() {
     const [email, setEmail] = useState("");
@@ -17,7 +18,20 @@ import {
     const { mutate: sendResetEmail, isPending } = useMutation({
       mutationFn: async (e: React.FormEvent) => {
         e.preventDefault();
-        // Your forgot password API call
+        try {            
+          const res = await fetch(BASE_URL + `/forgot-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+          const content = await res.json();
+          if (!res.ok) {
+            throw new Error(content.error || "Something went wrong");
+          }
+          return content;
+        } catch (error: unknown) {
+          throw new Error(error as string);
+        }
       },
       onSuccess: () => {
         toast.success("Reset email sent! Check your inbox.");

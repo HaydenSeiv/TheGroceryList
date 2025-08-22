@@ -158,4 +158,24 @@ public class UserService : IUserService
             Email = user.Email
         };
     }
+
+    public async Task<bool> ResetPasswordWithTokenAsync(string jwtToken, string newPassword)
+    {
+        var userId = _jwtService.GetUserIdFromToken(jwtToken);
+        if (userId == null)
+        {
+            throw new UnauthorizedAccessException("Invalid or expired token");
+        }
+        var user = await _context.Users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found");
+        }
+        // Hash the new password
+        var hashedPassword = _passwordService.HashPassword(newPassword);
+        // Update user's password
+        var update = Builders<User>.Update.Set(u => u.Password, hashedPassword);
+        var result = await _context.Users.UpdateOneAsync(u => u.Id == userId, update);
+        return result.ModifiedCount > 0;
+    }
 }

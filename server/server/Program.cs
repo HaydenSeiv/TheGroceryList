@@ -56,6 +56,7 @@ builder.Services.AddScoped<IListService, ListService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<ILayoutService, LayoutService>();
 builder.Services.AddScoped<IAisleService, AisleService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Add middleware services
 builder.Services.AddScoped<AuthRequiredAttribute>();
