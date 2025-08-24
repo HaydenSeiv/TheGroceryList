@@ -26,7 +26,7 @@ public class EmailService : IEmailService
         request.AddParameter("from", "Mailgun Sandbox <postmaster@sandbox499b21ff013e4b0688b61fe935c509bf.mailgun.org>");
         request.AddParameter("to", email);
         request.AddParameter("subject", "Password Reset");
-        request.AddParameter("text", $"Click the link to reset your password: {Environment.GetEnvironmentVariable("FRONTEND_URL")}/reset-password?token={token}");
+        request.AddParameter("text", $"Click the link to reset your password: {Environment.GetEnvironmentVariable("FRONTEND_URL")}/reset-password/{token}");
         return await client.ExecuteAsync(request);
     }
 }
