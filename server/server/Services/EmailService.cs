@@ -13,9 +13,10 @@ public class EmailService : IEmailService
     //Test email service - remove this later
     public async Task<RestResponse> SendEmail()
     {
+        Console.WriteLine("Inside SendEmail service");
         var options = new RestClientOptions("https://api.mailgun.net")
         {
-            Authenticator = new HttpBasicAuthenticator("api", Environment.GetEnvironmentVariable("MAIL_API_KEY"))
+            Authenticator = new HttpBasicAuthenticator("api", Environment.GetEnvironmentVariable("MAIL_API_KEY")")
         };
 
         var client = new RestClient(options);

@@ -154,7 +154,9 @@ public class AuthController : ControllerBase
         // 3. Send email with JWT token in URL
         var emailResponse = await _emailService.SendEmail();
         Console.WriteLine("Email sent");
-        Console.WriteLine(emailResponse.Content);
+        Console.WriteLine("Content: "+emailResponse.Content);
+        Console.WriteLine("Statuse code: " +emailResponse.StatusCode);
+        Console.WriteLine("Error Message: "+emailResponse.ErrorMessage);
 
         // 4. Always return success (security best practice)
         return Ok(new ApiResponse { Success = true, Message = "Password reset email sent" });
