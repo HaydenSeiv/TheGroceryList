@@ -137,7 +137,7 @@ public class JwtService : IJwtService
 
             // Verify required claims exist
             if (!claims.ContainsKey(ClaimTypes.NameIdentifier) ||
-                !claims.ContainsKey(ClaimTypes.Email))
+                !claims.ContainsKey("nonce"))
             {
                 return null;
             }
@@ -148,8 +148,10 @@ public class JwtService : IJwtService
             //     return null;
             // }
 
+            //get user id from claims
+            var userId = claims[ClaimTypes.NameIdentifier];
 
-            return new PasswordResetClaims { UserId = claims[ClaimTypes.NameIdentifier], Email = claims[ClaimTypes.Email], Expiration = validatedToken.ValidTo };
+            return new PasswordResetClaims { UserId = userId, Expiration = validatedToken.ValidTo };
 
         }
         catch (SecurityTokenExpiredException)

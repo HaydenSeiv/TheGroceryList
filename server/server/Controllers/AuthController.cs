@@ -149,10 +149,12 @@ public class AuthController : ControllerBase
         // 2. Generate JWT reset token (not stored in DB!)
         var token = _jwtService.GeneratePasswordResetToken(user.Id);
 
+        Console.WriteLine("Token generated");
+        Console.WriteLine(token);
 
         // TODO: Send email with JWT token in URL
         // 3. Send email with JWT token in URL
-        var emailResponse = await _emailService.SendEmail();
+        var emailResponse = await _emailService.SendPasswordResetEmail(dto.Email, token);
         Console.WriteLine("Email sent");
         Console.WriteLine("Content: "+emailResponse.Content);
         Console.WriteLine("Statuse code: " +emailResponse.StatusCode);
@@ -163,15 +165,24 @@ public class AuthController : ControllerBase
 
     }
 
-    //[HttpPost("reset-password")]
-    //public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
-    //{
-    //    // 1. Validate JWT token
-    //    // 2. Extract user ID from token claims
-    //    // 3. Update password in database
-    //    // 4. Token automatically becomes invalid after expiration
-        
-    //}
+    [HttpPost("reset-password")]
+    public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+    {
+       // 1. Validate JWT token
+       var claims = _jwtService.ValidatePasswordResetToken(dto.Token);
+       // 2. Extract user ID from token claims
+       var userId = claims?.UserId;
+
+       // 3. Update password in database
+       var user = await _userService.GetUserById(userId);
+       if (user == null)
+       {
+        return BadRequest(new ApiResponse { Success = false, Message = "User not found" });
+       }
+       await _userService.ResetPasswordAsync(user, dto.NewPassword);
+       // 4. Token automatically becomes invalid after expiration
+       return Ok(new ApiResponse { Success = true, Message = "Password reset successfully" });
+    }
 
     private string? GetTokenFromRequest()
     {

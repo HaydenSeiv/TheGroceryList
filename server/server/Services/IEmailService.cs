@@ -8,6 +8,6 @@ namespace server.Services
 {
     public interface IEmailService
     {
-        Task<RestResponse> SendEmail();
+        Task<RestResponse> SendPasswordResetEmail(string email, string token);
     }
 }
