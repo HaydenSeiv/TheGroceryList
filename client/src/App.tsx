@@ -10,6 +10,7 @@ import UserHome from "./routes/user-home";
 import UserLayoutsPage from "./routes/user-layouts";
 import LayoutCreation from "./routes/layout-creation";
 import ForgotPassword from "./routes/forgot-password";
+import ResetPasswordPage from "./routes/reset-password";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/layouts/:layoutId" element={<ProtectedRoute><LayoutCreation /></ProtectedRoute>} />
         <Route path="/userlists" element={<ProtectedRoute><UserLists /></ProtectedRoute >} />
         <Route path="list/:listId" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       </Routes>
     </Box>
   );

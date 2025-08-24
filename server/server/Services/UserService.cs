@@ -159,13 +159,31 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<bool> ResetPasswordAsync(User user, string newPassword)
+    // Private internal method to get User entity by ID (for service-to-service calls)
+    private async Task<User?> GetUserEntityByIdAsync(string id)
     {
+        return await _context.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
+    }
+
+    // Private internal method to get User entity by email (for service-to-service calls)
+    private async Task<User?> GetUserEntityByEmailAsync(string email)
+    {
+        return await _context.Users.Find(u => u.Email == email).FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> ResetPasswordAsync(string userId, string newPassword)
+    {
+        // Get the user entity from database
+        var user = await GetUserEntityByIdAsync(userId);
+        if (user == null) return false;
+
         // Hash the new password
         var hashedPassword = _passwordService.HashPassword(newPassword);
+        
         // Update user's password
         var update = Builders<User>.Update.Set(u => u.Password, hashedPassword);
         var result = await _context.Users.UpdateOneAsync(u => u.Id == user.Id, update);
+        
         return result.ModifiedCount > 0;
     }
 }

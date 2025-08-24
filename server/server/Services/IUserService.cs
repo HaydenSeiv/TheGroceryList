@@ -14,7 +14,6 @@ public interface IUserService
 
     Task<UserResponseDto?> GetUserByEmailAsync(string email);
 
-    //password reset
-    //Task<bool> SendPasswordResetEmailAsync(string email);
-    Task<bool> ResetPasswordWithTokenAsync(string jwtToken, string newPassword);
+    Task<bool> ResetPasswordAsync(string userId, string newPassword);
+
 }

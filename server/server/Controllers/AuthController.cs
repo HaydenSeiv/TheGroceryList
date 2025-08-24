@@ -12,7 +12,7 @@ public class AuthController : ControllerBase
     private readonly IEmailService _emailService;
     private readonly IJwtService _jwtService;
 
-    public AuthController(IUserService userService, IEmailService emailService, IJwtService jwtService  )
+    public AuthController(IUserService userService, IEmailService emailService, IJwtService jwtService)
     {
         _userService = userService;
         _emailService = emailService;
@@ -156,9 +156,9 @@ public class AuthController : ControllerBase
         // 3. Send email with JWT token in URL
         var emailResponse = await _emailService.SendPasswordResetEmail(dto.Email, token);
         Console.WriteLine("Email sent");
-        Console.WriteLine("Content: "+emailResponse.Content);
-        Console.WriteLine("Statuse code: " +emailResponse.StatusCode);
-        Console.WriteLine("Error Message: "+emailResponse.ErrorMessage);
+        Console.WriteLine("Content: " + emailResponse.Content);
+        Console.WriteLine("Statuse code: " + emailResponse.StatusCode);
+        Console.WriteLine("Error Message: " + emailResponse.ErrorMessage);
 
         // 4. Always return success (security best practice)
         return Ok(new ApiResponse { Success = true, Message = "Password reset email sent" });
@@ -168,20 +168,24 @@ public class AuthController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
     {
-       // 1. Validate JWT token
-       var claims = _jwtService.ValidatePasswordResetToken(dto.Token);
-       // 2. Extract user ID from token claims
-       var userId = claims?.UserId;
+        // 1. Validate JWT token
+        var claims = _jwtService.ValidatePasswordResetToken(dto.Token);
+        // 2. Extract user ID from token claims
+        var userId = claims?.UserId;
 
-       // 3. Update password in database
-       var user = await _userService.GetUserById(userId);
-       if (user == null)
-       {
-        return BadRequest(new ApiResponse { Success = false, Message = "User not found" });
-       }
-       await _userService.ResetPasswordAsync(user, dto.NewPassword);
-       // 4. Token automatically becomes invalid after expiration
-       return Ok(new ApiResponse { Success = true, Message = "Password reset successfully" });
+        if (userId == null)
+        {
+            return BadRequest(new ApiResponse { Success = false, Message = "User not found" });
+        }
+
+        // 3. Update password in database
+        var success = await _userService.ResetPasswordAsync(userId, dto.NewPassword);
+        if (!success)
+        {
+            return BadRequest(new ApiResponse { Success = false, Message = "Password reset failed" });
+        }
+        // 4. Token automatically becomes invalid after expiration
+        return Ok(new ApiResponse { Success = true, Message = "Password reset successfully" });
     }
 
     private string? GetTokenFromRequest()
