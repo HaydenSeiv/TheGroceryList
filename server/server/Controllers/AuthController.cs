@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
             var result = await _userService.LoginAsync(loginDto);
             Console.WriteLine($"log in Result: {result}");
 
-            // Set HTTP-only cookie (equivalent to Go's cookie setting)
+            // Set HTTP-only cookie 
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
@@ -109,7 +109,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            // Clear the JWT cookie (equivalent to Go's logout)
+            // Clear the JWT cookie 
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
@@ -146,21 +146,28 @@ public class AuthController : ControllerBase
         }
         Console.WriteLine("User found");
 
-        // 2. Generate JWT reset token (not stored in DB!)
+        // 2. Generate JWT reset token
         var token = _jwtService.GeneratePasswordResetToken(user.Id);
 
         Console.WriteLine("Token generated");
         Console.WriteLine(token);
 
-        // TODO: Send email with JWT token in URL
         // 3. Send email with JWT token in URL
         var emailResponse = await _emailService.SendPasswordResetEmail(dto.Email, token);
         Console.WriteLine("Email sent");
         Console.WriteLine("Content: " + emailResponse.Content);
         Console.WriteLine("Statuse code: " + emailResponse.StatusCode);
         Console.WriteLine("Error Message: " + emailResponse.ErrorMessage);
+        Console.WriteLine("Status Description: " + emailResponse.StatusDescription);
+        Console.WriteLine("Response: " + emailResponse.ResponseStatus);
+        Console.WriteLine("Response URL: " + emailResponse.ResponseUri);
+        Console.WriteLine("Response Headers: " + emailResponse.Headers);
+        Console.WriteLine("Response Cookies: " + emailResponse.Cookies);
+        Console.WriteLine("Response Content: " + emailResponse.Content);
+        Console.WriteLine("Response Status Code: " + emailResponse.StatusCode);
+        Console.WriteLine("Response Status Description: " + emailResponse.StatusDescription);
+        Console.WriteLine("Response Response Status: " + emailResponse.ResponseStatus);
 
-        // 4. Always return success (security best practice)
         return Ok(new ApiResponse { Success = true, Message = "Password reset email sent" });
 
     }

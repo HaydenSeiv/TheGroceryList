@@ -13,6 +13,7 @@ bin/
 obj/
 *.dll
 *.pdb
+**/launchSettings.json
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

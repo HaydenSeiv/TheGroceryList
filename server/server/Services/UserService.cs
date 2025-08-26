@@ -165,7 +165,7 @@ public class UserService : IUserService
         return await _context.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
     }
 
-    // Private internal method to get User entity by email (for service-to-service calls)
+    
     private async Task<User?> GetUserEntityByEmailAsync(string email)
     {
         return await _context.Users.Find(u => u.Email == email).FirstOrDefaultAsync();

@@ -129,7 +129,7 @@ public class ItemService : IItemService
 
     public async Task<bool> UpdateItemAsync(string itemId, string newTitle, string userId)
     {
-        // URL decode the title (equivalent to Go's url.QueryUnescape)
+        // URL decode the title 
         var decodedTitle = HttpUtility.UrlDecode(newTitle);
         
         // Verify the item belongs to a list owned by the user
