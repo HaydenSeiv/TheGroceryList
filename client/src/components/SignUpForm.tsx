@@ -231,12 +231,13 @@ export default function SignUpForm() {
               colorScheme="gray"
               size={{ base: "md", md: "lg" }}
               w={{ base: "100%", sm: "auto" }}
-              minW={{ sm: "140px" }}
+              minWidth={{ sm: "140px" }}
               _active={{
                 transform: "scale(.97)",
               }}
+              onClick={() => navigate("/")}
             >
-              <Link to={`/`}>Back to Log In</Link>
+              Back to Log In
             </Button>
             <Button
               type="submit"
