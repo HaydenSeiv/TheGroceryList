@@ -165,7 +165,7 @@ public class UserService : IUserService
         return await _context.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
     }
 
-    
+
     private async Task<User?> GetUserEntityByEmailAsync(string email)
     {
         return await _context.Users.Find(u => u.Email == email).FirstOrDefaultAsync();
@@ -173,17 +173,27 @@ public class UserService : IUserService
 
     public async Task<bool> ResetPasswordAsync(string userId, string newPassword)
     {
-        // Get the user entity from database
-        var user = await GetUserEntityByIdAsync(userId);
-        if (user == null) return false;
+        try
+        {
+            // Get the user entity from database
+            var user = await GetUserEntityByIdAsync(userId);
+            if (user == null) return false;
 
-        // Hash the new password
-        var hashedPassword = _passwordService.HashPassword(newPassword);
-        
-        // Update user's password
-        var update = Builders<User>.Update.Set(u => u.Password, hashedPassword);
-        var result = await _context.Users.UpdateOneAsync(u => u.Id == user.Id, update);
-        
-        return result.ModifiedCount > 0;
+            // Hash the new password
+            var hashedPassword = _passwordService.HashPassword(newPassword);
+
+            // Update user's password
+            var update = Builders<User>.Update.Set(u => u.Password, hashedPassword);
+            var result = await _context.Users.UpdateOneAsync(u => u.Id == user.Id, update);
+
+            return result.ModifiedCount > 0;
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error during password reset: " + ex.Message);
+            return false;
+        }
+
     }
 }

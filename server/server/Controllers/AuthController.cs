@@ -175,10 +175,16 @@ public class AuthController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
     {
+        Console.WriteLine("Inside Reset Password");
+        Console.WriteLine(dto.Token);
+        Console.WriteLine(dto.NewPassword);
+
         // 1. Validate JWT token
         var claims = _jwtService.ValidatePasswordResetToken(dto.Token);
         // 2. Extract user ID from token claims
         var userId = claims?.UserId;
+
+
 
         if (userId == null)
         {
@@ -186,13 +192,32 @@ public class AuthController : ControllerBase
         }
 
         // 3. Update password in database
-        var success = await _userService.ResetPasswordAsync(userId, dto.NewPassword);
-        if (!success)
+        try
         {
-            return BadRequest(new ApiResponse { Success = false, Message = "Password reset failed" });
+            Console.WriteLine("Attempting to reset password");
+            Console.WriteLine(userId);
+            Console.WriteLine(dto.NewPassword);
+
+            var success = await _userService.ResetPasswordAsync(userId, dto.NewPassword);
+            if (!success)
+            {
+                return BadRequest(new ApiResponse { Success = false, Message = "Password reset failed" });
+            }
+            // 4. Token automatically becomes invalid after expiration
+            return Ok(new ApiResponse { Success = true, Message = "Password reset successfully" });
+
         }
-        // 4. Token automatically becomes invalid after expiration
-        return Ok(new ApiResponse { Success = true, Message = "Password reset successfully" });
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error during password reset: " + ex.Message);
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Internal server error",
+                Error = new Dictionary<string, object> { { "details", ex.Message } }
+            });
+        }
+
     }
 
     private string? GetTokenFromRequest()
