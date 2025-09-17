@@ -20,23 +20,26 @@ public class EmailService : IEmailService
     //Send Password Reset Email
     public async Task<RestResponse> SendPasswordResetEmail(string email, string token)
     {
-        Console.WriteLine("Inside SendPasswordResetEmail service");
-
         var frontendUrl = _configuration.GetValue<string>("FrontendUrl");
+        var fromEmail = _configuration.GetValue<string>("Email:FromEmail");
+        var fromName = _configuration.GetValue<string>("Email:FromName");
 
+        var options = new RestClientOptions("https://api.brevo.com");
+        var client = new RestClient(options);
 
-        var options = new RestClientOptions("https://api.mailgun.net")
+        var request = new RestRequest("/v3/smtp/email", Method.Post);
+        request.AddHeader("api-key", Environment.GetEnvironmentVariable("BREVO_API_KEY"));
+        request.AddHeader("Content-Type", "application/json");
+
+        var payload = new
         {
-            Authenticator = new HttpBasicAuthenticator("api", Environment.GetEnvironmentVariable("MAIL_API_KEY"))
+            sender = new { email = fromEmail, name = fromName },
+            to = new[] { new { email } },
+            subject = "Password Reset",
+            textContent = $"Click the link to reset your password: {frontendUrl}/reset-password/{token}"
         };
 
-        var client = new RestClient(options);
-        var request = new RestRequest("/v3/sandbox499b21ff013e4b0688b61fe935c509bf.mailgun.org/messages", Method.Post);
-        request.AlwaysMultipartFormData = true;
-        request.AddParameter("from", "Mailgun Sandbox <postmaster@sandbox499b21ff013e4b0688b61fe935c509bf.mailgun.org>");
-        request.AddParameter("to", email);
-        request.AddParameter("subject", "Password Reset");
-        request.AddParameter("text", $"Click the link to reset your password: {frontendUrl}/reset-password/{token}");
+        request.AddJsonBody(payload);
         return await client.ExecuteAsync(request);
     }
 }
