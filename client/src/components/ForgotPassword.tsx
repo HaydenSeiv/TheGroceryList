@@ -6,6 +6,7 @@ import {
     Input,
     Box,
     Button,
+    Text,
   } from "@chakra-ui/react";
   import { useState } from "react";
   import { useMutation } from "@tanstack/react-query";
@@ -67,6 +68,9 @@ import { BASE_URL } from "../../utils/config";
             >
               Send Reset Email
             </Button>
+            <Text fontSize="sm" color="gray.500" textAlign="center">
+              If you don't receive an email, please check your spam or junk folder.
+            </Text>
           </Stack>
         </form>
       </Box>
