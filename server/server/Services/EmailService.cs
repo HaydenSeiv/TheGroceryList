@@ -24,11 +24,17 @@ public class EmailService : IEmailService
         var fromEmail = _configuration.GetValue<string>("Email:FromEmail");
         var fromName = _configuration.GetValue<string>("Email:FromName");
 
+        if (string.IsNullOrWhiteSpace(fromEmail) || string.IsNullOrWhiteSpace(fromName))
+            throw new InvalidOperationException("Missing Email:FromEmail or Email:FromName in configuration.");
+
         var options = new RestClientOptions("https://api.brevo.com");
         var client = new RestClient(options);
 
         var request = new RestRequest("/v3/smtp/email", Method.Post);
-        request.AddHeader("api-key", Environment.GetEnvironmentVariable("BREVO_API_KEY"));
+        var brevoApiKey = _configuration["BREVO_API_KEY"];
+        if (string.IsNullOrWhiteSpace(brevoApiKey))
+            throw new InvalidOperationException("Missing BREVO_API_KEY in configuration.");
+        request.AddHeader("api-key", brevoApiKey);
         request.AddHeader("Content-Type", "application/json");
 
         var payload = new
