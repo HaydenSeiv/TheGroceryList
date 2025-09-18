@@ -47,6 +47,10 @@ public class AisleService : IAisleService
         if (layout == null)
             throw new UnauthorizedAccessException("Layout not found or access denied");
 
+        // Verify the aisle order is not already used for this layout   
+        var exists = await _context.Aisles.Find(a => a.LayoutId == createAisleDto.LayoutId && a.AisleOrder == createAisleDto.AisleOrder).AnyAsync();
+        if (exists) throw new ArgumentException("Aisle order already used for this layout.");
+
         var aisle = new Aisle
         {
             UserId = userId,

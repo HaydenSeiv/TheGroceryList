@@ -16,7 +16,7 @@ const CreateAisleForm = ({ layoutId }: { layoutId: string }) => {
     mutationKey: ["addAisle"],
     mutationFn: async (e: React.FormEvent) => {
       e.preventDefault();
-      try {
+
         const token = localStorage.getItem("token");
         const res = await fetch(BASE_URL + "/aisles", {
           method: "POST",
@@ -33,12 +33,19 @@ const CreateAisleForm = ({ layoutId }: { layoutId: string }) => {
         if (!res.ok) {
           throw new Error("Failed to add aisle");
         }
-        //const data = await res.json();
-        toast.success("Aisle added successfully");
-        queryClient.invalidateQueries({ queryKey: ["layouts", layoutId] });
-      } catch (error: unknown) {
-        throw new Error(error as string);
-      }
+        return res.json();
+    },
+    onSuccess: () => {
+          // This runs ONLY on successful completion
+      toast.success("Aisle added successfully");
+      queryClient.invalidateQueries({ queryKey: ["layouts", layoutId] });
+      
+      // Clear the form fields
+      setNewAisle("");
+      setNewAisleOrder("");
+    },
+    onError: (error: unknown) => {
+      throw new Error(error as string);
     },
   });
 
